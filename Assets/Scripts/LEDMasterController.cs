@@ -133,7 +133,7 @@ public class LEDMasterController : MonoBehaviour
                 //For example, if you were to send a 2K byte string, at 9600 bps, the write method would take about 2 seconds to return.
 
                 //Write(byte[] buffer, int offset, int count);
-                m_serialPort.Write(m_startByte, 0, 1);
+                m_serialPort.Write(m_startByte, 0, 1);     // m_startByte = 255
                 m_serialPort.Write(m_LEDArray, 0, m_LEDArray.Length);
                    
 

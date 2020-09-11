@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////
+dP/////////////////////////////////////////////////////////
 //SPI Tutorial: https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all
 // https://forum.arduino.cc/index.php?topic=558963.0
 // Arduino UNO
@@ -125,7 +125,7 @@ void setup (void) {
     
   //SPI.setClockDivider(SPI_CLOCK_DIV8);
 
-  // SPI.setClockDivider(SPI_CLOCK_DIV16);
+  // SPI.setClockDivider(SPI_CLOCK_DIV16); // Uncomment it? [Sewha]
 
   // Sets the SPI clock divider relative to the system clock.
   // On AVR based boards, the dividers available are 2, 4, 8, 16, 32, 64 or 128.
@@ -214,19 +214,19 @@ void myReadByte() {
   // These two states are indicated by m_frameInProgess
 
 
-  if ( !m_frameInProgress ) { // intially or when the frame has arrived, it is considered that the frame is not in progress
+  if ( !m_frameInProgress ) { // intially or when the frame has arrived, it is considered that the frame [construction] is not in progress
     
     // check if the start byte has arrived
 
     if ( c == m_startByte ) {
-      m_frameInProgress = true; // when the start byte arrives, the frame in progress is true
+      m_frameInProgress = true; // when the start byte arrives, the frame [construction]  in progress is true
       m_pos = 0; // points to the beginning of the buffer  to read the current frame into
       return;
 
     }
 
     else {
-      // continue to read to find the start byte the next time myReadByte() is called
+      // continue to read to find the start byte; after the return, myReadByte() is called again
       return;
 
     }
@@ -241,16 +241,16 @@ void myReadByte() {
     if ( m_pos == m_totalByteSize - 1) { // the buffer index points to the last position
       // the receive buffer is full
       m_newFrameHasArrived == true; // this flag is used to show the newly arrived frame
-      m_frameInProgress == false;   // this flat becomes true only when the start byte arrives
+      m_frameInProgress == false;   // this flat becomes true when the start byte arrives until the new frame has arrived.
       return;
     } // the receive buffer is full
 
     else {
       m_pos ++ ; // go to the next location to fill in the buffer
       return;
-    }//// a frame is in progress
+    }//// a frame is still in progress
 
-  }// // a frame is in progres, that is,  the start byte has arrived
+  }// // a frame was  in progres, that is,  the start byte has arrived
 
 }//myReadByte()
 

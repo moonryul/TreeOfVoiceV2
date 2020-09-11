@@ -23,32 +23,78 @@
 #include <SPI.h>
 
 // The built-in pin number of the slave, which is used within SPI.Begin()
-const int ss1 = 37; // connect master pin 53 the first slave pin 53
-const int ss2 = 49; // connect master pin 49 to the second slave pin 53
-const int ss3 = 48; // connect master pin 48 to the third  slave pin 53
-const int ss4 = 47; // connect master pin 47 to the fourth slave pin 53
+//const int ss1 = 37; // connect master pin 53 the first slave pin 53
+//const int ss2 = 49; // connect master pin 49 to the second slave pin 53
+//const int ss3 = 48; // connect master pin 48 to the third  slave pin 53
+//const int ss4 = 47; // connect master pin 47 to the fourth slave pin 53
 //int ss5 = 46;
 
+
+int ssLeft = 37; // connect master pin 37 the second mega master  pin 53
+
+int ss1 = 49; // connect master pin 49 to the first uno slave pin 10
+int ss2 = 48; // connect master pin 48 to the second uno   slave pin 10
+int ss3 = 47; // connect master pin 47 to the third uno  slave pin 10
+
+int ss4 = 46; // connect master pin 48 to the fourth uno   slave pin 10
+int ss5 = 45; // connect master pin 47 to the fifth uno  slave pin 10
+
+
+
+//Sewah: left: 152, right : 134
+// Sewha: A total num of LED = 153+ 134
+
+const int NumPixelsLeftGroups = 152;
+const int NumPixelsRightGroups = 134;
+
+
 // A total num of LED = 186; each slave processes 40 LEDs
-const int NumPixels1 = 40;
-const int NumPixels2 = 44;
-const int NumPixels3 = 50;
-const int NumPixels4 = 52;
+//const int NumPixels1 = 40;
+//const int NumPixels2 = 44;
+//const int NumPixels3 = 50;
+//const int NumPixels4 = 52;
+
+
+const int NumPixels1L = 35; // The left of the 1st box
+const int NumPixels1R = 27;
+const int NumPixles2L = 30;
+const int NumPixels2R = 30;
+const int NumPixels3L = 28;
+const int NumPixels3R = 27;
+const int NumPixels4L = 29;
+const int NumPixels4R = 25;
+const int NumPixels5L = 30;
+const int NumPixels5R = 25;
+
+
+
+const int rightGroup1ByteSize = NumPixels1R * 3;
+const int rightGroup2ByteSize = NumPixles2R * 3;
+const int rightGroup3ByteSize = NumPixels3R * 3;
+const int rightGroup4ByteSize = NumPixels4R * 3;
+const int rightGroup5ByteSize = NumPixels5R * 3;
+
+const int leftGroupsByteSize = NumPixelsLeftGroups * 3;
+ 
+const int rightGroupsByteSize = NumPixelsRightGroups * 3;
+
+
+const int m_totalByteSize = leftGroupsByteSize + rightGroupsByteSize; 
 
 //const int m_totalNumOfPixels = NumPixels1 +  NumPixels2 + NumPixels3 +  NumPixels4 + 2;
-const int m_totalNumOfPixels = NumPixels1 +  NumPixels2 + NumPixels3 +  NumPixels4;
+//const int m_totalNumOfPixels = NumPixels1 +  NumPixels2 + NumPixels3 +  NumPixels4;
 
 
-const int m_totalByteSize = m_totalNumOfPixels * 3;
+//const int m_totalByteSize = m_totalNumOfPixels * 3;
 
 
-const int group1ByteSize = NumPixels1 * 3;
-const int group2ByteSize = NumPixels2 * 3;
-const int group3ByteSize = NumPixels3 * 3;
-const int group4ByteSize = NumPixels4 * 3;
+//const int group1ByteSize = NumPixels1 * 3;
+//const int group2ByteSize = NumPixels2 * 3;
+//const int group3ByteSize = NumPixels3 * 3;
+//const int group4ByteSize = NumPixels4 * 3;
 
 
-byte m_receiveBuffer[SERIAL_RX_BUFFER_SIZE];
+//byte m_receiveBuffer[SERIAL_RX_BUFFER_SIZE];
 
 
 byte m_totalReceiveBuffer[m_totalByteSize] ;
@@ -101,18 +147,25 @@ void setup (void) {
 
   // set the Slave Select Pins (SS)  as outputs:
 
+  pinMode(ssLeft, OUTPUT);
+ 
   pinMode(ss1, OUTPUT);
   pinMode(ss2, OUTPUT);
   pinMode(ss3, OUTPUT);
   pinMode(ss4, OUTPUT);
 
+  pinMode(ss5, OUTPUT);
+  
   //pinMode(ss5, OUTPUT);
 
+
+  digitalWrite(ssLeft, HIGH);
+  
   digitalWrite(ss1, HIGH);
   digitalWrite(ss2, HIGH);
   digitalWrite(ss3, HIGH);
   digitalWrite(ss4, HIGH);
-  //digitalWrite(ss5, HIGH);
+  digitalWrite(ss5, HIGH);
 
   SPI.begin(); // set up:
   //To condition the hardware you call SPI.begin () which configures the SPI pins (SCK, MOSI, SS) as outputs.
@@ -125,7 +178,7 @@ void setup (void) {
     
   //SPI.setClockDivider(SPI_CLOCK_DIV8);
 
-  SPI.setClockDivider(SPI_CLOCK_DIV16);
+  // SPI.setClockDivider(SPI_CLOCK_DIV16); // Uncomment it? [Sewha]
 
   // Sets the SPI clock divider relative to the system clock.
   // On AVR based boards, the dividers available are 2, 4, 8, 16, 32, 64 or 128.
@@ -133,8 +186,7 @@ void setup (void) {
   // which sets the SPI clock to one-quarter the frequency of the system clock (4 Mhz for the boards at 16 MHz).
   // SPI.setBitOrder(MSBFIRST);
 
-  Serial1.begin(57600); // To write message to the serial monitor
-  
+  //Serial1.begin(57600); // To write message to the serial monitor
   Serial.begin(57600); // To read bytes from the PC Unity Script
 
   //Serial.begin(9600); // increase the serial comm speed; Unity Script also sets this speed
@@ -203,7 +255,6 @@ void myReadByte() {
 
   int count = Serial.available();
 
-  Serial1.print("count=");   Serial1.print( count);
   if (count == 0) {
     // currently m_newFrameHasArrived is false and m_frameInProgress is false
     return;
@@ -212,24 +263,23 @@ void myReadByte() {
   // there are avaiable bytes in the incoming ring buffer
   c = Serial.read(); // read the first byte in the incoming ring buffer
 
- Serial1.print("byte=");   Serial1.print( c);
   // there are two cases to handle: (1) the start byte HAS arrived (2) the start byte has NOT arrived
   // These two states are indicated by m_frameInProgess
 
 
-  if ( !m_frameInProgress ) { // intially or when the frame has arrived, it is considered that the frame is not in progress
+  if ( !m_frameInProgress ) { // intially or when the frame has arrived, it is considered that the frame [construction] is not in progress
     
     // check if the start byte has arrived
 
-    if ( c == m_startByte ) { // the startbyte was sent by the Unity
-      m_frameInProgress = true; // when the start byte arrives, the frame in progress is true
+    if ( c == m_startByte ) { // the startbyte was sent by Unity
+      m_frameInProgress = true; // when the start byte arrives, the frame [construction]  in progress is true
       m_pos = 0; // points to the beginning of the buffer  to read the current frame into
       return;
 
     }
 
     else {
-      // continue to read to find the start byte the next time myReadByte() is called
+      // continue to read to find the start byte; after the return, myReadByte() is called again
       return;
 
     }
@@ -244,16 +294,16 @@ void myReadByte() {
     if ( m_pos == m_totalByteSize - 1) { // the buffer index points to the last position
       // the receive buffer is full
       m_newFrameHasArrived == true; // this flag is used to show the newly arrived frame
-      m_frameInProgress == false;   // this flat becomes true only when the start byte arrives
+      m_frameInProgress == false;   // this flat becomes true when the start byte arrives until the new frame has arrived.
       return;
     } // the receive buffer is full
 
     else {
       m_pos ++ ; // go to the next location to fill in the buffer
       return;
-    }//// a frame is in progress
+    }//// a frame is still in progress
 
-  }// // a frame is in progres, that is,  the start byte has arrived
+  }// // a frame was  in progres, that is,  the start byte has arrived
 
 }//myReadByte()
 
@@ -261,11 +311,11 @@ void myReadByte() {
 
 void showNewFrame() {
 
-  //sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
+  sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
 
-  //print the ledBytes to the serial monitor via Serial1.
+  // print the ledBytes to the serial monitor via Serial1.
 
-   printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize );
+ // printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize );
 
 }// showNewFrame()
 
@@ -304,13 +354,28 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // SPI.beginTransaction(SPISettingA);
 
   //https://forum.arduino.cc/index.php?topic=52111.0
-  //It is because they share the pins that we need the SS line. With multiple slaves,
-  //only one slave is allowed to "own" the MISO line(by configuring it as an output).So when SS is brought low
+  // With multiple slaves, only one slave is allowed to "own" the MISO line(by configuring it as an output).So when SS is brought low
   //for that slave it switches its MISO line from high - impedance to output, then it can reply to requests
   //from the master.When the SS is brought high again(inactive) that slave must reconfigure that line as high - impedance,
   //so another slave can use it.
 
 
+
+  // send the left groups of LED data to the Mega slave:
+
+  digitalWrite(ssLeft, LOW); // select the Mega  SS line
+
+  // To send  a sequence of bytes to a slave arduiono via SPI, the sequence is marked by the start and the end
+  // of the sequence with special bytes, m_startByte and m_endByte respectivley.
+
+  SPI.transfer( m_startByte); // The SPI master also sends the startByte for the slave to identify the beginning of the frame.
+  SPI.transfer( &totalReceiveBuffer[0], leftGroupsByteSize);
+
+
+  digitalWrite(ssLeft, HIGH);
+
+  // Process the right side LED data
+  
   // send the first group of data to the first slave:
 
   digitalWrite(ss1, LOW); // select the first SS line
@@ -318,8 +383,8 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // To send  a sequence of bytes to a slave arduiono via SPI, the sequence is marked by the start and the end
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
- // SPI.transfer( m_startByte); The slaves do not receive the startByte
-  SPI.transfer( &totalReceiveBuffer[0], group1ByteSize);
+  SPI.transfer( m_startByte);
+  SPI.transfer( &totalReceiveBuffer[leftGroupsByteSize], rightGroup1ByteSize);
 
 
   digitalWrite(ss1, HIGH);
@@ -333,12 +398,12 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss2, LOW); // select the second SS Line
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[group1ByteSize], group2ByteSize);
+  SPI.transfer( &totalReceiveBuffer[leftGroupsByteSize + rightGroup1ByteSize], rightGroup2ByteSize);
 
 
   digitalWrite(ss2, HIGH);
 
-  SPI.endTransaction();
+  //SPI.endTransaction();
 
   // send the third group of data to the third slave:
   //SPI.beginTransaction(SPISettingC);
@@ -347,7 +412,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss3, LOW); // select the third SS line
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[group1ByteSize + group2ByteSize], group3ByteSize);
+  SPI.transfer( &totalReceiveBuffer[leftGroupsByteSize + rightGroup1ByteSize + rightGroup2ByteSize], rightGroup3ByteSize);
 
 
   digitalWrite(ss3, HIGH);
@@ -362,10 +427,20 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss4, LOW);   // select the fourth SS line
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[group1ByteSize + group2ByteSize  + group3ByteSize ], group4ByteSize );
+  SPI.transfer( &totalReceiveBuffer[leftGroupsByteSize + rightGroup1ByteSize + rightGroup2ByteSize + rightGroup3ByteSize ], rightGroup4ByteSize );
 
 
   digitalWrite(ss4, HIGH);
+
+ 
+  digitalWrite(ss5, LOW);   // select the fourth SS line
+
+  SPI.transfer( m_startByte);
+  SPI.transfer( &totalReceiveBuffer[leftGroupsByteSize + rightGroup1ByteSize + rightGroup2ByteSize + rightGroup3ByteSize + rightGroup4ByteSize ], rightGroup5ByteSize );
+
+
+  digitalWrite(ss5, HIGH);
+
 
   // SPI.endTransaction();
 
@@ -376,31 +451,28 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 
-
-void printLEDBytesToSerialMonitor( byte * totalReceiveBuffer,  int totalByteSize  )
-{
-
-  for (int i = 0; i < totalByteSize; i++) {
-
-    // print the received data from PC to the serial monitor via Serial1 of Mega
-    if ( i % 3 == 0) {
-      Serial1.print("led=");
-      Serial1.print( i/3);
-      
-      Serial1.print(" r:");
-      Serial1.println(totalReceiveBuffer[i]);
-    }
-    else if ( i % 3 == 1) {
-      Serial1.print(" g:");
-      Serial1.println(totalReceiveBuffer[i]);
-    }
-
-    else {
-      Serial1.print(" b:");
-      Serial1.println(totalReceiveBuffer[i]);
-    }
-
-  }// for
-
-
-} //printLEDBytesToSerialMonitor( byte[] totalReceiveBuffer,  int m_totalByteSize  )
+// For Debugging
+//void printLEDBytesToSerialMonitor( byte * totalReceiveBuffer,  int totalByteSize  )
+//{
+//
+//  for (int i = 0; i < m_totalByteSize; i++) {
+//
+//    // print the received data from PC to the serial monitor via Serial1 of Mega
+//    if ( i % 3 == 0) {
+//      Serial1.print("r:");
+//      Serial1.println(totalReceiveBuffer[i]);
+//    }
+//    else if ( i % 3 == 1) {
+//      Serial1.print("g:");
+//      Serial1.println(totalReceiveBuffer[i]);
+//    }
+//
+//    else {
+//      Serial1.print("b:");
+//      Serial1.println(totalReceiveBuffer[i]);
+//    }
+//
+//  }// for
+//
+//
+//} //printLEDBytesToSerialMonitor( byte[] totalReceiveBuffer,  int m_totalByteSize  )

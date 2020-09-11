@@ -634,7 +634,7 @@ void computeBoidColor(inout Boid pBoid)
 
 	}//if (pBoid.wallNo == 0) // 
 
-	if (pBoid.wallNo == 1) // ceiling
+	if (pBoid.wallNo == 1) // upper hemisphere
 	{
 		angDeg = findAngleForVector(pBoid.position) * (180 / M_PI);  // convert the angle (in radian) to the value between 0 and 1
 
@@ -764,7 +764,7 @@ void computeBoidColor(inout Boid pBoid)
 
 		return;
 
-	}
+	} //if (pBoid.wallNo == 1) // upper hemisphere
 
 
 
@@ -820,6 +820,7 @@ void moveBoidsToLowerHemisphere(inout Boid pBoid)
 
 	pBoid.boidFrame = float4x4(firstRow, secondRow, thirdRow, fourthRow);
 
+	pBoid.headDir = newZAxis;
 	return;
 
 }//moveBoidsToLowerHemisphere()
@@ -876,16 +877,6 @@ void SimulateBoids(uint3 DTid : SV_DispatchThreadID)
 
 	
 
-	// If  the boid  entered the ceiling hole in the previous frame,
-	// it is supposed to go down to the bottom of the lower hemisphere.
-
-	float apexRadius = length(float3(pBoid.position.x, 0, pBoid.position.z));
-	if (pBoid.wallNo == 1 && apexRadius <= _CeilingInnerRadius)
-	{
-		pBoid.wallNo = 0; // go to the lower hemisphere
-		moveBoidsToLowerHemisphere(pBoid); // this action is performed one frame after the boid has entered the hole
-		// because the boid can provide a color to the nearby LED boid. LED boids also exis on the hole
-	}
 
 	// apply three boid rules to the current boid using neighbors
 	for (int nId = 0; nId < _BoidsNum; nId++)
@@ -1067,8 +1058,12 @@ void SimulateBoids(uint3 DTid : SV_DispatchThreadID)
 
 	float3 pNewHeadVec;
 
-	if (pBoid.position.y >= 0)
-	{ // upper hemisphere
+	// Determine which hemisphere the boid lies; 
+	// This information affects the tangential goal seeking behavior of the boid;
+	// It is also used to compute the color of the boid
+
+	if (pBoid.position.y >= 0) // // upper hemisphere
+	{ 
 		pBoid.wallNo = 1; // ceiling
 
 		goalSeekingWeight = _CeilingConvergeWeight;
@@ -1141,6 +1136,11 @@ void SimulateBoids(uint3 DTid : SV_DispatchThreadID)
 
 
 	}
+
+	// check if the boid has entered the hole on the north pole
+
+
+
 	// compute the new position of pBoid
 
 	pBoid.duration = _DeltaTime;
@@ -1198,27 +1198,46 @@ void SimulateBoids(uint3 DTid : SV_DispatchThreadID)
 
 	pBoid.scale = pBoid.scale * _ScaleFactor;
 
-	//Project pBoid.boidFrame onto the tangent plane at pBoid.position
-	// => Project the headDir onto the tangent plane and make it the new Z axis.
-	// The direction of pBoid.position will be the new Y axis (the back direction of the boid)
-	// The cross product (left hand rule) of Y and Z will the X axis pointing to the right direction
 
-	float3 newYAxis = newNormalDir;
-	float3 newZAxis = normalize(getTangentComponent(newHeadDir, newNormalDir));
-	float3 newXAxis = -cross(newYAxis, newZAxis); // use the left hand rule to
-	// the compute rightward basis
+	// If  the boid  entered the ceiling hole in the previous frame,
+	// it is supposed to go down to the bottom of the lower hemisphere.
 
-	//float3x3 n = float3x3(row0, row1, row2); // sets rows of matrix n
-	//cf https://docs.unity3d.com/ScriptReference/Material.SetMatrix.html?_ga=2.197958058.467342056.1573866422-1662555742.1530823204
+	float apexRadius = length(float3(pBoid.position.x, 0, pBoid.position.z));
 
-	float4 firstRow = float4(newXAxis[0], newYAxis[0], newZAxis[0], pBoid.position[0]);
-	float4 secondRow = float4(newXAxis[1], newYAxis[1], newZAxis[1], pBoid.position[1]);
-	float4 thirdRow = float4(newXAxis[2], newYAxis[2], newZAxis[2], pBoid.position[2]);
-	float4 fourthRow = float4(0, 0, 0, 1);
+	if (pBoid.wallNo == 1 && apexRadius <= _CeilingInnerRadius)
+	{
+		pBoid.wallNo = 0; // go to the lower hemisphere
+		moveBoidsToLowerHemisphere(pBoid); // this action is performed one frame after the boid has entered the hole
+		// because the boid is used to  provide a color to the nearby LED boid. LED boids also exis on the hole
+	}
 
-	pBoid.boidFrame = float4x4(firstRow, secondRow, thirdRow, fourthRow);
-	pBoid.headDir = newZAxis;
+	else
+	{
+		//Project pBoid.boidFrame onto the tangent plane at pBoid.position
+		// => Project the headDir onto the tangent plane and make it the new Z axis.
+		// The direction of pBoid.position will be the new Y axis (the back direction of the boid)
+		// The cross product (left hand rule) of Y and Z will the X axis pointing to the right direction
 
+		float3 newYAxis = newNormalDir;
+		float3 newZAxis = normalize(getTangentComponent(newHeadDir, newNormalDir));
+		float3 newXAxis = -cross(newYAxis, newZAxis); // use the left hand rule to
+		// the compute rightward basis
+
+		//float3x3 n = float3x3(row0, row1, row2); // sets rows of matrix n
+		//cf https://docs.unity3d.com/ScriptReference/Material.SetMatrix.html?_ga=2.197958058.467342056.1573866422-1662555742.1530823204
+
+		float4 firstRow = float4(newXAxis[0], newYAxis[0], newZAxis[0], pBoid.position[0]);
+		float4 secondRow = float4(newXAxis[1], newYAxis[1], newZAxis[1], pBoid.position[1]);
+		float4 thirdRow = float4(newXAxis[2], newYAxis[2], newZAxis[2], pBoid.position[2]);
+		float4 fourthRow = float4(0, 0, 0, 1);
+
+		pBoid.boidFrame = float4x4(firstRow, secondRow, thirdRow, fourthRow);
+		pBoid.headDir = newZAxis;
+
+	} // not within the hole of the north pole.
+
+
+	
 	computeBoidColor(pBoid); // both HSL and RBG colors
 
 	

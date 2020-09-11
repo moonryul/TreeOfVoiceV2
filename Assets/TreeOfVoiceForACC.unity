@@ -555,7 +555,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 468306996}
   m_HandleRect: {fileID: 468306995}
   m_Direction: 0
-  m_Value: -0.00000089757583
+  m_Value: 0
   m_Size: 0.915
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -920,7 +920,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 598164252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: -20}
+  m_LocalPosition: {x: 0, y: 0, z: -22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2109,11 +2109,10 @@ MonoBehaviour:
   CeilingMaxCorner: {x: 10, y: 10, z: 10}
   GroundRadius: 10
   CeilingRadius: 10
-  m_CeilingInnerRadius: 0.1
+  m_CeilingInnerRadius: 0.7
   numOfWalls: 2
   m_numOfWallGizmos: 3
   m_MaxDomainRadius: 10
-  m_HemisphereHoleRadius: 0.7
   gameObjForWallTransforms:
   - {fileID: 562297673}
   - {fileID: 407466412}

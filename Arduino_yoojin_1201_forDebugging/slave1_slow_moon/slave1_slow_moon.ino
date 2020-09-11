@@ -42,9 +42,9 @@ ISR (SPI_STC_vect) { // SPI_STC_vect: invoked when data arrives:
     if ( !m_frameInProgess ) { // when frameInProfess is false, try to check the start byte, 255
 
 
-      if ( c == 255 ) {
-        m_pos = m_bufferSize - 1; // insert bytes starting from the end of the buffer, so that the end parts of the LED go into 
-                                  // the chain first
+      if ( c == 255 ) { // 255 is the start byte sent by the master
+        m_pos = m_bufferSize - 1; // insert bytes starting from the end of the buffer, so that the end parts of the LEDs go into 
+                                  // the chain first??? questions by Moon Jung
         m_frameInProgess = true;
         return;
       }

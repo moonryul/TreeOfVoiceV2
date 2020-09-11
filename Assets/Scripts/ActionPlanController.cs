@@ -238,11 +238,11 @@ public class ActionPlanController : MonoBehaviour
 
   
 
-    void OnGUI()
-    {
+   // void OnGUI()
+    //{
       //The Label shows the current Rect settings on the screen (GUI => origin = left top)
-        GUI.Label(new Rect(20, 20, 500, 80), "Rect : " + m_canvasRectTransform.rect);
-    }
+     //   GUI.Label(new Rect(20, 20, 500, 80), "Rect : " + m_canvasRectTransform.rect);
+   // }
 
     
     // Use Awake() to initialize field variables.

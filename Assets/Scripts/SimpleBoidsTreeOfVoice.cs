@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 public class SimpleBoidsTreeOfVoice : MonoBehaviour
 {
 
-    ActionPlanController m_actionPlanController; 
+    ActionPlanController m_actionPlanController;
 
     const int BLOCK_SIZE = 1024; // The number of threads in a single thread group
 
@@ -30,14 +30,14 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
     public float m_SimulationDeltaT;
 
     public bool UseActionPlan = true;
-   
+
 
     // 보이드의 수
     [Range(500, 10000)]
     public float m_BoidsNum = 1000f;
 
 
-    
+
     [Range(0.0f, 3.0f)]
     [SerializeField] public float MinBoidRadius = 0.1f;
     [Range(0.0f, 3.0f)]
@@ -47,7 +47,7 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
     [Range(0.0f, 3.0f)]
     [SerializeField] private float _minSpeed = 0.5f;
     [Range(1.0f, 5.0f)]
-    [SerializeField] private float _maxSpeed= 3.0f;
+    [SerializeField] private float _maxSpeed = 3.0f;
 
 
 
@@ -56,8 +56,8 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
 
     [Range(0.0f, 3.0f)]
     [SerializeField] private float _scaleFactor = 1.0f;
-       
-   
+
+
 
     // the neighborhood conditions and weights for the three flocking actions
     // 분리   
@@ -138,7 +138,7 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
 
     [Range(0.0f, 1.0f)]
     [SerializeField] private float _ceilingMaxAlpha = 1.0f;
-          
+
     // 벽의 크기
     public Vector3 GroundMinCorner = new Vector3(-10f, -10f, -10f);
     public Vector3 GroundMaxCorner = new Vector3(10f, -10f, 10f);
@@ -162,8 +162,8 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
     public float CeilingRadius = 10f;
     // public float CeilingInnerRadius = 0.7f;
 
-    public float m_CeilingInnerRadius = 0.1f;
-    
+    public float m_CeilingInnerRadius = 0.7f;
+
     public int numOfWalls = 2; // ground, ceiling, front wall
 
     public int m_numOfWallGizmos = 3; // ground, ceiling, front wall
@@ -171,13 +171,13 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
 
     //public float m_MinDomainRadius = 0.1f; // the minumum radius of of the xz domain; used LED boid rendering
     public float m_MaxDomainRadius = 10; // // the maximum radius of of the xz domain; used in LED boid rendering
-    public float m_HemisphereHoleRadius = 0.7f; // m
+    //public float m_HemisphereHoleRadius = 0.7f; // m
 
     // 컴퓨트 쉐이더
     // Mention another Component instance.
     //[SerializeField] protected ComputeShader m_BoidComputeShader; // set in the inspector
 
-    ComputeShader m_BoidComputeShader; 
+    ComputeShader m_BoidComputeShader;
     //https://www.reddit.com/r/Unity3D/comments/7ppldz/physics_simulation_on_gpu_with_compute_shader_in/
     // 보이드의 버퍼
     public ComputeBuffer m_BoidBuffer { get; protected set; } // null reference
@@ -186,7 +186,7 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
     int m_BufferStartIndex, m_BufferEndIndex;
 
     protected int m_KernelIdGround;
-    
+
     public BoidData[] m_boidArray;
 
     int totalNumOfSimulations = 0;
@@ -220,7 +220,7 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
     // Sample[] samples = new Sample[100];
     // for (int i = 0; i<samples.Length; i++) samples[i] = new Sample();
 
-  
+
 
     private bool IsBoidsNumSet = false;
 
@@ -270,35 +270,35 @@ public class SimpleBoidsTreeOfVoice : MonoBehaviour
 
    ;
 
-//class Test
-//{
-//    public static void Main()
-//    {
-//        string path = @"c:\temp\MyTest.txt";
-//        if (!File.Exists(path))
-//        {
-//            // Create a file to write to.
-//            using (StreamWriter sw = File.CreateText(path))
-//            {
-//                sw.WriteLine("Hello");
-//                sw.WriteLine("And");
-//                sw.WriteLine("Welcome");
-//            }
-//        }
+    //class Test
+    //{
+    //    public static void Main()
+    //    {
+    //        string path = @"c:\temp\MyTest.txt";
+    //        if (!File.Exists(path))
+    //        {
+    //            // Create a file to write to.
+    //            using (StreamWriter sw = File.CreateText(path))
+    //            {
+    //                sw.WriteLine("Hello");
+    //                sw.WriteLine("And");
+    //                sw.WriteLine("Welcome");
+    //            }
+    //        }
 
-//        // Open the file to read from.
-//        using (StreamReader sr = File.OpenText(path))
-//        {
-//            string s = "";
-//            while ((s = sr.ReadLine()) != null)
-//            {
-//                Console.WriteLine(s);
-//            }
-//        }
-//    }
-//}
+    //        // Open the file to read from.
+    //        using (StreamReader sr = File.OpenText(path))
+    //        {
+    //            string s = "";
+    //            while ((s = sr.ReadLine()) != null)
+    //            {
+    //                Console.WriteLine(s);
+    //            }
+    //        }
+    //    }
+    //}
 
-private void Awake()
+    private void Awake()
     {
 
         // DEBUG code
@@ -311,7 +311,7 @@ private void Awake()
         //Because string is a reference type and the default value for all reference types is null. 
 
         //https://answers.unity.com/questions/990496/ioexception-sharing-violation-on-path-please-help.html?_ga=2.11865712.591554826.1574537830-1174358732.1569135042
-       
+
         //File.CreateText(pathToLoad)).Dispose();
         //using (TextWriter writer = new StreamWriter(pathToLoad, false))
         //{
@@ -319,7 +319,7 @@ private void Awake()
         //    writer.Close();
         //}
 
-         m_path = "Assets/Resources/DebugFiles/" + fileName +  fileIndex + ".txt";
+        m_path = "Assets/Resources/DebugFiles/" + fileName + fileIndex + ".txt";
 
         //File.CreateText(path).Dispose();
 
@@ -411,14 +411,13 @@ private void Awake()
         //which have elapsed since the project started playing.
         // Time.time (and Time.deltaTime) only change their value once per frame.
 
-
-        Simulate(); // for debugging
+        Simulate();
     }
 
 
     private void OnDrawGizmos()
     {
-       
+
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(RoomCenter, RoomSize);
@@ -557,7 +556,7 @@ private void Awake()
 
     } //  private void OnDrawGizmos()
 
-  
+
 
     private void OnDestroy()
     {
@@ -571,8 +570,8 @@ private void Awake()
     //public static Color HSVToRGB(float H, float S, float V);
     protected void InitializeValues()
     {
-     
-        IsBoidsNumSet = true;         
+
+        IsBoidsNumSet = true;
 
         m_BufferEndIndex = (int)m_BoidsNum;
 
@@ -581,11 +580,11 @@ private void Awake()
         m_BoidComputeShader.SetFloat("_MaxDomainRadius", m_MaxDomainRadius);
 
         m_BoidComputeShader.SetInt("_BoidsNum", (int)m_BoidsNum);
-       // m_BoidComputeShader.SetInt("_NumOfWalls", numOfWalls);
+        // m_BoidComputeShader.SetInt("_NumOfWalls", numOfWalls);
 
 
         //BoidComputeShader.SetFloat("_Mass", _mass);
-                     
+
         m_BoidComputeShader.SetFloat("_SeparateRadius", _separate.Radius);
         m_BoidComputeShader.SetFloat("_SeparateWeight", _separate.Weight);
         m_BoidComputeShader.SetFloat("_AlignmentRadius", _alignment.Radius);
@@ -639,15 +638,15 @@ private void Awake()
 
         m_BoidComputeShader.SetVector("_CeilingMaxCorner", CeilingMaxCorner);
         m_BoidComputeShader.SetVector("_CeilingMinCorner", CeilingMinCorner);
-        
+
         m_BoidComputeShader.SetFloat("_GroundRadius", GroundRadius);
         m_BoidComputeShader.SetFloat("_CeilinRadius", CeilingRadius);
 
-    
 
-        
+
+
         m_KernelIdGround = m_BoidComputeShader.FindKernel("SimulateBoids");
-       
+
     } //nitializeValues()
 
 
@@ -683,28 +682,28 @@ private void Awake()
         //https://forum.unity.com/threads/size-of-computebuffer-for-mesh-vertices.446972/
         //Also by checking the decompiled file of Vector3 on github,
         // I confirmed that Vector3 indeed only consists of 3 floats
-                      
+
 
         m_BoidBuffer = new ComputeBuffer(MAX_SIZE_OF_BUFFER,
                    Marshal.SizeOf(typeof(BoidData)), ComputeBufferType.Default);
 
-       // Graphics.SetRandomWriteTarget(1, m_BoidBuffer);
+        // Graphics.SetRandomWriteTarget(1, m_BoidBuffer);
 
         m_boidArray = new BoidData[MAX_SIZE_OF_BUFFER];
 
 
         //var boidArray = new BoidData[BoidsNum];
-        SetBoidArray(m_boidArray,(int)m_BoidsNum);
+        SetBoidArray(m_boidArray, (int)m_BoidsNum);
 
         //
         //For each kernel we are setting the buffers that are used by the kernel, so it would read and write to those buffers
 
-        
+
         m_BoidBuffer.SetData(m_boidArray); // buffer is R or RW
-       
+
         m_BoidComputeShader.SetBuffer(m_KernelIdGround, "_BoidBuffer", m_BoidBuffer);
-     
-       
+
+
     } // InitializeBuffers()
 
 
@@ -714,31 +713,31 @@ private void Awake()
     {
 
 
-        Vector3  initScale;
-        float thetaPos, phiPos,  initSpeed, initRadiusX, initRadiusY, initRadiusZ;
+        Vector3 initScale;
+        float thetaPos, phiPos, initSpeed, initRadiusX, initRadiusY, initRadiusZ;
 
 
         //float thetaOfHole = Mathf.Atan(0.7f / 12);
-        float thetaOfHole = Mathf.Atan(m_HemisphereHoleRadius / (m_MaxDomainRadius / 2));
+        float thetaOfHole = Mathf.Atan(m_CeilingInnerRadius / (m_MaxDomainRadius / 2));
 
         // float radius = Random.Range(m_MinDomainRadius, m_MaxDomainRadius);
         float radius = m_MaxDomainRadius;
 
-        for (int i=0; i < numberOfElements; i++)
+        for (int i = 0; i < numberOfElements; i++)
         {
-           
-            thetaPos = Random.Range(thetaOfHole, M_PI);   // deviation from the y axis;
-            //select random number from the range [thetaOfHole, M_PI]
 
-             phiPos = Random.Range(0, 2 * M_PI); // azimuth for the boid position; 방위각 on the zx plane
-            // select random number from the range [0, 2*M_PI]; max inclusive. 
+            thetaPos = Random.Range(thetaOfHole, M_PI);   // deviation from the y axis;
+                                                          //select random number from the range [thetaOfHole, M_PI]
+
+            phiPos = Random.Range(0, 2 * M_PI); // azimuth for the boid position; 방위각 on the zx plane
+                                                // select random number from the range [0, 2*M_PI]; max inclusive. 
 
 
             // The postion of a boid is on the sphere which defined relative to the world origin (0,0,0):
 
-             m_boidArray[i].Position = new Vector3(radius * Mathf.Sin(thetaPos)* Mathf.Cos(phiPos), 
-                                                      radius * Mathf.Cos(thetaPos), 
-                                                      radius * Mathf.Sin(thetaPos) * Mathf.Sin(phiPos) );
+            m_boidArray[i].Position = new Vector3(radius * Mathf.Sin(thetaPos) * Mathf.Cos(phiPos),
+                                                     radius * Mathf.Cos(thetaPos),
+                                                     radius * Mathf.Sin(thetaPos) * Mathf.Sin(phiPos));
 
             // Each boid is located on on the tangent of the sphere moving foward on the tagent plane;
             // The boid frame follows the Unity convention where the x is to the right on the tangent plane,
@@ -768,24 +767,24 @@ private void Awake()
 
             // Create the frame for each boid
             Vector3 YAxis = position.normalized; // The position vector of the boid on the sphere
-            // is considered as the local up vector of the boid frame.
-            
-            Vector3 ZAxis  = Vector3.Cross(YAxis, Vector3.up ); // XAxis = perpendicular to the
+                                                 // is considered as the local up vector of the boid frame.
+
+            Vector3 ZAxis = Vector3.Cross(YAxis, Vector3.up); // XAxis = perpendicular to the
             // plane formed by the boid up and the global up.
             // It is tangent to the surface of sphere, and used as the forward head direction
             // of the boid. 
             // 
 
-            Vector3 XAxis  = Vector3.Cross(YAxis, ZAxis);  // the side (rightward) direction of the
-                                                           // boid 
+            Vector3 XAxis = Vector3.Cross(YAxis, ZAxis);  // the side (rightward) direction of the
+                                                          // boid 
 
-            Vector4 col0 = new  Vector4( XAxis[0], XAxis[1], XAxis[2], 0.0f);
-            Vector4 col1 = new Vector4( YAxis[0], YAxis[1], YAxis[2], 0.0f);
+            Vector4 col0 = new Vector4(XAxis[0], XAxis[1], XAxis[2], 0.0f);
+            Vector4 col1 = new Vector4(YAxis[0], YAxis[1], YAxis[2], 0.0f);
             Vector4 col2 = new Vector4(ZAxis[0], ZAxis[1], ZAxis[2], 0.0f);
-            Vector4 col3 = new  Vector4( position[0], position[1], position[2], 1.0f);
+            Vector4 col3 = new Vector4(position[0], position[1], position[2], 1.0f);
 
             Matrix4x4 boidFrame = new Matrix4x4(col0, col1, col2, col3);
-                // XAxis, YAxis, ZAxis become the first, second, third columns of the boidFrame matrix
+            // XAxis, YAxis, ZAxis become the first, second, third columns of the boidFrame matrix
             //boidFrame.SetColumn(0, new  Vector4( XAxis[0], XAxis[1], XAxis[2], 0.0f) );
             //boidFrame.SetColumn(1, new Vector4( YAxis[0], YAxis[1], YAxis[2], 0.0f));
             //boidFrame.SetColumn(2, new Vector4(ZAxis[0], ZAxis[1], ZAxis[2], 0.0f));
@@ -806,16 +805,16 @@ private void Awake()
             //m_boidArray[i].BoidFrameInv = boidFrame.inverse; 
 
             initRadiusX = Random.Range(MinBoidRadius, MaxBoidRadius); // 0.1 ~ 0.3
-             initRadiusY = Random.Range(MinBoidRadius, MaxBoidRadius);
-             initRadiusZ = Random.Range(MinBoidRadius, MaxBoidRadius);
+            initRadiusY = Random.Range(MinBoidRadius, MaxBoidRadius);
+            initRadiusZ = Random.Range(MinBoidRadius, MaxBoidRadius);
 
             //initScale = new Vector3(initRadiusX, initRadiusY, initRadiusZ);
             initScale = new Vector3(initRadiusX, initRadiusX, initRadiusX);
             initSpeed = Random.Range(_minSpeed, _maxSpeed);
-       
-             m_boidArray[i].Scale = initScale;
 
-             m_boidArray[i].Speed = initSpeed;              
+            m_boidArray[i].Scale = initScale;
+
+            m_boidArray[i].Speed = initSpeed;
 
 
         } // for  (int i = 0; i < numberOfElements; i++)
@@ -824,7 +823,7 @@ private void Awake()
     } // SetBoidArray()
 
 
-    public void DetermineParamValue(string name,  out float paramValue)
+    public void DetermineParamValue(string name, out float paramValue)
     {
         // check if deltaTime is more than SceneDuration of  the action plan => reset SceneStartTime to
         // the current time.
@@ -832,16 +831,16 @@ private void Awake()
         if (m_SimulationDeltaT >= m_AnimationCycle)
         {
             m_SceneStartTime = m_currTime; // m_currTime is set in Update()
-           // m_SimulationDeltaT = 0f; // wrap to the beginning of actionPlan to repeat the scene
+                                           // m_SimulationDeltaT = 0f; // wrap to the beginning of actionPlan to repeat the scene
 
         }
         // ref float paramValue has a value before the function was alled
 
 
         m_SimulationDeltaT = m_currTime - m_SceneStartTime; //  the delta time since the beginning of the
-                                                    // current animation cycle
-        //Debug.Log("DeltaT=");
-        //Debug.Log(deltaT);
+                                                            // current animation cycle
+                                                            //Debug.Log("DeltaT=");
+                                                            //Debug.Log(deltaT);
 
         List<ActionPlanController.Action> timedActions = m_actionPlan[name];
 
@@ -858,30 +857,30 @@ private void Awake()
         // the first interval ( T[0], T[1]). If the delta is less than the midpoint of the interval
         // the midpoint value of the interval, timedActions[0].V, is used.
         if (m_SimulationDeltaT < (timedActions[0].T[0] + timedActions[0].T[1]) / 2)
-            {
-                paramValue = timedActions[0].V;
-                return;
-            } // first interval
+        {
+            paramValue = timedActions[0].V;
+            return;
+        } // first interval
 
-            // The last "action" for the current parameter, timedActions[0], has 
-            // the interval ( T[0], T[1]). If the delta is greater than the midpoint of the 
-            // last interval, the midpoint value of the interval, 
-            //  timedActions[timedActions.Count - 1].V, is used.
+        // The last "action" for the current parameter, timedActions[0], has 
+        // the interval ( T[0], T[1]). If the delta is greater than the midpoint of the 
+        // last interval, the midpoint value of the interval, 
+        //  timedActions[timedActions.Count - 1].V, is used.
 
-            else if (m_SimulationDeltaT >= (timedActions[timedActions.Count - 1].T[0] + timedActions[timedActions.Count - 1].T[1]) / 2)
-            { // the ith action is found for the current parameter
-                paramValue = timedActions[timedActions.Count - 1].V;
-                return;
-            } // last interval
+        else if (m_SimulationDeltaT >= (timedActions[timedActions.Count - 1].T[0] + timedActions[timedActions.Count - 1].T[1]) / 2)
+        { // the ith action is found for the current parameter
+            paramValue = timedActions[timedActions.Count - 1].V;
+            return;
+        } // last interval
 
-            // Otherwise, the value of the current parameter is interpolated between the midpoint
-            // value of the previous interval and the midpoint value of the current interval
-            else
-            { // m_SimulationDeltaT is between timedActions[k - 1].T[1] and timedActions[k].T[0]
-                // for some k.
+        // Otherwise, the value of the current parameter is interpolated between the midpoint
+        // value of the previous interval and the midpoint value of the current interval
+        else
+        { // m_SimulationDeltaT is between timedActions[k - 1].T[1] and timedActions[k].T[0]
+          // for some k.
 
-                // int k = findCurrentActionIndex(timedActions, m_SimulationDeltaT);
-                int k = m_actionPlanController.searchForActionIndex(timedActionBinaryTree, m_SimulationDeltaT);
+            // int k = findCurrentActionIndex(timedActions, m_SimulationDeltaT);
+            int k = m_actionPlanController.searchForActionIndex(timedActionBinaryTree, m_SimulationDeltaT);
 
             //int actionIndex
             //              = m_actionPlanController.searchForActionIndex(timedActionBinaryTree, m_SimulationDeltaT);
@@ -911,63 +910,63 @@ private void Awake()
 
             //     }
 
-                if (k == -1)
-                {
-                 Debug.LogError(" Some time intervals of the action plan table are specified incorrectly. " +
-                       "please corrent them first");
+            if (k == -1)
+            {
+                Debug.LogError(" Some time intervals of the action plan table are specified incorrectly. " +
+                      "please corrent them first");
 
                 m_writer.WriteLine(" Some time intervals of the action plan table are specified incorrectly. " +
                        "please corrent them first");
                 paramValue = -1; // undefined out paramValue
 
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                 // Application.Quit() does not work in the editor so
-                   UnityEditor.EditorApplication.isPlaying = false;
-                #else
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
                    Application.Quit();
-                #endif
+#endif
 
-                }
-                else
-                {
-                    float firstTimePoint = (timedActions[k - 1].T[0] + timedActions[k - 1].T[1]) / 2;
-                    float secondTimePoint = (timedActions[k].T[0] + timedActions[k].T[1]) / 2;
-                    float t = (m_SimulationDeltaT - firstTimePoint) /
-                                       (secondTimePoint - firstTimePoint);
+            }
+            else
+            {
+                float firstTimePoint = (timedActions[k - 1].T[0] + timedActions[k - 1].T[1]) / 2;
+                float secondTimePoint = (timedActions[k].T[0] + timedActions[k].T[1]) / 2;
+                float t = (m_SimulationDeltaT - firstTimePoint) /
+                                   (secondTimePoint - firstTimePoint);
 
-                    paramValue = timedActions[k - 1].V * (1 - t) + timedActions[k].V * t;
-                    return;
-                }
-            } // else (intermediate intervals)
-
-                   
-} // DetermineParaValue()
-
-public int findCurrentActionIndex(List<ActionPlanController.Action> timedActions, float simulationDeltaT)
-{
+                paramValue = timedActions[k - 1].V * (1 - t) + timedActions[k].V * t;
+                return;
+            }
+        } // else (intermediate intervals)
 
 
-    for (int k = 1; k <= timedActions.Count - 1; k++)
+    } // DetermineParaValue()
+
+    public int findCurrentActionIndex(List<ActionPlanController.Action> timedActions, float simulationDeltaT)
     {
+
+
+        for (int k = 1; k <= timedActions.Count - 1; k++)
+        {
             float firstTimePoint = (timedActions[k - 1].T[0] + timedActions[k - 1].T[1]) / 2;
             float secondTimePoint = (timedActions[k].T[0] + timedActions[k].T[1]) / 2;
 
-            if (simulationDeltaT >=  firstTimePoint  && 
-                         simulationDeltaT < secondTimePoint )
+            if (simulationDeltaT >= firstTimePoint &&
+                         simulationDeltaT < secondTimePoint)
             {
-               return k;
-             }
-             else continue;
-    } // for
+                return k;
+            }
+            else continue;
+        } // for
 
-    //Debug.LogError(" Some time intervals of the action plan table are specified incorrectly. " +
-    //   "please corrent them first");
+        //Debug.LogError(" Some time intervals of the action plan table are specified incorrectly. " +
+        //   "please corrent them first");
 
-    return -1;
+        return -1;
 
-}//findCurrentInterval()
+    }//findCurrentInterval()
 
-protected void Simulate() // called from Update()
+    protected void Simulate() // called from Update()
     {
 
 
@@ -975,126 +974,111 @@ protected void Simulate() // called from Update()
 
         // Determine the values of the parameters according to actionPlan
 
-        if (UseActionPlan)
+        if (UseActionPlan)   // Determine the parameters according to the action plan
         {
             DetermineParamValue("_SpeedFactor", out _speedFactor);
-            DetermineParamValue("_ScaleFactor",  out _scaleFactor);
+            DetermineParamValue("_ScaleFactor", out _scaleFactor);
 
 
-            DetermineParamValue("_SeparateRadius",out _separate.Radius);
+            DetermineParamValue("_SeparateRadius", out _separate.Radius);
             DetermineParamValue("_SeparateWeight", out _separate.Weight);
 
-            DetermineParamValue("_AlignmentRadius",  out _alignment.Radius);
-            DetermineParamValue("_AlignmentWeight",  out _alignment.Weight);
+            DetermineParamValue("_AlignmentRadius", out _alignment.Radius);
+            DetermineParamValue("_AlignmentWeight", out _alignment.Weight);
 
-            DetermineParamValue("_CohesionRadius",  out _cohesion.Radius);
+            DetermineParamValue("_CohesionRadius", out _cohesion.Radius);
             DetermineParamValue("_CohesionWeight", out _cohesion.Weight);
 
-            DetermineParamValue("_GroundFlockingWeight",  out _groundWeight.FlockingWeight);
+            DetermineParamValue("_GroundFlockingWeight", out _groundWeight.FlockingWeight);
             DetermineParamValue("_GroundDivergeWeight", out _groundWeight.DivergeWeight);
-            DetermineParamValue("_GroundCirculationWeight",  out _groundWeight.CirculationWeight);
+            DetermineParamValue("_GroundCirculationWeight", out _groundWeight.CirculationWeight);
 
-            DetermineParamValue("_CeilingFlockingWeight",  out _ceilingWeight.FlockingWeight);
-            DetermineParamValue("_CeilingConvergeWeight",  out _ceilingWeight.ConvergeWeight);
+            DetermineParamValue("_CeilingFlockingWeight", out _ceilingWeight.FlockingWeight);
+            DetermineParamValue("_CeilingConvergeWeight", out _ceilingWeight.ConvergeWeight);
             DetermineParamValue("_CeilingCirculationWeight", out _ceilingWeight.CirculationWeight);
 
 
-            DetermineParamValue("_GroundMinHue",  out _groundMinHue);
-            DetermineParamValue("_GroundMaxHue",  out _groundMaxHue);
-            DetermineParamValue("_GroundMinSaturation",  out _groundMinSaturation);
+            DetermineParamValue("_GroundMinHue", out _groundMinHue);
+            DetermineParamValue("_GroundMaxHue", out _groundMaxHue);
+            DetermineParamValue("_GroundMinSaturation", out _groundMinSaturation);
             DetermineParamValue("_GroundMaxSaturation", out _groundMaxSaturation);
-            DetermineParamValue("_GroundMinValue",  out _groundMinValue);
-            DetermineParamValue("_GroundMaxValue",  out _groundMaxValue);
+            DetermineParamValue("_GroundMinValue", out _groundMinValue);
+            DetermineParamValue("_GroundMaxValue", out _groundMaxValue);
 
             DetermineParamValue("_GroundMinAlpha", out _groundMinAlpha);
-            DetermineParamValue("_GroundMaxAlpha",out _groundMaxAlpha);
+            DetermineParamValue("_GroundMaxAlpha", out _groundMaxAlpha);
 
 
 
             DetermineParamValue("_CeilingMinHue", out _ceilingMinHue);
             DetermineParamValue("_CeilingMaxHue", out _ceilingMaxHue);
-            DetermineParamValue("_CeilingMinSaturation",  out _ceilingMinSaturation);
+            DetermineParamValue("_CeilingMinSaturation", out _ceilingMinSaturation);
             DetermineParamValue("_CeilingMaxSaturation", out _ceilingMaxSaturation);
-            DetermineParamValue("_CeilingMinValue",  out _ceilingMinValue);
-            DetermineParamValue("_CeilingMaxValue",  out _ceilingMaxValue);
+            DetermineParamValue("_CeilingMinValue", out _ceilingMinValue);
+            DetermineParamValue("_CeilingMaxValue", out _ceilingMaxValue);
 
-            DetermineParamValue("_CeilingMinAlpha",  out _ceilingMinAlpha);
-            DetermineParamValue("_CeilingMaxAlpha",  out _ceilingMaxAlpha);
-
-            
-            // apply the current values of the parameters to the compute shader
-
-            m_BoidComputeShader.SetFloat("_SpeedFactor", _speedFactor);
-            m_BoidComputeShader.SetFloat("_ScaleFactor", _scaleFactor);
-
-
-            m_BoidComputeShader.SetFloat("_SeparateRadius", _separate.Radius);
-            m_BoidComputeShader.SetFloat("_SeparateWeight", _separate.Weight);
-
-            m_BoidComputeShader.SetFloat("_AlignmentRadius", _alignment.Radius);
-            m_BoidComputeShader.SetFloat("_AlignmentWeight", _alignment.Weight);
-
-            m_BoidComputeShader.SetFloat("_CohesionRadius", _cohesion.Radius);
-            m_BoidComputeShader.SetFloat("_CohesionWeight", _cohesion.Weight);
-
-            m_BoidComputeShader.SetFloat("_GroundFlockingWeight", _groundWeight.FlockingWeight);
-            m_BoidComputeShader.SetFloat("_GroundDivergeWeight", _groundWeight.DivergeWeight);
-            m_BoidComputeShader.SetFloat("_GroundCirculationWeight", _groundWeight.CirculationWeight);
-
-            m_BoidComputeShader.SetFloat("_CeilingFlockingWeight", _ceilingWeight.FlockingWeight);
-            m_BoidComputeShader.SetFloat("_CeilingConvergeWeight", _ceilingWeight.ConvergeWeight);
-            m_BoidComputeShader.SetFloat("_CeilingCirculationWeight", _ceilingWeight.CirculationWeight);
-
-
-
-            m_BoidComputeShader.SetFloat("_GroundMinHue", _groundMinHue);
-            m_BoidComputeShader.SetFloat("_GroundMaxHue", _groundMaxHue);
-            m_BoidComputeShader.SetFloat("_GroundMinSaturation", _groundMinSaturation);
-            m_BoidComputeShader.SetFloat("_GroundMaxSaturation", _groundMaxSaturation);
-            m_BoidComputeShader.SetFloat("_GroundMinValue", _groundMinValue);
-            m_BoidComputeShader.SetFloat("_GroundMaxValue", _groundMaxValue);
-
-            m_BoidComputeShader.SetFloat("_GroundMinAlpha", _groundMinAlpha);
-            m_BoidComputeShader.SetFloat("_GroundMaxAlpha", _groundMaxAlpha);
-
-
-
-            m_BoidComputeShader.SetFloat("_CeilingMinHue", _ceilingMinHue);
-            m_BoidComputeShader.SetFloat("_CeilingMaxHue", _ceilingMaxHue);
-            m_BoidComputeShader.SetFloat("_CeilingMinSaturation", _ceilingMinSaturation);
-            m_BoidComputeShader.SetFloat("_CeilingMaxSaturation", _ceilingMaxSaturation);
-            m_BoidComputeShader.SetFloat("_CeilingMinValue", _ceilingMinValue);
-            m_BoidComputeShader.SetFloat("_CeilingMaxValue", _ceilingMaxValue);
-
-            m_BoidComputeShader.SetFloat("_CeilingMinAlpha", _ceilingMinAlpha);
-            m_BoidComputeShader.SetFloat("_CeilingMaxAlpha", _ceilingMaxAlpha);
-
-
-
-            m_BoidComputeShader.SetFloat("_DeltaTime", Time.deltaTime);
-
-            
-
-            //Debug.Log("DeltaTime [second]=" + Time.deltaTime);
-
-            //https://msdn.microsoft.com/en-us/library/windows/desktop/ff471566(v=vs.85).aspx
-            //https://stackoverflow.com/questions/19860586/compute-shader-with-numthreads-1-1-1-runs-extremly-slow
-
-            // The disptach call invokes threadGroupSize(256) * 1 * 1 Thread Groups in undefined order
-
-           
-           
-            //cf.    m_KernelIdGround = m_BoidComputeShader.FindKernel("SimulateCSGround");
-            m_BoidComputeShader.Dispatch(m_KernelIdGround, m_threadGroupSize, 1, 1);
-           
-            // Each thread group, e.g.  SV_GroupID = (2,0,0) will contain BLOCK_SIZE * 1 * 1 threads according to the
-            // declaration "numthreads(BLOCK_SIZE, 1, 1)]" in the computeshader.
-            // E.G., Thread ID  SV_GroupThreadID = (7,0,0) refers to a particular thread in a given thread group
-            // This Thread ID is also represented by the global index SV_DispatchThreadID
-            // = ( [2,0,0] * (BLOCK_SIZE,1,1] + [7,0,0] ) =(BoidID, 0,0)
+            DetermineParamValue("_CeilingMinAlpha", out _ceilingMinAlpha);
+            DetermineParamValue("_CeilingMaxAlpha", out _ceilingMaxAlpha);
 
 
         } // if (UseActionPlan)
+
+        // apply the current values of the parameters to the compute shader
+
+        m_BoidComputeShader.SetFloat("_SpeedFactor", _speedFactor);
+        m_BoidComputeShader.SetFloat("_ScaleFactor", _scaleFactor);
+
+
+        m_BoidComputeShader.SetFloat("_SeparateRadius", _separate.Radius);
+        m_BoidComputeShader.SetFloat("_SeparateWeight", _separate.Weight);
+
+        m_BoidComputeShader.SetFloat("_AlignmentRadius", _alignment.Radius);
+        m_BoidComputeShader.SetFloat("_AlignmentWeight", _alignment.Weight);
+
+        m_BoidComputeShader.SetFloat("_CohesionRadius", _cohesion.Radius);
+        m_BoidComputeShader.SetFloat("_CohesionWeight", _cohesion.Weight);
+
+        m_BoidComputeShader.SetFloat("_GroundFlockingWeight", _groundWeight.FlockingWeight);
+        m_BoidComputeShader.SetFloat("_GroundDivergeWeight", _groundWeight.DivergeWeight);
+        m_BoidComputeShader.SetFloat("_GroundCirculationWeight", _groundWeight.CirculationWeight);
+
+        m_BoidComputeShader.SetFloat("_CeilingFlockingWeight", _ceilingWeight.FlockingWeight);
+        m_BoidComputeShader.SetFloat("_CeilingConvergeWeight", _ceilingWeight.ConvergeWeight);
+        m_BoidComputeShader.SetFloat("_CeilingCirculationWeight", _ceilingWeight.CirculationWeight);
+
+
+
+        m_BoidComputeShader.SetFloat("_GroundMinHue", _groundMinHue);
+        m_BoidComputeShader.SetFloat("_GroundMaxHue", _groundMaxHue);
+        m_BoidComputeShader.SetFloat("_GroundMinSaturation", _groundMinSaturation);
+        m_BoidComputeShader.SetFloat("_GroundMaxSaturation", _groundMaxSaturation);
+        m_BoidComputeShader.SetFloat("_GroundMinValue", _groundMinValue);
+        m_BoidComputeShader.SetFloat("_GroundMaxValue", _groundMaxValue);
+
+        m_BoidComputeShader.SetFloat("_GroundMinAlpha", _groundMinAlpha);
+        m_BoidComputeShader.SetFloat("_GroundMaxAlpha", _groundMaxAlpha);
+
+
+
+        m_BoidComputeShader.SetFloat("_CeilingMinHue", _ceilingMinHue);
+        m_BoidComputeShader.SetFloat("_CeilingMaxHue", _ceilingMaxHue);
+        m_BoidComputeShader.SetFloat("_CeilingMinSaturation", _ceilingMinSaturation);
+        m_BoidComputeShader.SetFloat("_CeilingMaxSaturation", _ceilingMaxSaturation);
+        m_BoidComputeShader.SetFloat("_CeilingMinValue", _ceilingMinValue);
+        m_BoidComputeShader.SetFloat("_CeilingMaxValue", _ceilingMaxValue);
+
+        m_BoidComputeShader.SetFloat("_CeilingMinAlpha", _ceilingMinAlpha);
+        m_BoidComputeShader.SetFloat("_CeilingMaxAlpha", _ceilingMaxAlpha);
+
+
+
+        m_BoidComputeShader.SetFloat("_DeltaTime", Time.deltaTime);
+
+
+
+        //Debug.Log("DeltaTime [second]=" + Time.deltaTime);
+
+
 
 
         // for debugging
@@ -1115,88 +1099,110 @@ protected void Simulate() // called from Update()
         //                sw.WriteLine("Welcome");
         //            }
 
+
+        //https://msdn.microsoft.com/en-us/library/windows/desktop/ff471566(v=vs.85).aspx
+        //https://stackoverflow.com/questions/19860586/compute-shader-with-numthreads-1-1-1-runs-extremly-slow
+
+        // The disptach call invokes threadGroupSize(256) * 1 * 1 Thread Groups in undefined order
+
+
+        //cf.    m_KernelIdGround = m_BoidComputeShader.FindKernel("SimulateBoids");
+
+        //This functions "runs" the compute shader, 
+        //launching the indicated number of compute shader thread groups
+        //in the X, Y and Z dimensions.  This is executed each frame every time Update() is called.
+
+        m_BoidComputeShader.Dispatch(m_KernelIdGround, m_threadGroupSize, 1, 1);
+
+        // Each thread group, e.g.  SV_GroupID = (2,0,0) will contain BLOCK_SIZE * 1 * 1 threads according to the
+        // declaration "numthreads(BLOCK_SIZE, 1, 1)]" in the computeshader.
+        // E.G., Thread ID  SV_GroupThreadID = (7,0,0) refers to a particular thread in a given thread group
+        // This Thread ID is also represented by the global index SV_DispatchThreadID
+        // = ( [2,0,0] * (BLOCK_SIZE,1,1] + [7,0,0] ) =(BoidID, 0,0)
+
+
         m_BoidBuffer.GetData(m_boidArray); // used in LEDColorGenController
 
-        if (!m_fileWritten)
-        {
-            using (m_writer = File.CreateText(m_path))
-            {
+        //if (!m_fileWritten)
+        //{
+        //    using (m_writer = File.CreateText(m_path))
+        //    {
 
 
-                m_writer.WriteLine("Iteration Num of Simuation:" + totalNumOfSimulations);
-                m_writer.WriteLine("m_SimulationDeltaT of action plan:" + m_SimulationDeltaT);
-                //StreamWriter(string path, bool append);
-                //writer.WriteLine("Test");
-                // m_boids.m_BoidBuffer
-               
-
-                for (int i = 0; i < (int)m_BoidsNum / 100; i++)
-                {
-
-                    //Debug.Log("boidNo = "); Debug.Log(i);
-                    m_writer.WriteLine("boidNo = " + i);
-                    //Debug.Log("boid Wall No = ");
-                    m_writer.WriteLine("boid Wall No = " + m_boidArray[i].WallNo);
-
-                    Debug.Log(m_boidArray[i].WallNo);
-                    Debug.Log("position = = ");
-                    Debug.Log(m_boidArray[i].Position);
-
-                    m_writer.WriteLine("position = = " + m_boidArray[i].Position);
-
-                    //Debug.Log("Boid Radius= ");
-                    //Debug.Log(m_boidArray[i].Position.magnitude);
-
-                    m_writer.WriteLine("Boid Radius= " + m_boidArray[i].Position.magnitude);
-                    m_writer.WriteLine("Boid Frame=\n " + m_boidArray[i].BoidFrame);
-
-                    //Debug.Log("Boid color (HSV) = = ");
-                    //Debug.Log(m_boidArray[i].ColorHSV); // h,s,l ranges from 0 to 1
-                    // m_writer.WriteLine("Boid HSV: (atan2, angDeg, hDeg) = " + m_boidArray[i].ColorHSV);
-
-                    //     //Debug.Log("Boid color (RGB computed in shader) = = ");
-                    //     //Debug.Log(m_boidArray[i].Color);
-
-                    //     if (m_boidArray[i].WallNo == 0)
-                    //     {
-                    //         m_writer.WriteLine("Boid (_groundMinHue,_groundMaxHue,_groundMinValue," +
-                    //             "_groundMaxValue) in Script= " + _groundMinHue + " " +
-                    //             _groundMaxHue + " " + _groundMinValue + " " + _groundMaxValue);
-
-                    //      }
-                    //     else
-                    //     {
-                    //         m_writer.WriteLine("Boid (_ceilingMinHue,_ceilingMaxHue,_ceilingMinValue," +
-                    //            "_ceilingMaxValue) in Script= " + _ceilingMinHue + " " +
-                    //            _ceilingMaxHue + " " + _ceilingMinValue + " " + _ceilingMaxValue);
-
-                    //     }
-
-                    //// }
-
-                    //    m_writer.WriteLine("Boid (_minHue,_maxHue,_minValue,_maxValue) in shader= " + m_boidArray[i].Color);
+        //        m_writer.WriteLine("Iteration Num of Simuation:" + totalNumOfSimulations);
+        //        m_writer.WriteLine("m_SimulationDeltaT of action plan:" + m_SimulationDeltaT);
+        //        //StreamWriter(string path, bool append);
+        //        //writer.WriteLine("Test");
+        //        // m_boids.m_BoidBuffer
 
 
-                    // Color color = Color.HSVToRGB(m_boidArray[i].ColorHSV.x,
-                    //                   m_boidArray[i].ColorHSV.y, m_boidArray[i].ColorHSV.z);
+        //        for (int i = 0; i < (int)m_BoidsNum / 100; i++)
+        //        {
+
+        //            //Debug.Log("boidNo = "); Debug.Log(i);
+        //            m_writer.WriteLine("boidNo = " + i);
+        //            //Debug.Log("boid Wall No = ");
+        //            m_writer.WriteLine("boid Wall No = " + m_boidArray[i].WallNo);
+
+        //            Debug.Log(m_boidArray[i].WallNo);
+        //            Debug.Log("position = = ");
+        //            Debug.Log(m_boidArray[i].Position);
+
+        //            m_writer.WriteLine("position = = " + m_boidArray[i].Position);
+
+        //            //Debug.Log("Boid Radius= ");
+        //            //Debug.Log(m_boidArray[i].Position.magnitude);
+
+        //            m_writer.WriteLine("Boid Radius= " + m_boidArray[i].Position.magnitude);
+        //            m_writer.WriteLine("Boid Frame=\n " + m_boidArray[i].BoidFrame);
+
+        //            //Debug.Log("Boid color (HSV) = = ");
+        //            //Debug.Log(m_boidArray[i].ColorHSV); // h,s,l ranges from 0 to 1
+        //            // m_writer.WriteLine("Boid HSV: (atan2, angDeg, hDeg) = " + m_boidArray[i].ColorHSV);
+
+        //            //     //Debug.Log("Boid color (RGB computed in shader) = = ");
+        //            //     //Debug.Log(m_boidArray[i].Color);
+
+        //            //     if (m_boidArray[i].WallNo == 0)
+        //            //     {
+        //            //         m_writer.WriteLine("Boid (_groundMinHue,_groundMaxHue,_groundMinValue," +
+        //            //             "_groundMaxValue) in Script= " + _groundMinHue + " " +
+        //            //             _groundMaxHue + " " + _groundMinValue + " " + _groundMaxValue);
+
+        //            //      }
+        //            //     else
+        //            //     {
+        //            //         m_writer.WriteLine("Boid (_ceilingMinHue,_ceilingMaxHue,_ceilingMinValue," +
+        //            //            "_ceilingMaxValue) in Script= " + _ceilingMinHue + " " +
+        //            //            _ceilingMaxHue + " " + _ceilingMinValue + " " + _ceilingMaxValue);
+
+        //            //     }
+
+        //            //// }
+
+        //            //    m_writer.WriteLine("Boid (_minHue,_maxHue,_minValue,_maxValue) in shader= " + m_boidArray[i].Color);
 
 
-                    ////Debug.Log("color (RGB by Unity API) = = ");
-                    ////Debug.Log(color);
-
-                    // m_writer.WriteLine("Boid RGB from HSV by Unity API = = " + color);
+        //            // Color color = Color.HSVToRGB(m_boidArray[i].ColorHSV.x,
+        //            //                   m_boidArray[i].ColorHSV.y, m_boidArray[i].ColorHSV.z);
 
 
-                    //    //    //m_boidArray[i].Color = new Vector4(color.r, color.g, color.b, m_boidArray[i].Color.w);
+        //            ////Debug.Log("color (RGB by Unity API) = = ");
+        //            ////Debug.Log(color);
+
+        //            // m_writer.WriteLine("Boid RGB from HSV by Unity API = = " + color);
 
 
-                }//     for (int i = 0; i < (int)m_BoidsNum; i++)
+        //            //    //    //m_boidArray[i].Color = new Vector4(color.r, color.g, color.b, m_boidArray[i].Color.w);
 
-                    
 
-            } // using 
-            m_fileWritten = true;
-        } // if (!m_fileWritten) 
+        //        }//     for (int i = 0; i < (int)m_BoidsNum; i++)
+
+
+
+        //    } // using 
+        //    m_fileWritten = true;
+        //} // if (!m_fileWritten) 
 
         //BoidBuffer.SetData(m_boidArray); // buffer is R or RW
 
@@ -1224,4 +1230,4 @@ protected void Simulate() // called from Update()
     } // Simulate()
 
 
-} // class SimpleBoids
+} // class SimpleBoidsTreeOfVoice

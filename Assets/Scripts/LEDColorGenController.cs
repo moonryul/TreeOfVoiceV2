@@ -46,98 +46,115 @@ public class LEDColorGenController : MonoBehaviour
     // Declare and set array element values.
     //int[,] multiDimensionalArray2 = { { 1, 2, 3 }, { 4, 5, 6 } };
 
-    public Vector2[,,] m_LEDPosArray =
-        {
-                             {
-                                    { new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3)
+    public float m_LEDBoxLength = 2; // 2m
+    public float m_LEDBoxWidth = 2.4f;
+    public float m_LEDGridUnitX = 1.2f / 24;       // 1.2 is divided into 24 units
+    public float m_LEDGridUnitY = 2.0f / 32;      // 2m is divided into 32 units
 
-                                    },     // Left   ( a total of 30) 
-                                    { new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3)
-                                     }     // Right     ( a total of 30) 
-                             },     // box1
+    public int m_NumOfLEDInBox1L = 35;
+    public Vector2[] m_LEDArray1L =
+        {      new Vector2(4,4), new Vector2(8,2), new Vector2(12,3), new Vector2(16,5), new Vector2(15,11),
+               new Vector2(12,8), new Vector2(8,7), new Vector2(4,9), new Vector2(8,12), new Vector2(12,13),
+               new Vector2(19,7), new Vector2(22,5), new Vector2(23,9), new Vector2(18,31), new Vector2(13,30),
+               new Vector2(14,27), new Vector2(18,26), new Vector2(21,25), new Vector2(22,23),new Vector2(19,22),
+               new Vector2(16,20),new Vector2(12,19),new Vector2(10,22),new Vector2(6,20),new Vector2(3,22),
+               new Vector2(18,18),new Vector2(15,17),new Vector2(10,16), new Vector2(7,18),new Vector2(5,16),
+               new Vector2(2,14),new Vector2(6,13),new Vector2(11,14),new Vector2(15,13),new Vector2(20,10)
 
-                             {
-                                    { new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3)
-
-                                    },     // Left   ( a total of 30) 
-                                    { new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3)
-                                     }     // Right     ( a total of 30) 
-                             },     // box2
-                             {
-                                    { new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3)
-
-                                    },     // Left   ( a total of 30) 
-                                    { new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3)
-                                     }     // Right     ( a total of 30) 
-                             },     // box3
-                             {
-                                    { new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3)
-
-                                    },     // Left   ( a total of 30) 
-                                    { new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3)
-                                     }     // Right     ( a total of 30) 
-                             },     // box4
-                             {
-                                    { new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3),
-                                     new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3),  new Vector2(1, 3) , new Vector2(1, 3)
-
-                                    },     // Left   ( a total of 30) 
-                                    { new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3),
-                                      new Vector2(2, 1), new Vector2(2, 2), new Vector2(2, 3),new Vector2(1, 3) , new Vector2(1, 3)
-                                     }     // Right     ( a total of 30) 
-                             }     // box5
-
-          };
+       };
 
 
+
+    public int m_NumOfLEDInBox1R = 27;
+    public Vector2[] m_LEDArray1R =
+        {      new Vector2(21, 30),new Vector2(12, 31), new Vector2(4,29),new Vector2(6, 17),new Vector2(11, 19),
+               new Vector2(15, 17),new Vector2(18, 19), new Vector2(21, 20),new Vector2(20,25),new Vector2(17, 25),
+               new Vector2(13, 26),new Vector2(9, 25),  new Vector2(5,24), new Vector2(8, 13),new Vector2(12, 12),
+               new Vector2(16, 10),new Vector2(20,8),  new Vector2(3,11), new Vector2(4, 8),  new Vector2(6, 6),
+               new Vector2(9, 4),  new Vector2(12, 5), new Vector2(16, 6), new Vector2(20, 4),  new Vector2(15, 2),
+               new Vector2(11,1),  new Vector2(5, 2)
+       };
+
+    public int m_NumOfLEDInBox2L = 30;
+    public Vector2[] m_LEDArray2L =
+        {     new Vector2(4, 4),   new Vector2(8, 2),  new Vector2(11, 3), new Vector2(16, 5),  new Vector2(20, 4),
+              new Vector2(17, 9), new Vector2(14,7), new Vector2(11,9),    new Vector2(7, 7),   new Vector2(3, 9),
+              new Vector2(5, 12), new Vector2(9, 13), new Vector2(12,14),  new Vector2(16, 14), new Vector2(20,15),
+              new Vector2(19, 18),new Vector2(15, 19), new Vector2(13,17),  new Vector2(8, 16), new Vector2(3, 21),
+              new Vector2(10, 31), new Vector2(15, 30), new Vector2(18, 29), new Vector2(19, 27), new Vector2(22,26),
+              new Vector2(17,23),  new Vector2(13, 21), new Vector2(10,23), new Vector2(7, 25),  new Vector2(4, 24)
+       };
+
+    public int m_NumOfLEDInBox2R = 30;
+    public Vector2[] m_LEDArray2R =
+        {     new Vector2(21, 1), new Vector2(18, 2), new Vector2(15, 3), new Vector2(8, 3),  new Vector2(3, 2),
+              new Vector2(1, 5),  new Vector2(4, 7), new Vector2(8, 8), new Vector2(11, 6), new Vector2(15, 8),
+              new Vector2(20, 9), new Vector2(19, 13), new Vector2(16, 12),new Vector2(12, 11),new Vector2(6, 11),
+              new Vector2(14, 3), new Vector2(8, 15), new Vector2(13, 16),new Vector2(18, 17), new Vector2(16, 20),
+              new Vector2(10, 17),new Vector2(5, 18), new Vector2(2, 21), new Vector2(8, 22),  new Vector2(14,23),
+              new Vector2(21, 23),new Vector2(16, 27), new Vector2(11, 27), new Vector2(5, 28), new Vector2(8, 31)
+       };
+
+    public int m_NumOfLEDInBox3L = 28;
+    public Vector2[] m_LEDArray3L =
+        {     new Vector2(6, 27),new Vector2(19, 30),new Vector2(18, 26),new Vector2(14, 25),new Vector2(8, 23),
+              new Vector2(11, 19),new Vector2(19, 20),new Vector2(22, 17),new Vector2(18, 12),new Vector2(15, 12),
+              new Vector2(5, 9), new Vector2(9, 7), new Vector2(14, 6), new Vector2(19,7), new Vector2(21, 3),
+              new Vector2(16, 2), new Vector2(10, 2), new Vector2(3, 1), new Vector2(4, 5), new Vector2(7, 1),
+              new Vector2(3, 11), new Vector2(7, 14), new Vector2(7, 17), new Vector2(3, 20), new Vector2(5, 22),
+              new Vector2(7, 25), new Vector2(3, 26), new Vector2(4, 30)
+       };
+
+
+    public int m_NumOfLEDInBox3R = 27;
+    public Vector2[] m_LEDArray3R =
+        {     new Vector2(21, 2), new Vector2(12, 1), new Vector2(3, 4), new Vector2(4, 7), new Vector2(9, 6),
+              new Vector2(18, 5), new Vector2(20, 8), new Vector2(12,7), new Vector2(5, 9), new Vector2(9, 13),
+              new Vector2(12, 11), new Vector2(18, 10), new Vector2(4, 29), new Vector2(12, 31), new Vector2(21, 28),
+              new Vector2(18, 26), new Vector2(12, 27), new Vector2(6, 25), new Vector2(8, 23), new Vector2(15, 22),
+              new Vector2(22, 27), new Vector2(17, 18), new Vector2(11, 18), new Vector2(6, 17), new Vector2(10, 14),
+              new Vector2(15, 14),new Vector2(21, 13)
+       };
+
+    public int m_NumOfLEDInBox4L = 29;
+    public Vector2[] m_LEDArray4L =
+        {     new Vector2(3, 4), new Vector2(7, 6),new Vector2(11, 7),new Vector2(12, 4), new Vector2(18, 1),
+              new Vector2(19, 3),new Vector2(22, 6),new Vector2(15, 9),new Vector2(5, 12),new Vector2(11, 15),
+              new Vector2(16, 12),new Vector2(21, 22),new Vector2(3, 18),new Vector2(8, 11),new Vector2(15, 12),
+              new Vector2(18, 21),new Vector2(17, 23),new Vector2(11, 23), new Vector2(4, 24),new Vector2(9, 26),
+              new Vector2(14, 25), new Vector2(19, 26),new Vector2(22, 26),new Vector2(16, 29),new Vector2(10,26),
+              new Vector2(4, 29), new Vector2(7, 31), new Vector2(13, 30),new Vector2(20, 31)
+       };
+
+
+    public int m_NumOfLEDInBox4R = 25;
+    public Vector2[] m_LEDArray4R =
+        {     new Vector2(22, 28), new Vector2(17, 31), new Vector2(6, 31),new Vector2(3, 27), new Vector2(8, 25),
+              new Vector2(13, 24), new Vector2(9, 22), new Vector2(3, 19), new Vector2(17, 22), new Vector2(20, 26),
+              new Vector2(20, 17), new Vector2(11, 16), new Vector2(5, 15), new Vector2(10, 15),new Vector2(16, 11),
+              new Vector2(12, 10), new Vector2(6, 11), new Vector2(5, 9), new Vector2(15, 7), new Vector2(20, 7),
+              new Vector2(17, 5), new Vector2(8, 6), new Vector2(4, 4), new Vector2(12, 4), new Vector2(12, 1)
+       };
+
+
+    public int m_NumOfLEDInBox5L = 30;
+    public Vector2[] m_LEDArray5L =
+        {     new Vector2(13, 1), new Vector2(16, 3), new Vector2(19, 5),new Vector2(17, 6),new Vector2(12, 5),
+              new Vector2(6, 5),  new Vector2(6, 7), new Vector2(10, 8), new Vector2(14, 9), new Vector2(18, 10),
+              new Vector2(17, 13), new Vector2(10, 12), new Vector2(4, 12), new Vector2(9, 15), new Vector2(13,15),
+              new Vector2(18, 15), new Vector2(21, 16), new Vector2(21, 18), new Vector2(17, 20), new Vector2(14, 18),
+              new Vector2(10, 14), new Vector2(5, 18), new Vector2(3, 21), new Vector2(7, 15), new Vector2(14, 24),
+              new Vector2(19, 22), new Vector2(6, 27), new Vector2(9, 30), new Vector2(15, 29), new Vector2(20, 28)
+       };
+
+    public int m_NumOfLEDInBox5R = 25;
+    public Vector2[] m_LEDArray5R =
+        {     new Vector2(19, 1), new Vector2(16, 3), new Vector2(9, 3), new Vector2(3, 5), new Vector2(4, 7),
+              new Vector2(9, 8), new Vector2(15, 6), new Vector2(19, 7), new Vector2(21, 9), new Vector2(19, 12),
+              new Vector2(12, 11), new Vector2(5, 13), new Vector2(9, 15), new Vector2(19, 17), new Vector2(12, 19),
+              new Vector2(4, 17), new Vector2(5, 21), new Vector2(12, 22), new Vector2(17, 21), new Vector2(21, 24),
+              new Vector2(13, 26), new Vector2(6, 26), new Vector2(6, 28), new Vector2(12, 30), new Vector2(18, 29)
+       };
 
 
     //public struct BoidData
@@ -169,14 +186,14 @@ public class LEDColorGenController : MonoBehaviour
     public int m_colorSamplingMethod = 0; // 0 = get the nearest neighbor color
                                           // 1 = get the average color of the neighbors
 
-    public int m_totalNumOfLEDs; // computed within script
+    public int m_totalNumOfLEDs = 300; // computed within script
 
 
     public float m_samplingRadius = 5f; //10cm
 
-    public float m_LEDChainHeight = 9; // the height of the LED chain 
+    float m_LEDChainHeight = 9; // the height of the LED chain 
 
-    public float m_Hemisphere = 1;
+    float m_Hemisphere = 1;
 
     // m_HemisphereGroundPosition is the reference position. If it is positive or zero,
     // the hemisphere above this position will be used to sample LED colors
@@ -197,31 +214,30 @@ public class LEDColorGenController : MonoBehaviour
 
     byte[] m_LEDArray;
 
-    public float m_LEDArcPercentage = 0.9f; // the percentage of the LED arc over the hemisphere.
+    float m_LEDArcPercentage = 0.9f; // the percentage of the LED arc over the hemisphere.
 
 
     // 150 LEDs in each chain:
-    public int m_leftChain = 150;
-    public int m_rightChain = 150;
+    public int m_leftChain = 152;
+    public int m_rightChain = 148;
 
     // Arrange 30 LEDs in a single LED panel whose dimensions are as follows:
     // There are 5 panels on each side.
     public int m_NumOfBoxes = 5;
-    public int m_NumOfLEDsInBox = 30;
+    int m_NumOfLEDsInBox = 30;
 
-    public float m_LEDPanelWidth = 1f; // 1m
-    public float m_LEDPanelLength = 10f; // 2m
-    public float m_LEDPassageWidth = 0.4f; // m
+    float m_LEDPanelWidth = 2f; // 2m
+    float m_LEDPanelLength = 10f; // 2m
 
-    public float m_LEDInterval = 0.2f; // 20cm
+    float m_LEDInterval = 0.2f; // 20cm
     //public int m_SphericalMotion = 0;  
 
-    public float m_startingRadiusOfInnerChain = 0.1f; // m
+    float m_startingRadiusOfInnerChain = 0.1f; // m
     // the startingRadiusOfInnerChain should be equal to the CeilingInnerRadius of SimpleBoidsForTreeOfVoice
-    public float m_endingRadiusOfInnerChainThreeTurns = 0.8f;
+    float m_endingRadiusOfInnerChainThreeTurns = 0.8f;
 
-    public float m_startingRadiusOfOuterChain = 1.4f; // m
-    public float m_endingRadiusOfOuterChainThreeTurns = 2f;
+    float m_startingRadiusOfOuterChain = 1.4f; // m
+    float m_endingRadiusOfOuterChainThreeTurns = 2f;
 
     // public float m_MaxDomainRadius = 10; // 10
     //public float m_MinDomainRadius = 0.7f; // 0.7
@@ -304,7 +320,7 @@ public class LEDColorGenController : MonoBehaviour
         //                  + m_thirdChain + m_fourthChain;
 
         m_totalNumOfLEDs = m_leftChain + m_rightChain;
-        
+
         m_startAngleOfChain1 = m_beginFromInChain1 * M_PI / 180; // degree
         m_startAngleOfChain2 = m_beginFromInChain2 * M_PI / 180; // degree
 
@@ -435,8 +451,8 @@ public class LEDColorGenController : MonoBehaviour
         // create a m_BoidLEDArray to link to m_BoidLEDBuffer:
         //SetBoidLEDArray(m_BoidLEDArray); // THe Boid LEDs array is defined without their colors
 
-        //SetSewhaBoidLEDArray(m_BoidLEDArray); // THe Boid LEDs array is defined without their colors
-        SetSewhaBoidLEDArrayTest(m_BoidLEDArray); // THe Boid LEDs array is defined without their colors
+        SetSewhaBoidLEDArray(m_BoidLEDArray); // THe Boid LEDs array is defined without their colors
+        //SetSewhaBoidLEDArrayTest(m_BoidLEDArray); // THe Boid LEDs array is defined without their colors
         m_BoidLEDBuffer.SetData(m_BoidLEDArray); // buffer is R or RW
 
         m_BoidLEDComputeShader.SetBuffer(m_kernelIDLED, "_BoidLEDBuffer", m_BoidLEDBuffer);
@@ -735,7 +751,160 @@ public class LEDColorGenController : MonoBehaviour
     } // SetBoidLEDArray()
 
 
-    protected void SetSewhaBoidLEDArrayRandom(BoidLEDData[] m_BoidLEDArray)
+    //protected void SetSewhaBoidLEDArrayRandom(BoidLEDData[] m_BoidLEDArray)
+    //{
+
+    //    // select an left rectangle of 1 m x 2* m_MaxDomainRadius on the equator plane of the sphere
+    //    // and randomly choose 150 positions on the rectangle. Find the points on the upper hemisphere
+    //    // whose projection on the equator plane are the randomly chosen points. 
+    //    // Insert these points into m_BoidLEDArray from which we will pick up colors for the LEDs.
+
+    //    // 
+    //    float R = m_boids.m_MaxDomainRadius;
+    //    float LEDEquatorRadius = R * m_LEDArcPercentage;
+    //    float holeRadius = m_boids.m_CeilingInnerRadius;
+
+    //    //m_totalNumOfLEDs = m_leftChain;     // the total number of leds =  150 for test
+    //    m_totalNumOfLEDs = m_leftChain + m_rightChain;     // the total number of leds =  150 for test
+
+    //    Debug.Log("Create LED boids :");
+
+    //    for (int i = 0; i < m_totalNumOfLEDs; i++)
+    //    {
+    //        // choose (x,z) position randomly from the equator plane of the sphere
+
+    //        float x, z, r;       // z = the length direction of the LED panel, x= the width direction
+    //        // x < 0: the left side; x > 0: the right side
+
+    //        //  public float m_LEDPanelWidth = 1f; // 1m
+    //        //  public float m_LEDPanelLength = 10f; // 2m
+    //        //  public float m_LEDPassageWidth = 0.4f; // m
+
+    //        // Check if the LED boid  is on the left LED panel or the right
+
+    //        if (i < m_leftChain)  // The half of the LED boids are on the left LED panel and the rest on the right LED panel
+    //        {
+    //            do
+    //            {
+    //                x = Random.Range(-m_LEDPassageWidth / 2, -(m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
+    //                z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
+    //                r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
+    //            }
+    //            while (r < holeRadius);  // check if the point is within the hemisphere hole area where no points are found
+    //        }
+
+    //        else  // the LED boid is on the right LED panel
+    //        {
+    //            do
+    //            {
+    //                x = Random.Range(m_LEDPassageWidth / 2, (m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
+    //                z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
+    //                r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
+    //            }
+    //            while (r < holeRadius);  // check if the point is within the hemisphere hole area where no points are found
+    //        }
+
+    //        // Create the LED boid on the hemisphere; The LED boid will get the color from the nearest boid or the 
+    //        // average color of its neighbors
+
+    //        float h = Mathf.Sqrt(R * R - r * r); // the height of the hemisphere point from the equator plane
+
+    //        //float theta = Mathf.Atan(h / R); // the deviation from the y axis
+
+    //        m_BoidLEDArray[i].Position = new Vector3(x, h, z);
+
+    //        // Set the rotation frame of LED boid at m_boidLEDArray[i].Position:
+
+    //        // Each boid is located on on the tangent of the sphere moving foward on the tagent plane;
+    //        // The boid frame follows the Unity convention where the x is to the right on the tangent plane,
+    //        //  the z is forward direction on the tangent plane, and the y axis is the up direction, which is
+    //        // perpendicular to the tangent plane;
+    //        // The up (y, back side) direction of the boid is negative to the  normal of the 2D circle mesh
+    //        // of the boid; The normal direction points to the center of the sphere; The light is within
+    //        // the sphere.
+
+    //        // The "forward" in OpenGL is "-z".In Unity forward is "+z".Most hand - rules you might know from math are inverted in Unity
+    //        //    .For example the cross product usually uses the right hand rule c = a x b where a is thumb, b is index finger and c is the middle
+    //        //    finger.In Unity you would use the same logic, but with the left hand.
+
+    //        //    However this does not affect the projection matrix as Unity uses the OpenGL convention for the projection matrix.
+    //        //    The required z - flipping is done by the cameras worldToCameraMatrix.
+    //        //    So the projection matrix should look the same as in OpenGL.
+
+    //        // Compute the Unity affine frame for each boid on the sphere (uses the left hand rule).
+    //        // The direction of the Position is used as the up direction [Y axis) (points to the dorsal part)
+    //        // of the boid. The Z axis is set to the perpendicular to the plane formed by the Y axis
+    //        // and the world UP vector  Vector3.up(0,1,0), and points the local forward of the boid. 
+    //        // The z axis is the head (moving) direction  of the boid. The X axis is the local right 
+    //        // of the 2D circle boid.
+
+
+    //        Vector3 position = m_BoidLEDArray[i].Position;
+
+    //        // Create the frame for each LED boid; but for what are they used?
+
+
+    //        Vector3 YAxis = position.normalized; // The direction vector of the boid
+    //                                             // is considered as the up vector of the boid frame.
+
+    //        Vector3 XAxis = Vector3.Cross(YAxis, Vector3.up); // XAxis = perpendicular to the
+    //        // plane formed by the boid up and the global up. It is the rightward basis
+    //        // left hand rule
+    //        // 
+
+    //        Vector3 ZAxis = Vector3.Cross(XAxis, YAxis);  // the forward direction 
+
+
+    //        Matrix4x4 boidFrame = new Matrix4x4();
+    //        // XAxis, YAxis, ZAxis become the first, second, third columns of the boidFrame matrix
+    //        boidFrame.SetColumn(0, new Vector4(XAxis[0], XAxis[1], XAxis[2], 0.0f));
+    //        boidFrame.SetColumn(1, new Vector4(YAxis[0], YAxis[1], YAxis[2], 0.0f));
+    //        boidFrame.SetColumn(2, new Vector4(ZAxis[0], ZAxis[1], ZAxis[2], 0.0f));
+    //        boidFrame.SetColumn(3, new Vector4(position[0], position[1], position[2], 1.0f));
+
+    //        m_BoidLEDArray[i].BoidFrame = boidFrame; // affine frame
+
+
+
+    //        m_BoidLEDArray[i].HeadDir = ZAxis;
+
+
+    //        float initRadiusX = Random.Range(m_boids.MinBoidRadius, m_boids.MaxBoidRadius); // 0.1 ~ 0.3
+    //        float initRadiusY = Random.Range(m_boids.MinBoidRadius, m_boids.MaxBoidRadius);
+    //        float initRadiusZ = Random.Range(m_boids.MinBoidRadius, m_boids.MaxBoidRadius);
+
+
+    //        // m_BoidLEDArray[i].Scale = new Vector3(initRadiusX, initRadiusY, initRadiusZ);
+    //        m_BoidLEDArray[i].Scale = new Vector3(initRadiusX, initRadiusX, initRadiusX);
+
+    //        //m_writer.WriteLine(  i+ "th LED POS:" + m_BoidLEDArray[i].Position);
+    //        //m_writer.WriteLine(i + "th LED frame:\n" + m_BoidLEDArray[i].BoidFrame);
+
+    //    } //    for (int i = 0; i < m_totalNumOfLEDs; i++)
+
+    //    // m_writer.Close();
+
+    //} // SetSewhaBoidLEDArrayRandom()
+
+
+    int GetNumOfLEDInBox(int i, int j)
+    {
+        if (i == 0 && j == 0) return m_NumOfLEDInBox1L;
+        else if (i == 0 && j == 1) return m_NumOfLEDInBox1R;
+        else if (i == 1 && j == 0) return m_NumOfLEDInBox2L;
+        else if (i == 1 && j == 1) return m_NumOfLEDInBox2R;
+        else if (i == 2 && j == 0) return m_NumOfLEDInBox3L;
+        else if (i == 2 && j == 1) return m_NumOfLEDInBox3R;
+        else if (i == 3 && j == 0) return m_NumOfLEDInBox4L;
+        else if (i == 3 && j == 1) return m_NumOfLEDInBox4R;
+        else if (i == 4 && j == 0) return m_NumOfLEDInBox5L;
+        else if (i == 4 && j == 1) return m_NumOfLEDInBox5R;
+        else return 30;
+
+    }// GetNumOfLEDInBox
+
+
+    void SetSewhaBoidLEDArray(BoidLEDData[] m_BoidLEDArray)
     {
 
         // select an left rectangle of 1 m x 2* m_MaxDomainRadius on the equator plane of the sphere
@@ -745,145 +914,8 @@ public class LEDColorGenController : MonoBehaviour
 
         // 
         float R = m_boids.m_MaxDomainRadius;
-        float LEDEquatorRadius = R * m_LEDArcPercentage;
-        float holeRadius = m_boids.m_HemisphereHoleRadius;
-
-        //m_totalNumOfLEDs = m_leftChain;     // the total number of leds =  150 for test
-        m_totalNumOfLEDs = m_leftChain + m_rightChain;     // the total number of leds =  150 for test
-
-        Debug.Log("Create LED boids :");
-
-        for (int i = 0; i < m_totalNumOfLEDs; i++)
-        {
-            // choose (x,z) position randomly from the equator plane of the sphere
-
-            float x, z, r;       // z = the length direction of the LED panel, x= the width direction
-            // x < 0: the left side; x > 0: the right side
-
-            //  public float m_LEDPanelWidth = 1f; // 1m
-            //  public float m_LEDPanelLength = 10f; // 2m
-            //  public float m_LEDPassageWidth = 0.4f; // m
-
-            // Check if the LED boid  is on the left LED panel or the right
-
-            if (i < m_leftChain)  // The half of the LED boids are on the left LED panel and the rest on the right LED panel
-            {
-                do
-                {
-                    x = Random.Range(-m_LEDPassageWidth / 2, -(m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
-                    z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
-                    r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
-                }
-                while (r < holeRadius);  // check if the point is within the hemisphere hole area where no points are found
-            }
-
-            else  // the LED boid is on the right LED panel
-            {
-                do
-                {
-                    x = Random.Range(m_LEDPassageWidth / 2, (m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
-                    z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
-                    r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
-                }
-                while (r < holeRadius);  // check if the point is within the hemisphere hole area where no points are found
-            }
-
-            // Create the LED boid on the hemisphere; The LED boid will get the color from the nearest boid or the 
-            // average color of its neighbors
-
-            float h = Mathf.Sqrt(R * R - r * r); // the height of the hemisphere point from the equator plane
-
-            //float theta = Mathf.Atan(h / R); // the deviation from the y axis
-
-            m_BoidLEDArray[i].Position = new Vector3(x, h, z);
-
-            // Set the rotation frame of LED boid at m_boidLEDArray[i].Position:
-
-            // Each boid is located on on the tangent of the sphere moving foward on the tagent plane;
-            // The boid frame follows the Unity convention where the x is to the right on the tangent plane,
-            //  the z is forward direction on the tangent plane, and the y axis is the up direction, which is
-            // perpendicular to the tangent plane;
-            // The up (y, back side) direction of the boid is negative to the  normal of the 2D circle mesh
-            // of the boid; The normal direction points to the center of the sphere; The light is within
-            // the sphere.
-
-            // The "forward" in OpenGL is "-z".In Unity forward is "+z".Most hand - rules you might know from math are inverted in Unity
-            //    .For example the cross product usually uses the right hand rule c = a x b where a is thumb, b is index finger and c is the middle
-            //    finger.In Unity you would use the same logic, but with the left hand.
-
-            //    However this does not affect the projection matrix as Unity uses the OpenGL convention for the projection matrix.
-            //    The required z - flipping is done by the cameras worldToCameraMatrix.
-            //    So the projection matrix should look the same as in OpenGL.
-
-            // Compute the Unity affine frame for each boid on the sphere (uses the left hand rule).
-            // The direction of the Position is used as the up direction [Y axis) (points to the dorsal part)
-            // of the boid. The Z axis is set to the perpendicular to the plane formed by the Y axis
-            // and the world UP vector  Vector3.up(0,1,0), and points the local forward of the boid. 
-            // The z axis is the head (moving) direction  of the boid. The X axis is the local right 
-            // of the 2D circle boid.
-
-
-            Vector3 position = m_BoidLEDArray[i].Position;
-
-            // Create the frame for each LED boid; but for what are they used?
-
-
-            Vector3 YAxis = position.normalized; // The direction vector of the boid
-                                                 // is considered as the up vector of the boid frame.
-
-            Vector3 XAxis = Vector3.Cross(YAxis, Vector3.up); // XAxis = perpendicular to the
-            // plane formed by the boid up and the global up. It is the rightward basis
-            // left hand rule
-            // 
-
-            Vector3 ZAxis = Vector3.Cross(XAxis, YAxis);  // the forward direction 
-
-
-            Matrix4x4 boidFrame = new Matrix4x4();
-            // XAxis, YAxis, ZAxis become the first, second, third columns of the boidFrame matrix
-            boidFrame.SetColumn(0, new Vector4(XAxis[0], XAxis[1], XAxis[2], 0.0f));
-            boidFrame.SetColumn(1, new Vector4(YAxis[0], YAxis[1], YAxis[2], 0.0f));
-            boidFrame.SetColumn(2, new Vector4(ZAxis[0], ZAxis[1], ZAxis[2], 0.0f));
-            boidFrame.SetColumn(3, new Vector4(position[0], position[1], position[2], 1.0f));
-
-            m_BoidLEDArray[i].BoidFrame = boidFrame; // affine frame
-
-
-
-            m_BoidLEDArray[i].HeadDir = ZAxis;
-
-
-            float initRadiusX = Random.Range(m_boids.MinBoidRadius, m_boids.MaxBoidRadius); // 0.1 ~ 0.3
-            float initRadiusY = Random.Range(m_boids.MinBoidRadius, m_boids.MaxBoidRadius);
-            float initRadiusZ = Random.Range(m_boids.MinBoidRadius, m_boids.MaxBoidRadius);
-
-
-            // m_BoidLEDArray[i].Scale = new Vector3(initRadiusX, initRadiusY, initRadiusZ);
-            m_BoidLEDArray[i].Scale = new Vector3(initRadiusX, initRadiusX, initRadiusX);
-
-            //m_writer.WriteLine(  i+ "th LED POS:" + m_BoidLEDArray[i].Position);
-            //m_writer.WriteLine(i + "th LED frame:\n" + m_BoidLEDArray[i].BoidFrame);
-
-        } //    for (int i = 0; i < m_totalNumOfLEDs; i++)
-
-        // m_writer.Close();
-
-    } // SetSewhaBoidLEDArrayRandom()
-
-
-
-    protected void SetSewhaBoidLEDArray(BoidLEDData[] m_BoidLEDArray)
-    {
-
-        // select an left rectangle of 1 m x 2* m_MaxDomainRadius on the equator plane of the sphere
-        // and randomly choose 150 positions on the rectangle. Find the points on the upper hemisphere
-        // whose projection on the equator plane are the randomly chosen points. 
-        // Insert these points into m_BoidLEDArray from which we will pick up colors for the LEDs.
-
-        // 
-        float R = m_boids.m_MaxDomainRadius;
-        float LEDEquatorRadius = R * m_LEDArcPercentage;
-        float holeRadius = m_boids.m_HemisphereHoleRadius;
+        //float LEDEquatorRadius = R * m_LEDArcPercentage;
+        //float holeRadius = m_boids.m_CeilingInnerRadius;
 
         //m_totalNumOfLEDs = m_leftChain;     // the total number of leds =  150 for test
         m_totalNumOfLEDs = m_leftChain + m_rightChain;     // the total number of leds =  150 for test
@@ -892,7 +924,7 @@ public class LEDColorGenController : MonoBehaviour
 
         for (int i = 0; i < m_NumOfBoxes; i++)     // n_NumOfBoxes =5
             for (int j = 0; j < 1; j++)    // left and right 
-                for (int k = 0; k < m_NumOfLEDsInBox; k++) // m_NumOfLEDsInBox =30
+                for (int k = 0; k < GetNumOfLEDInBox(i, j); k++) // m_NumOfLEDsInBox =30
                 {   // m_BoidLEDArray looks like:
 
                     // box1 (i=0): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
@@ -901,12 +933,90 @@ public class LEDColorGenController : MonoBehaviour
                     // box4 (i=3): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
                     // box5 (i=4): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
 
-                    float x = m_LEDPosArray[i, j, k].x;
-                    float z = m_LEDPosArray[i, j, k].y;
+                    //cf. tuple https://csharp.christiannagel.com/2016/10/11/tuples/
+
+                    float x, z;
+                    if (i == 0 && j == 0)
+                    {
+                        x = m_LEDArray1L[k].x;
+                        z = m_LEDArray1L[k].y;
+                    }
+                    else if (i == 0 && j == 1)
+                    {
+                        x = m_LEDArray1R[k].x;
+                        z = m_LEDArray1R[k].y;
+                    }
+                    else if (i == 1 && j == 0)
+                    {
+                        x = m_LEDArray2L[k].x;
+                        z = m_LEDArray2L[k].y;
+                    }
+                    else if (i == 1 && j == 1)
+                    {
+                        x = m_LEDArray2R[k].x;
+                        z = m_LEDArray2R[k].y;
+                    }
+                    else if (i == 2 && j == 0)
+                    {
+                        x = m_LEDArray3L[k].x;
+                        z = m_LEDArray3L[k].y;
+                    }
+                    else if (i == 2 && j == 1)
+                    {
+                        x = m_LEDArray3R[k].x;
+                        z = m_LEDArray3R[k].y;
+                    }
+                    else if (i == 3 && j == 0)
+                    {
+                        x = m_LEDArray4L[k].x;
+                        z = m_LEDArray4L[k].y;
+                    }
+
+                    else if (i == 3 && j == 1)
+                    {
+                        x = m_LEDArray4R[k].x;
+                        z = m_LEDArray4R[k].y;
+                    }
+
+                    else if (i == 4 && j == 0)
+                    {
+                        x = m_LEDArray5L[k].x;
+                        z = m_LEDArray5L[k].y;
+                    }
+
+                    else if (i == 4 && j == 1)
+                    {
+                        x = m_LEDArray5R[k].x;
+                        z = m_LEDArray5R[k].y;
+                    }
+
+                    else
+                    {
+                        x = 0;
+                        z = 0;
+                    }
+
+
 
 
                     // Create the LED boid on the hemisphere; The LED boid will get the color from the nearest boid or the 
                     // average color of its neighbors
+
+                    // convert x and z to SI units:
+                    // cf: float m_LEDBoxLength = 2; // 2m
+                    //float m_LEDGridUnitX = 1.2f / 24;       // 1.2 is divided into 24 units
+                    //float m_LEDGridUnitY = 2.0f / 32;      // 2m is divided into 32 units
+                    x *= m_LEDGridUnitX;
+                    z = i * m_LEDBoxLength + z * m_LEDGridUnitY;
+
+                    // change the (x,z) coordinates which are relative to the left-bottom of the LED array
+                    // to those relative to the center of the LED array
+                    float x_center = m_LEDBoxWidth / 2;
+                    float z_center = m_LEDBoxLength / 2;
+
+                    x -= x_center;
+                    z -= z_center;
+
                     float r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
 
                     float h = Mathf.Sqrt(R * R - r * r); // the height of the hemisphere point from the equator plane
@@ -941,7 +1051,7 @@ public class LEDColorGenController : MonoBehaviour
                     // of the 2D circle boid.
 
 
-                    Vector3 position = m_BoidLEDArray[i].Position;
+                    //Vector3 position = m_BoidLEDArray[i * (2 * m_NumOfLEDsInBox) + j * m_NumOfLEDsInBox + k].Position;
 
                     // Create the frame for each LED boid; but for what are they used?  Not used in SewahSampleLEDColors.compute
 
@@ -982,74 +1092,73 @@ public class LEDColorGenController : MonoBehaviour
                     //m_writer.WriteLine(  i+ "th LED POS:" + m_BoidLEDArray[i].Position);
                     //m_writer.WriteLine(i + "th LED frame:\n" + m_BoidLEDArray[i].BoidFrame);
 
-                } //    for (int i = 0; i < m_totalNumOfLEDs; i++)
+                } //    for (int k = 0; k < GetNumOfLEDInBox(i, j); k++) // m_NumOfLEDsInBox =30
 
-        // m_writer.Close();
 
     } // SetSewhaBoidLEDArray()
 
-    protected void SetSewhaBoidLEDArrayTest(BoidLEDData[] m_BoidLEDArray)
-    {
+    //void SetSewhaBoidLEDArrayTest(BoidLEDData[] m_BoidLEDArray)
+    //{
 
-        // select an left rectangle of 1 m x 2* m_MaxDomainRadius on the equator plane of the sphere
-        // and randomly choose 150 positions on the rectangle. Find the points on the upper hemisphere
-        // whose projection on the equator plane are the randomly chosen points. 
-        // Insert these points into m_BoidLEDArray from which we will pick up colors for the LEDs.
+    //    // select an left rectangle of 1 m x 2* m_MaxDomainRadius on the equator plane of the sphere
+    //    // and randomly choose 150 positions on the rectangle. Find the points on the upper hemisphere
+    //    // whose projection on the equator plane are the randomly chosen points. 
+    //    // Insert these points into m_BoidLEDArray from which we will pick up colors for the LEDs.
 
-        // 
-        float R = m_boids.m_MaxDomainRadius;
-        float LEDEquatorRadius = R * m_LEDArcPercentage;
-        float holeRadius = m_boids.m_HemisphereHoleRadius;
+    //    // 
+    //    float R = m_boids.m_MaxDomainRadius;
+    //    float LEDEquatorRadius = R * m_LEDArcPercentage;
+    //    float holeRadius = m_boids.m_CeilingInnerRadius;
 
-        //m_totalNumOfLEDs = m_leftChain;     // the total number of leds =  150 for test
-        m_totalNumOfLEDs = m_leftChain + m_rightChain;     // the total number of leds =  150 for test
+    //    //m_totalNumOfLEDs = m_leftChain;     // the total number of leds =  150 for test
+    //    m_totalNumOfLEDs = m_leftChain + m_rightChain;     // the total number of leds =  150 for test
 
-        Debug.Log("Create LED boids :");
+    //    Debug.Log("Create LED boids :");
 
-        for (int i = 0; i < m_NumOfBoxes; i++)     // n_NumOfBoxes =5
-            for (int j = 0; j < 1; j++)    // left and right 
-                for (int k = 0; k < m_NumOfLEDsInBox; k++) // m_NumOfLEDsInBox =30
-                {   // m_BoidLEDArray looks like:
+    //    for (int i = 0; i < m_NumOfBoxes; i++)     // n_NumOfBoxes =5
+    //        for (int j = 0; j < 1; j++)    // left and right 
+    //            for (int k = 0; k < m_NumOfLEDsInBox; k++) // m_NumOfLEDsInBox =30
+    //            {   // m_BoidLEDArray looks like:
 
-                    // box1 (i=0): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
-                    // box2 (i=1): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
-                    // box3 (i=2): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
-                    // box4 (i=3): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
-                    // box5 (i=4): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
+    //                // box1 (i=0): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
+    //                // box2 (i=1): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
+    //                // box3 (i=2): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
+    //                // box4 (i=3): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
+    //                // box5 (i=4): left (j=0): 1,2....,30; right (j=1): 1,2,....,30;
 
-                    float x, z, r, h;
+    //                float x, z, r, h;
 
-                    if (j == 0)  // The half of the LED boids are on the left LED panel and the rest on the right LED panel
-                    {
+    //                if (j == 0)  // The half of the LED boids are on the left LED panel and the rest on the right LED panel
+    //                {
 
-                        x = Random.Range(-m_LEDPassageWidth / 2, -(m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
-                        z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
-                        r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
+    //                    x = Random.Range(-m_LEDPassageWidth / 2, -(m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
+    //                    z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
+    //                    r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
 
-                    }
+    //                }
 
-                    else  // the LED boid is on the right LED panel
-                    {
+    //                else  // the LED boid is on the right LED panel
+    //                {
 
-                        x = Random.Range(m_LEDPassageWidth / 2, (m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
-                        z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
-                        r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
+    //                    x = Random.Range(m_LEDPassageWidth / 2, (m_LEDPanelWidth + m_LEDPassageWidth / 2)); // max inclusive
+    //                    z = Random.Range(-LEDEquatorRadius, LEDEquatorRadius); // the length direction; max inclusive
+    //                    r = Mathf.Sqrt(x * x + z * z); // the radius of the point from the origin
 
-                    }
+    //                }
 
 
 
-                    h = Mathf.Sqrt(R * R - r * r); // the height of the hemisphere point from the equator plane
+    //                h = Mathf.Sqrt(R * R - r * r); // the height of the hemisphere point from the equator plane
 
-                    //float theta = Mathf.Atan(h / R); // the deviation from the y axis
+    //                //float theta = Mathf.Atan(h / R); // the deviation from the y axis
 
-                    m_BoidLEDArray[i * (2 * m_NumOfLEDsInBox) + j * m_NumOfLEDsInBox + k].Position = new Vector3(x, h, z);
+    //                m_BoidLEDArray[i * (2 * m_NumOfLEDsInBox) + j * m_NumOfLEDsInBox + k].Position = new Vector3(x, h, z);
 
-                } // for (int i = 0; i < m_NumOfBoxes; i++)     // n_NumOfBoxes =5
-                  //     for (int j = 0; j < 1; j++)    // left and right 
-                  //       for (int k = 0; k < m_NumOfLEDsInBox; k++) // m_NumOfLEDsInBox =30
-        
-    } // SetSewhaBoidLEDArrayTest()
+    //            } // for (int i = 0; i < m_NumOfBoxes; i++)     // n_NumOfBoxes =5
+    //              //     for (int j = 0; j < 1; j++)    // left and right 
+    //              //       for (int k = 0; k < m_NumOfLEDsInBox; k++) // m_NumOfLEDsInBox =30
+
+    //} // SetSewhaBoidLEDArrayTest()
 
 
     // Get th_i for the ith LED along the sprial curve r = a * exp(b*th_i)
@@ -1092,9 +1201,9 @@ public class LEDColorGenController : MonoBehaviour
         // float currTime = Time.time; //  seconds
 
 
-        m_boids.DetermineParamValue("_Hemisphere", out m_Hemisphere);
+        //m_boids.DetermineParamValue("_Hemisphere", out m_Hemisphere);
 
-        m_BoidLEDComputeShader.SetFloat("_Hemisphere", m_Hemisphere);
+        //m_BoidLEDComputeShader.SetFloat("_Hemisphere", m_Hemisphere);
 
         m_BoidLEDComputeShader.SetInt("_ColorSamplingMethod", m_colorSamplingMethod);
 
@@ -1178,9 +1287,9 @@ public class LEDColorGenController : MonoBehaviour
         for (int i = 0; i < m_totalNumOfLEDs; i++)
         {
 
-            m_LEDArray[i * 3] = (byte)(255 * m_BoidLEDArray[i].Color[0]); // Vector4 Color
-            m_LEDArray[i * 3 + 1] = (byte)(255 * m_BoidLEDArray[i].Color[1]);
-            m_LEDArray[i * 3 + 2] = (byte)(255 * m_BoidLEDArray[i].Color[2]);
+            m_LEDArray[i * 3] = (byte)(254 * m_BoidLEDArray[i].Color[0]); // Vector4 Color
+            m_LEDArray[i * 3 + 1] = (byte)(254 * m_BoidLEDArray[i].Color[1]);
+            m_LEDArray[i * 3 + 2] = (byte)(254 * m_BoidLEDArray[i].Color[2]);        // 255 is used as the start byte.
 
 
             //Debug.Log(i + "th LED Position" + m_BoidLEDArray[i].Position.ToString("F4"));
