@@ -318,7 +318,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // To send  a sequence of bytes to a slave arduiono via SPI, the sequence is marked by the start and the end
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
- // SPI.transfer( m_startByte); The slaves do not receive the startByte
+  SPI.transfer( m_startByte); 
   SPI.transfer( &totalReceiveBuffer[0], group1ByteSize);
 
 
