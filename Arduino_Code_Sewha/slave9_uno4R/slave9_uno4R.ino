@@ -86,15 +86,15 @@ void loop() {
     for (int i = 0; i < NUMPIXELS1; i++)
     {
       strip.setPixelColor(i, m_buffer[ i * 3 + 0], m_buffer[i * 3 + 1], m_buffer[i * 3 + 2] );
-//      Serial.print(i);
-//      Serial.print("th  ");
-//      Serial.print("  r:  ");
-//      Serial.print(m_buffer[i * 3 + 0]);
-//      Serial.print("  g:  ");
-//
-//      Serial.print(m_buffer[i * 3 + 1]);
-//      Serial.print("  b:  ");
-//      Serial.println(m_buffer[i * 3 + 2]);
+      Serial.print(i);
+      Serial.print("th  ");
+      Serial.print("  r:  ");
+      Serial.print(m_buffer[i * 3 + 0]);
+      Serial.print("  g:  ");
+
+      Serial.print(m_buffer[i * 3 + 1]);
+      Serial.print("  b:  ");
+      Serial.println(m_buffer[i * 3 + 2]);
     }
 
     strip.show(); // show command has been  recieved
