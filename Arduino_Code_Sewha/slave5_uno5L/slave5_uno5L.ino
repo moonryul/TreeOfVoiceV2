@@ -4,7 +4,7 @@
 #include "SoftwareSerial.h"
 #include "Adafruit_Pixie.h"
 
-#define NUMPIXELS1 30 // Number of Pixies in the strip
+#define NUMPIXELS1 35 // Number of Pixies in the strip
 #define PIXIEPIN  5 // Pin number for SoftwareSerial output to the LED chain
 
 SoftwareSerial pixieSerial(-1, PIXIEPIN);

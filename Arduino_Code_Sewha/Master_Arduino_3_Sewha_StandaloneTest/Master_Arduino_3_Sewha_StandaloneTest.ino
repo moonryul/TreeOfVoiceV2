@@ -30,7 +30,7 @@
 //int ss5 = 46;
 
 
-//int ssLeft = 37; // connect master pin 37 the second mega master  pin 53
+int ssLeft = 37; // connect master pin 37 the second mega master  pin 53
 
 int ss1 = 49; // connect master pin 49 to the first uno slave pin 10
 int ss2 = 48; // connect master pin 48 to the second uno   slave pin 10
@@ -46,52 +46,50 @@ int ss5 = 45; // connect master pin 47 to the fifth uno  slave pin 10
 
 
 
+
 // A total num of LED = 186; each slave processes 40 LEDs
 //const int NumPixels1 = 40;
 //const int NumPixels2 = 44;
 //const int NumPixels3 = 50;
 //const int NumPixels4 = 52;
 
+
 const int NumPixels1L = 30; // The left of the 1st box
-//const int NumPixels1R = 27;
+const int NumPixels1R = 25;
 
 const int NumPixles2L = 29;
-//const int NumPixels2R = 30;
+const int NumPixels2R = 25;
 
 const int NumPixels3L = 28;
 const int NumPixels3R = 27;
 
 const int NumPixels4L = 30;
-//const int NumPixels4R = 25;
+const int NumPixels4R = 40;
 
-const int NumPixels5L = 25;
-//const int NumPixels5R = 25;
-
-
-const int ByteSize1L = NumPixels1L * 3;
-const int ByteSize2L = NumPixles2L * 3;
-const int ByteSize3L = NumPixels3L * 3;
-const int ByteSize4L = NumPixels4L * 3;
-const int ByteSize5L = NumPixels5L * 3;
+const int NumPixels5L = 35;
+const int NumPixels5R = 27;
 
 
 
-int NumPixelsLeftGroups =  NumPixels1L +  NumPixels2L +  NumPixels3L +  NumPixels4L +  NumPixels5L;
+const int ByteSize1R = NumPixels1R * 3;
+const int ByteSize2R = NumPixles2R * 3;
+const int ByteSize3R = NumPixels3R * 3;
+const int ByteSize4R = NumPixels4R * 3;
+const int ByteSize5R = NumPixels5R * 3;
 
-//const int ByteSizeLeft = NumPixelsLeftGroups * 3;
- 
+
+//const int NumPixelsLeftGroups = 152;
+//const int NumPixelsRightGroups = 134;
+
+const int NumPixelsLeftGroups = NumPixels1L + NumPixels2L + NumPixels3L + NumPixels4L + NumPixels5L;  
+const int NumPixelsRightGroups = NumPixels1R + NumPixels2R + NumPixels3R + NumPixels4R + NumPixels5R; 
+
 const int ByteSizeLeft = NumPixelsLeftGroups * 3;
+ 
+const int ByteSizeRight = NumPixelsRightGroups * 3;
 
 
-//const int m_totalByteSize =  ByteSizeLeft; // used for resending the received frame
-const int m_bufferSize = ByteSizeLeft; // used for the interrupt rouine for receiving the bytes
-
-byte m_buffer[m_bufferSize];
-
-volatile int m_pos = 0;
-volatile boolean m_process_it = false;
-volatile boolean m_frameInProgess = false;
-
+const int m_totalByteSize = ByteSizeLeft + ByteSizeRight; 
 
 //const int m_totalNumOfPixels = NumPixels1 +  NumPixels2 + NumPixels3 +  NumPixels4 + 2;
 //const int m_totalNumOfPixels = NumPixels1 +  NumPixels2 + NumPixels3 +  NumPixels4;
@@ -109,7 +107,7 @@ volatile boolean m_frameInProgess = false;
 //byte m_receiveBuffer[SERIAL_RX_BUFFER_SIZE];
 
 
-//byte m_totalReceiveBuffer[m_totalByteSize] ;
+byte m_totalReceiveBuffer[m_totalByteSize] ;
 
 
 // SERIAL_RX_BUFFER_SIZE == 64;
@@ -121,8 +119,8 @@ volatile boolean m_frameInProgess = false;
 const byte m_startByte = 255;
 int m_pos;
 
-//boolean m_newFrameHasBeenCompleted = false;
-//boolean m_newFrameHasStarted = false;
+boolean m_newFrameHasBeenCompleted = false;
+boolean m_newFrameHasStarted = false;
 
 // newFrameHasArrived is true when m_totalNumOfPixels of LED Pixel Data has arrived but not yet displayed or sent
 
@@ -156,16 +154,10 @@ int m_pos;
 
 void setup (void) {
 
-// Setup for reading the SPI data from the first MEGA
 
-  SPCR |= _BV(SPE); // SPE: SPI Enable; Macro _BV(n) sets bit n to 1, whereas the other bits to 0
-  SPCR &= ~_BV(MSTR); // MSTR = Master Slave Select Register; MSTR = 1 => Set as master
-  // turn on interrupts
-  SPCR |= _BV(SPIE); // SPIE: SPI Interrrupt Enable
-  
   // set the pins from which SPI data is sent as outputs:
 
-  //pinMode(ssLeft, OUTPUT);
+  pinMode(ssLeft, OUTPUT);
  
   pinMode(ss1, OUTPUT);
   pinMode(ss2, OUTPUT);
@@ -176,7 +168,7 @@ void setup (void) {
   
 
  // Disable these Pins at the beginning by setting them HIGH
- // digitalWrite(ssLeft, HIGH);
+  digitalWrite(ssLeft, HIGH);
   
   digitalWrite(ss1, HIGH);
   digitalWrite(ss2, HIGH);
@@ -220,87 +212,214 @@ void setup (void) {
   // USB port in the PC to Pin 19 and 18; Also open another arduino IDE for the second serial port, Serial1.
   // Use the first arduino IDE to upload the arduino code, and use the second arduino IDE to report messages.
 
+
+// artificial LED RGB data for testing: 1 2 3;1 2 3; 1 2 3;.......
+
+// cf 
+//const int NumPixels1L = 35; // The left of the 1st box
+//const int NumPixels1R = 27;
+//
+//const int NumPixles2L = 30;
+//const int NumPixels2R = 30;
+//
+//const int NumPixels3L = 28;
+//const int NumPixels3R = 27;
+//
+//const int NumPixels4L = 29;
+//const int NumPixels4R = 25;
+//
+//const int NumPixels5L = 30;
+//const int NumPixels5R = 25;
+
+
+// Left Unos
+for (int i = 0; i < NumPixels1L *3; i++)
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[i]= 1;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[i]= 2;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[i]= 3;
+    
+  }
+}
+for (int i = 0; i < NumPixels2L *3; i++) 
+  {
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 3;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 4;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 5;
+    
+  }
+}
+
+for (int i = 0; i < NumPixels3L *3; i++)
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 6;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 7;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + i]= 8;
+    
+  }
+}
+
+for (int i = 0; i < NumPixels4L *3; i++) 
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=9;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=10;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=11;
+    
+  }
+
+}
+
+for (int i = 0; i < NumPixels5L *3; i++) 
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 +  NumPixels4L *3+ i]=12;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3+ i]=13;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3 + i]=14;
+    
+  }
+
+}
+
+
+// Right  Unos
+for (int i = 0; i < NumPixels1R *3; i++)
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[i]= 1;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[i]= 2;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[i]= 3;
+    
+  }
+}
+for (int i = 0; i < NumPixels2R *3; i++) 
+  {
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + i]= 3;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + i]= 4;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + i]= 5;
+    
+  }
+}
+
+for (int i = 0; i < NumPixels3R *3; i++)
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + i]= 6;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + i]= 7;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + i]= 8;
+    
+  }
+}
+
+for (int i = 0; i < NumPixels4R *3; i++) 
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=9;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=10;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=11;
+    
+  }
+
+}
+
+for (int i = 0; i < NumPixels5R *3; i++) 
+{
+
+  if ( i%3 == 0 ) // i is a  multiple of 3 
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]=12;    
+  }
+   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]=13;    
+  }
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  { 
+    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]=14;
+    
+  }
+
 }
 
 
 
-// SPI interrupt routine
-ISR (SPI_STC_vect) { // SPI_STC_vect: invoked when data arrives:
-
-  byte c = SPDR;  // grab byte from SPI Data Register
-
-  if ( m_process_it)
-  {
-    // if the buffer is being read by the function in the loop, the incoming byte which caused the interrupt
-    // will be ignored to keep the buffer safe while it is being read. 
-    
-    return;
-    
-  }
-  else
-  {
-    // not m_process_it has two cases:
-    if ( !m_frameInProgess )
-    { // when frameInProfess is false, try to check the start byte, 255
-
-
-//      if ( c == 255 )
-//      { // 255 is the start byte sent by the master
-//        m_pos = m_bufferSize - 1; // insert bytes starting from the end of the buffer, so that the end parts of the LEDs go into 
-//                                  // the chain first; Yes this is correct; said  Moon Jung
-//        m_frameInProgess = true;
-//        return;
-//      }
-
-      
-      if ( c == 255 ) {
-        m_pos = 0;
-        m_frameInProgess = true;
-        return;
-      }
-      else { // continue to read until the start byte arrives while frameInPgoress is false
-        return;
-      }
-      
-    }//if ( !m_frameInProgress )
-
-    else  { // m_frameInProgess is true: the start byte had arrived
-
-      m_buffer[m_pos] = c;
-
-      if ( m_pos == m_bufferSize - 1) {
-        m_process_it = true;
-        m_frameInProgess = false;
-        return;
-      } // if
-
-
-//      if ( m_pos == 0)
-//      { // the buffer is full
-//        m_process_it = true;
-//        m_frameInProgess = false;
-//        return;
-//      } // if
-      
-//      else
-//      {
-//        m_pos--; // the next location to fill in the buffer
-//        return;
-//      }
-
-       else {
-        m_pos ++; // the next location to fill in the buffer
-        return;
-      }
-
-      
-    } // else: m_frameInProgess is true: the start byte has arrived
-
-  } //  else:  not m_process_it
-
- 
-
-} // ISR
+} // setup
 
 // https://arduino.stackexchange.com/questions/8457/serial-read-vs-serial-readbytes
 // readBytes() is blocking until the determined length has been read, or it times out (see Serial.setTimeout()).
@@ -334,102 +453,91 @@ void loop (void) {
   // If Serial.read() == -1 =oxff , it means that head == tail, i.e. there are no bytes to read, that is, underflow happened
   //Serial1.print("b:");
 
- // myReadByte(); // read a new byte changing the state of the reading process, m_newFrameHasArrived. 
+  //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
 
-// The following process of reading the sending buffer can be interrupted when new bytes arrive at the SPI port;
-// In the interrupt routine, the incoming bytes will be ignored and not inserted into the buffer, from which the bytes
-// being read by the following process. 
-
-  if ( m_process_it )
-  {
-     // if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
-     
-        resendNewFrame(); // display the new frame of LED data that has arrived
-        
-    //    m_newFrameHasBeenCompleted = false;
-     // }
-
-     m_process_it = false;
+  m_newFrameHasBeenCompleted = true; // for debug
+  
+  if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
+    showNewFrame(); // display the new frame of LED data that has arrived
+    m_newFrameHasBeenCompleted = false;
   }
+
 
 } // loop()
 
-//void myReadByte() {
-//
-//  static int index = 0; // index of the buffer
-//
-//  byte c; // received byte
-//
-//  int count = Serial.available();
-//
-//
-//  Serial1.print("count=");   Serial1.print( count); // For Debug
-//  if (count == 0) {
-//    // not bytes has arrived
-//    return;
-//  }
-//
-//  // there are avaiable bytes in the incoming ring buffer
-//  c = Serial.read(); // read the first byte in the incoming ring buffer, changing the pointer to the next place
-//
-//  Serial1.print("byte=");   Serial1.print( c); // For Debug
-//  
-//  // there are two cases to handle: (1) the start byte HAS arrived (2) the start byte has NOT arrived
-//  // These two states are indicated by  m_newFrameHasStarted
-//
-// // case 1:
-//  if ( !m_newFrameHasStarted ) { // the arrival of the startByte has not been verified. 
-//    
-//    // check if the start byte has arrived
-//
-//    if ( c == m_startByte ) { // the startbyte was sent by Unity
-//      m_newFrameHasStarted = true; // this indicates that the start byte arrived;
-//      m_pos = 0; // points to the beginning of the buffer  to read the next byte into; The startByte is not inserted to the buffer
-//      return;
-//
-//    }
-//
-//    else { // the read byte is not a startByte =>  Ignore the byte and continue to read to find the start byte;
-//      // after this  return, myReadByte() is called again
-//      return;
-//
-//    }
-//
-//  } // if ( !m_newFrameHasStarted )
-//
-//// case 2:
-//  else { // The new frame has started (the start byte arrived) =>  add the received byte to the receive buffer at the empty location m_pos
-//  
-//    m_totalReceiveBuffer[m_pos] = c;
-//
-//    if ( m_pos == m_totalByteSize - 1) { // if the buffer index points to the last position of the receive buffer
-//      // it means that the receive buffer is full and the current frame has been completed.
-//      m_newFrameHasBeenCompleted == true; // this flag is used to indicate that the new frame has been completed and is ready to be sent to the slaves
-//      m_newFrameHasStarted = false;   // this is set to indicate that the next start byte is being waited for
-//      return;
-//    } // the receive buffer is full
-//
-//    else { // the receive buffer is not yet full
-//      m_pos ++ ; // go to the next location of the buffer
-//      return;
-//    }//
-//
-//  }//  the start byte has started and the current frame is being constructed
-//
-//}//myReadByte()
-//
+void myReadByte() {
+
+  static int index = 0; // index of the buffer
+
+  byte c; // received byte
+
+  int count = Serial.available();
 
 
-void resendNewFrame() {
+  Serial1.print("count=");   Serial1.print( count); // For Debug
+  if (count == 0) {
+    // not bytes has arrived
+    return;
+  }
 
-  //sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
-  sendLEDBytesToSlaves(m_buffer,  m_bufferSize );
+  // there are avaiable bytes in the incoming ring buffer
+  c = Serial.read(); // read the first byte in the incoming ring buffer, changing the pointer to the next place
+
+  Serial1.print("byte=");   Serial1.print( c); // For Debug
+  
+  // there are two cases to handle: (1) the start byte HAS arrived (2) the start byte has NOT arrived
+  // These two states are indicated by  m_newFrameHasStarted
+
+ // case 1:
+  if ( !m_newFrameHasStarted ) { // the arrival of the startByte has not been verified. 
+    
+    // check if the start byte has arrived
+
+    if ( c == m_startByte ) { // the startbyte was sent by Unity
+      m_newFrameHasStarted = true; // this indicates that the start byte arrived;
+      m_pos = 0; // points to the beginning of the buffer  to read the next byte into; The startByte is not inserted to the buffer
+      return;
+
+    }
+
+    else { // the read byte is not a startByte =>  Ignore the byte and continue to read to find the start byte;
+      // after this  return, myReadByte() is called again
+      return;
+
+    }
+
+  } // if ( !m_newFrameHasStarted )
+
+// case 2:
+  else { // The new frame has started (the start byte arrived) =>  add the received byte to the receive buffer at the empty location m_pos
+  
+    m_totalReceiveBuffer[m_pos] = c;
+
+    if ( m_pos == m_totalByteSize - 1) { // if the buffer index points to the last position of the receive buffer
+      // it means that the receive buffer is full and the current frame has been completed.
+      m_newFrameHasBeenCompleted == true; // this flag is used to indicate that the new frame has been completed and is ready to be sent to the slaves
+      m_newFrameHasStarted = false;   // this is set to indicate that the next start byte is being waited for
+      return;
+    } // the receive buffer is full
+
+    else { // the receive buffer is not yet full
+      m_pos ++ ; // go to the next location of the buffer
+      return;
+    }//
+
+  }//  the start byte has started and the current frame is being constructed
+
+}//myReadByte()
+
+
+
+void showNewFrame() {
+
+  sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
 
   // print the ledBytes to the serial monitor via Serial1.
 
-  //printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
-
-  printLEDBytesToSerialMonitor(m_buffer,  m_bufferSize ); // for debug
+  printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
 
 }// showNewFrame()
 
@@ -477,16 +585,16 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 
   // send the left groups of LED data to the Mega slave:
 
-//  digitalWrite(ssLeft, LOW); // select the second Mega  SS line
+  digitalWrite(ssLeft, LOW); // select the second Mega  SS line
 
   // To send  a sequence of bytes to a slave arduiono via SPI, the sequence is marked by the start and the end
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
-  //SPI.transfer( m_startByte); // The SPI master also sends the startByte for the slave to identify the beginning of the frame.
-  //SPI.transfer( &totalReceiveBuffer[0], ByteSizeLeft);
+  SPI.transfer( m_startByte); // The SPI master also sends the startByte for the slave to identify the beginning of the frame.
+  SPI.transfer( &totalReceiveBuffer[0], ByteSizeLeft);
 
 
-  //digitalWrite(ssLeft, HIGH);
+  digitalWrite(ssLeft, HIGH);
 
   // Process the right side LED data
   
@@ -499,7 +607,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[0], ByteSize1L);
+  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft], ByteSize1R);
 
 // deselect the first SS line
   digitalWrite(ss1, HIGH);
@@ -513,7 +621,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss2, LOW);
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ ByteSize1L], ByteSize2L);
+  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R], ByteSize2R);
 
  // deselect the second SS Line
   digitalWrite(ss2, HIGH);
@@ -527,7 +635,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss3, LOW); 
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSize1L + ByteSize2L], ByteSize3L);
+  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R], ByteSize3R);
 
 // deselect the third SS line
   digitalWrite(ss3, HIGH);
@@ -542,7 +650,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss4, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSize1L + ByteSize2L + ByteSize3L ], ByteSize4L );
+  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
 
  // deselect the fourth SS line
   digitalWrite(ss4, HIGH);
@@ -551,7 +659,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss5, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSize1L + ByteSize2L + ByteSize3L + ByteSize4L ], ByteSize5L );
+  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
 
  // deselect the fifth SS line 
   digitalWrite(ss5, HIGH);
