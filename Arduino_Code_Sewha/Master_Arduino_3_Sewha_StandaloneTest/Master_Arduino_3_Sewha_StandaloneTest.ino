@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////
+507123/////////////////////////////////////////////////////////
 //SPI Tutorial: https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all
 // https://forum.arduino.cc/index.php?topic=558963.0
 // Arduino UNO
@@ -331,15 +331,15 @@ for (int i = 0; i < NumPixels1R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[i]= 1;    
+    m_totalReceiveBuffer[ByteSizeLeft + i]= 1;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[i]= 2;    
+    m_totalReceiveBuffer[ByteSizeLeft + i]= 2;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[i]= 3;
+    m_totalReceiveBuffer[ByteSizeLeft + i]= 3;
     
   }
 }
@@ -348,15 +348,15 @@ for (int i = 0; i < NumPixels2R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + i]= 3;    
+    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 3;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + i]= 4;    
+    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 4;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + i]= 5;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + i]= 5;
     
   }
 }
@@ -366,15 +366,15 @@ for (int i = 0; i < NumPixels3R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + i]= 6;    
+    m_totalReceiveBuffer[ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 6;    
   }
-   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  else if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + i]= 7;    
+    m_totalReceiveBuffer[ ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 7;    
   }
-   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+  else if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + i]= 8;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + i]= 8;
     
   }
 }
@@ -384,15 +384,15 @@ for (int i = 0; i < NumPixels4R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=9;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=9;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=10;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=10;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=11;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=11;
     
   }
 
@@ -403,15 +403,15 @@ for (int i = 0; i < NumPixels5R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]=12;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]=12;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]=13;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]=13;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]=14;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]=14;
     
   }
 
@@ -678,7 +678,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 void printLEDBytesToSerialMonitor( byte * totalReceiveBuffer,  int totalByteSize  )
 {
 
- for (int i = 0; i < m_totalByteSize; i++) {
+ for (int i = 0; i < totalByteSize; i++) {
 
     // print the received data from PC to the serial monitor via Serial1 of Mega
     if ( i % 3 == 0) {

@@ -76,7 +76,7 @@ const int ByteSize5L = NumPixels5L * 3;
 
 
 
-int NumPixelsLeftGroups =  NumPixels1L +  NumPixels2L +  NumPixels3L +  NumPixels4L +  NumPixels5L;
+const int NumPixelsLeftGroups =  NumPixels1L +  NumPixels2L +  NumPixels3L +  NumPixels4L +  NumPixels5L;
 
 //const int ByteSizeLeft = NumPixelsLeftGroups * 3;
  
@@ -119,7 +119,7 @@ volatile boolean m_frameInProgess = false;
 //byte m_endBytes[3]  = {255, 255, 255}; // This full white color indicates the end a single frame of LEDs.
 
 const byte m_startByte = 255;
-int m_pos;
+//int m_pos;
 
 //boolean m_newFrameHasBeenCompleted = false;
 //boolean m_newFrameHasStarted = false;
@@ -422,7 +422,8 @@ void loop (void) {
 
 void resendNewFrame() {
 
-  //sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
+ // sendLEDBytesToSlaves(m_buffer,    m_bufferSize );
+  
   sendLEDBytesToSlaves(m_buffer,  m_bufferSize );
 
   // print the ledBytes to the serial monitor via Serial1.
@@ -570,7 +571,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 void printLEDBytesToSerialMonitor( byte * totalReceiveBuffer,  int totalByteSize  )
 {
 
- for (int i = 0; i < m_totalByteSize; i++) {
+ for (int i = 0; i < totalByteSize; i++) {
 
     // print the received data from PC to the serial monitor via Serial1 of Mega
     if ( i % 3 == 0) {
