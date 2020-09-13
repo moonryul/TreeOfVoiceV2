@@ -429,6 +429,8 @@ for (int i = 0; i < m_totalByteSize; i++) {
   }// for
 
 
+Serial.print("message 2 in setup:");
+  printLEDBytesToSerialMonitor();
 
 } // setup
 
@@ -471,13 +473,13 @@ void loop (void) {
   if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
    // showNewFrame(); // display the new frame of LED data that has arrived
   
-   sendLEDBytesToSlaves(&m_totalReceiveBuffer[0],  m_totalByteSize );
+   sendLEDBytesToSlaves();
 
    if (  m_newFrameToBePrinted ) {
 
       Serial.print("message in loop():");
-      printLEDBytesToSerialMonitor0();
-      printLEDBytesToSerialMonitor(&m_totalReceiveBuffer[0],  m_totalByteSize ); // for debug
+      printLEDBytesToSerialMonitor();
+    
       m_newFrameToBePrinted = false;
    }
    // m_newFrameHasBeenCompleted = false;
@@ -554,12 +556,12 @@ void loop (void) {
 
 void showNewFrame() {
 
-  sendLEDBytesToSlaves( &m_totalReceiveBuffer[0],  m_totalByteSize );
-
+  sendLEDBytesToSlaves();
+  
   // print the ledBytes to the serial monitor via Serial1.
 
-  printLEDBytesToSerialMonitor(&m_totalReceiveBuffer[0],  m_totalByteSize ); // for debug
-
+  printLEDBytesToSerialMonitor();
+  
 }// showNewFrame()
 
 
@@ -591,7 +593,7 @@ void showNewFrame() {
 //  totalRecieveBuffer[3 * i +2] = (byte)random(10, 255);
 
 
-void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
+void  sendLEDBytesToSlaves()
 {
 
   // SPI.beginTransaction(SPISettingA);
@@ -628,7 +630,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft], ByteSize1R);
+  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft], ByteSize1R);
 
 // deselect the first SS line
   digitalWrite(ss1, HIGH);
@@ -642,7 +644,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss2, LOW);
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R], ByteSize2R);
+  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R], ByteSize2R);
 
  // deselect the second SS Line
   digitalWrite(ss2, HIGH);
@@ -656,7 +658,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss3, LOW); 
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R], ByteSize3R);
+  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R], ByteSize3R);
 
 // deselect the third SS line
   digitalWrite(ss3, HIGH);
@@ -671,7 +673,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss4, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
+  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
 
  // deselect the fourth SS line
   digitalWrite(ss4, HIGH);
@@ -680,7 +682,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss5, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
+  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
 
  // deselect the fifth SS line 
   digitalWrite(ss5, HIGH);
@@ -698,13 +700,13 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 
 
 
-void printLEDBytesToSerialMonitor0()
+void printLEDBytesToSerialMonitor()
 {
 // for debugging
 Serial.print("message code the same in setup in loop:");
 
-Serial.print("array address:");
-Serial.println( int( &m_totalReceiveBuffer[0] ) );
+//Serial.print("array address:");
+//Serial.println( int( &m_totalReceiveBuffer[0] ) );
     
 for (int i = 0; i < m_totalByteSize; i++) {
    
@@ -727,33 +729,33 @@ for (int i = 0; i < m_totalByteSize; i++) {
 
 }
 
-// For Debugging
-void printLEDBytesToSerialMonitor( byte *totalReceiveBuffer,  int totalByteSize  )
-{
-
-Serial.print("message parameters passed  in loop:");
-Serial.print("array address:");
-Serial.println( int(totalReceiveBuffer) );
-
-    
- for (int i = 0; i < totalByteSize; i++) {
-
-    // print the received data from first Mega to the second Mega to the PC monitor
-    if ( i % 3 == 0) {
-     Serial.print("r:");
-      Serial.println(totalReceiveBuffer[i]);
-    }
-    else if ( i % 3 == 1) {
-     Serial.print("g:");
-     Serial.println(totalReceiveBuffer[i]);
-    }
-
-   else {
-      Serial.print("b:");
-      Serial.println(totalReceiveBuffer[i]);
-    }
-
-  }// for
-
-
-} //printLEDBytesToSerialMonitor( byte[] totalReceiveBuffer,  int m_totalByteSize  )
+//// For Debugging
+//void printLEDBytesToSerialMonitor( byte *totalReceiveBuffer,  int totalByteSize  )
+//{
+//
+//Serial.print("message parameters passed  in loop:");
+//Serial.print("array address:");
+//Serial.println( int(totalReceiveBuffer) );
+//
+//    
+// for (int i = 0; i < totalByteSize; i++) {
+//
+//    // print the received data from first Mega to the second Mega to the PC monitor
+//    if ( i % 3 == 0) {
+//     Serial.print("r:");
+//      Serial.println(totalReceiveBuffer[i]);
+//    }
+//    else if ( i % 3 == 1) {
+//     Serial.print("g:");
+//     Serial.println(totalReceiveBuffer[i]);
+//    }
+//
+//   else {
+//      Serial.print("b:");
+//      Serial.println(totalReceiveBuffer[i]);
+//    }
+//
+//  }// for
+//
+//
+//} //printLEDBytesToSerialMonitor( byte[] totalReceiveBuffer,  int m_totalByteSize  )
