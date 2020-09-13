@@ -469,6 +469,20 @@ void loop ()
 
   //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
 
+
+
+      
+  
+  if ( m_newFrameHasBeenCompleted ) 
+  { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
+   // showNewFrame(); // display the new frame of LED data that has arrived
+  
+   sendLEDBytesToSlaves();
+
+   if (  m_newFrameToBePrinted )
+   {
+
+
    Serial.print("message 3 [foloop] in loop():");
 
          
@@ -491,19 +505,7 @@ void loop ()
     }
 
   }// for
-
-
-      
   
-  if ( m_newFrameHasBeenCompleted ) 
-  { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
-   // showNewFrame(); // display the new frame of LED data that has arrived
-  
-   sendLEDBytesToSlaves();
-
-   if (  m_newFrameToBePrinted )
-   {
-
       Serial.print("message 4 [function] in loop():");
       printLEDBytesToSerialMonitor();
     
