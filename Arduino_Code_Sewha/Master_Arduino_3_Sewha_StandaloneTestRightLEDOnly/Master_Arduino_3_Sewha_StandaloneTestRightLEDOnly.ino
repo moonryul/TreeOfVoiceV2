@@ -408,7 +408,7 @@ for (int i = 0; i < NumPixels5R *3; i++)
 
 
 // for debugging
-Serial.print("message in setup:");
+Serial.print("message 1 in setup:");
 for (int i = 0; i < m_totalByteSize; i++) {
 
     // print the received data from first Mega to the second Mega to the PC monitor
@@ -461,14 +461,16 @@ Serial.print("message 2 in setup:");
 //SO: I will stick with using readBytes() because it seems to produce consistent results
 //and I can predict the number of bytes I should receive back. –
 
-void loop (void) {
+void loop () {
 
   // If Serial.read() == -1 =oxff , it means that head == tail, i.e. there are no bytes to read, that is, underflow happened
   //Serial1.print("b:");
 
   //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
 
- 
+   Serial.print("message 3 in loop():");
+      printLEDBytesToSerialMonitor();
+      
   
   if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
    // showNewFrame(); // display the new frame of LED data that has arrived
@@ -477,7 +479,7 @@ void loop (void) {
 
    if (  m_newFrameToBePrinted ) {
 
-      Serial.print("message in loop():");
+      Serial.print("message 4 in loop():");
       printLEDBytesToSerialMonitor();
     
       m_newFrameToBePrinted = false;
@@ -708,7 +710,8 @@ Serial.print("message code the same in setup in loop:");
 //Serial.print("array address:");
 //Serial.println( int( &m_totalReceiveBuffer[0] ) );
     
-for (int i = 0; i < m_totalByteSize; i++) {
+for (int i = 0; i < m_totalByteSize; i++) 
+{
    
     // print the received data from first Mega to the second Mega to the PC monitor
     if ( i % 3 == 0) {
@@ -727,7 +730,7 @@ for (int i = 0; i < m_totalByteSize; i++) {
 
   }// for
 
-}
+}//void printLEDBytesToSerialMonitor()
 
 //// For Debugging
 //void printLEDBytesToSerialMonitor( byte *totalReceiveBuffer,  int totalByteSize  )
