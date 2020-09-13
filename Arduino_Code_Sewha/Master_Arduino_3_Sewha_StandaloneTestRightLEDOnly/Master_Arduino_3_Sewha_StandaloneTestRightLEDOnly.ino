@@ -100,12 +100,6 @@ const int m_totalByteSize = ByteSizeLeft + ByteSizeRight;
 //const int m_totalByteSize = m_totalNumOfPixels * 3;
 
 
-//const int group1ByteSize = NumPixels1 * 3;
-//const int group2ByteSize = NumPixels2 * 3;
-//const int group3ByteSize = NumPixels3 * 3;
-//const int group4ByteSize = NumPixels4 * 3;
-
-
 //byte m_receiveBuffer[SERIAL_RX_BUFFER_SIZE];
 
 
@@ -123,7 +117,7 @@ int m_pos;
 
 //boolean m_newFrameHasBeenCompleted = false;
 
-boolean m_newFrameHasBeenCompleted = true; // only for debugging the message printing
+boolean m_newFrameHasBeenCompleted = true; // only for debugging 
 
 boolean  m_newFrameToBePrinted = true;
 
@@ -222,21 +216,7 @@ void setup (void) {
 
 // artificial LED RGB data for testing: 1 2 3;1 2 3; 1 2 3;.......
 
-// cf 
-//const int NumPixels1L = 35; // The left of the 1st box
-//const int NumPixels1R = 27;
-//
-//const int NumPixles2L = 30;
-//const int NumPixels2R = 30;
-//
-//const int NumPixels3L = 28;
-//const int NumPixels3R = 27;
-//
-//const int NumPixels4L = 29;
-//const int NumPixels4R = 25;
-//
-//const int NumPixels5L = 30;
-//const int NumPixels5R = 25;
+
 
 //
 //// Left Unos
@@ -491,12 +471,12 @@ void loop (void) {
   if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
    // showNewFrame(); // display the new frame of LED data that has arrived
   
-   sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
+   sendLEDBytesToSlaves(&m_totalReceiveBuffer[0],  m_totalByteSize );
 
    if (  m_newFrameToBePrinted ) {
 
       Serial.print("message in loop():");
-      printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
+      printLEDBytesToSerialMonitor(&m_totalReceiveBuffer[0],  m_totalByteSize ); // for debug
       m_newFrameToBePrinted = false;
    }
    // m_newFrameHasBeenCompleted = false;
@@ -573,11 +553,11 @@ void loop (void) {
 
 void showNewFrame() {
 
-  sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
+  sendLEDBytesToSlaves( &m_totalReceiveBuffer[0],  m_totalByteSize );
 
   // print the ledBytes to the serial monitor via Serial1.
 
-  printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
+  printLEDBytesToSerialMonitor(&m_totalReceiveBuffer[0],  m_totalByteSize ); // for debug
 
 }// showNewFrame()
 
@@ -715,9 +695,34 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 
 // For Debugging
-void printLEDBytesToSerialMonitor( byte * totalReceiveBuffer,  int totalByteSize  )
+void printLEDBytesToSerialMonitor( byte *totalReceiveBuffer,  int totalByteSize  )
 {
 
+
+
+// for debugging
+Serial.print("message code the same in setup in loop:");
+for (int i = 0; i < m_totalByteSize; i++) {
+
+    // print the received data from first Mega to the second Mega to the PC monitor
+    if ( i % 3 == 0) {
+     Serial.print("r:");
+      Serial.println(m_totalReceiveBuffer[i]);
+    }
+    else if ( i % 3 == 1) {
+     Serial.print("g:");
+     Serial.println(m_totalReceiveBuffer[i]);
+    }
+
+   else {
+      Serial.print("b:");
+      Serial.println(m_totalReceiveBuffer[i]);
+    }
+
+  }// for
+
+
+Serial.print("message parameters passed  in loop:");
  for (int i = 0; i < totalByteSize; i++) {
 
     // print the received data from first Mega to the second Mega to the PC monitor
