@@ -702,8 +702,12 @@ void printLEDBytesToSerialMonitor()
 {
 // for debugging
 Serial.print("message code the same in setup in loop:");
-for (int i = 0; i < m_totalByteSize; i++) {
 
+Serial.print("array address:");
+Serial.println( int( &m_totalReceiveBuffer[0] ) );
+    
+for (int i = 0; i < m_totalByteSize; i++) {
+   
     // print the received data from first Mega to the second Mega to the PC monitor
     if ( i % 3 == 0) {
      Serial.print("r:");
@@ -727,10 +731,11 @@ for (int i = 0; i < m_totalByteSize; i++) {
 void printLEDBytesToSerialMonitor( byte *totalReceiveBuffer,  int totalByteSize  )
 {
 
-
-
-
 Serial.print("message parameters passed  in loop:");
+Serial.print("array address:");
+Serial.println( int(totalReceiveBuffer) );
+
+    
  for (int i = 0; i < totalByteSize; i++) {
 
     // print the received data from first Mega to the second Mega to the PC monitor
