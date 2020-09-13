@@ -476,6 +476,7 @@ void loop (void) {
    if (  m_newFrameToBePrinted ) {
 
       Serial.print("message in loop():");
+      printLEDBytesToSerialMonitor();
       printLEDBytesToSerialMonitor(&m_totalReceiveBuffer[0],  m_totalByteSize ); // for debug
       m_newFrameToBePrinted = false;
    }
@@ -694,12 +695,11 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 
-// For Debugging
-void printLEDBytesToSerialMonitor( byte *totalReceiveBuffer,  int totalByteSize  )
+
+
+
+void printLEDBytesToSerialMonitor()
 {
-
-
-
 // for debugging
 Serial.print("message code the same in setup in loop:");
 for (int i = 0; i < m_totalByteSize; i++) {
@@ -720,6 +720,14 @@ for (int i = 0; i < m_totalByteSize; i++) {
     }
 
   }// for
+
+}
+
+// For Debugging
+void printLEDBytesToSerialMonitor( byte *totalReceiveBuffer,  int totalByteSize  )
+{
+
+
 
 
 Serial.print("message parameters passed  in loop:");
