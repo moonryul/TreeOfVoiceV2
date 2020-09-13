@@ -408,7 +408,7 @@ for (int i = 0; i < NumPixels5R *3; i++)
 
 
 // for debugging
-Serial.print("message 1 in setup:");
+Serial.print("message 1 [forloop] in setup:");
 for (int i = 0; i < m_totalByteSize; i++) {
 
     // print the received data from first Mega to the second Mega to the PC monitor
@@ -429,7 +429,7 @@ for (int i = 0; i < m_totalByteSize; i++) {
   }// for
 
 
-Serial.print("message 2 in setup:");
+Serial.print("message 2 [func] in setup:");
   printLEDBytesToSerialMonitor();
 
 } // setup
@@ -469,7 +469,7 @@ void loop ()
 
   //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
 
-   Serial.print("message 3 in loop():");
+   Serial.print("message 3 [foloop] in loop():");
 
          
    for (int i = 0; i < m_totalByteSize; i++) 
@@ -501,9 +501,10 @@ void loop ()
   
    sendLEDBytesToSlaves();
 
-   if (  m_newFrameToBePrinted ) {
+   if (  m_newFrameToBePrinted )
+   {
 
-      Serial.print("message 4 in loop():");
+      Serial.print("message 4 [function] in loop():");
       printLEDBytesToSerialMonitor();
     
       m_newFrameToBePrinted = false;
@@ -728,8 +729,6 @@ void  sendLEDBytesToSlaves()
 
 void printLEDBytesToSerialMonitor()
 {
-// for debugging
-Serial.print("message code:  the same as in  setup in loop:");
 
 //Serial.print("array address:");
 //Serial.println( int( &m_totalReceiveBuffer[0] ) );
