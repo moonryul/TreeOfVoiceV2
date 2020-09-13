@@ -404,7 +404,7 @@ for (int i = 0; i < NumPixels5R *3; i++)
     
   }
 
-}
+}//for
 
 
 // for debugging
@@ -469,9 +469,7 @@ void loop ()
 
   //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
 
-
-
-      
+    
   
   if ( m_newFrameHasBeenCompleted ) 
   { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
@@ -659,7 +657,7 @@ void  sendLEDBytesToSlaves()
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft], ByteSize1R);
+  SPI.transfer( &m_totalReceiveBuffer[0], ByteSize1R);
 
 // deselect the first SS line
   digitalWrite(ss1, HIGH);
@@ -673,7 +671,7 @@ void  sendLEDBytesToSlaves()
   digitalWrite(ss2, LOW);
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R], ByteSize2R);
+  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R], ByteSize2R);
 
  // deselect the second SS Line
   digitalWrite(ss2, HIGH);
@@ -687,7 +685,7 @@ void  sendLEDBytesToSlaves()
   digitalWrite(ss3, LOW); 
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R], ByteSize3R);
+  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
 
 // deselect the third SS line
   digitalWrite(ss3, HIGH);
@@ -702,7 +700,7 @@ void  sendLEDBytesToSlaves()
   digitalWrite(ss4, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
+  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
 
  // deselect the fourth SS line
   digitalWrite(ss4, HIGH);
@@ -711,7 +709,7 @@ void  sendLEDBytesToSlaves()
   digitalWrite(ss5, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSizeLeft + ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
+  SPI.transfer( &m_totalReceiveBuffer[ ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
 
  // deselect the fifth SS line 
   digitalWrite(ss5, HIGH);
@@ -722,7 +720,7 @@ void  sendLEDBytesToSlaves()
   // If other libraries use the SPI (hardware resource)  from interrupts,
   // they will be prevented from accessing SPI until you call SPI.endTransaction().
 
-  //delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
+  delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
 
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 

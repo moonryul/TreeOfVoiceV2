@@ -17,15 +17,17 @@ public class LEDMasterController : MonoBehaviour
     //
     //////////////////////////////////
     /// <summary>
-    public string m_portName = "COM0"; // should be specified in the inspector
-    SerialPort m_serialPort;
+    public string m_portName1 = "COM0"; // should be specified in the inspector
+    public string m_portName2 = "COM1"; // should be specified in the inspector
+
+    SerialPort m_serialPort1, m_serialPort2;
     public int m_threadCounter = 0;
     public int m_arduinoSendPeriod = 500;    // Is it used somewhere else?
 
     /// </summary>
     //SerialToArduinoMgr m_SerialToArduinoMgr; 
-    Thread m_Thread;
-
+    Thread m_Thread1;      // thread for the first serial line
+    Thread m_Thread2;      // thread for the second serial line
     Action m_updateArduino;
 
 
@@ -64,7 +66,8 @@ public class LEDMasterController : MonoBehaviour
 
         // Set up the serial Port
 
-        m_serialPort = new SerialPort(m_portName, 57600); // bit rate= 567000 bps = 
+        m_serialPort1 = new SerialPort(m_portName1, 57600); // bit rate= 567000 bps = 
+        m_serialPort2 = new SerialPort(m_portName2, 57600); // bit rate= 567000 bps = 
 
 
         //m_SerialPort.ReadTimeout = 50;
@@ -74,7 +77,8 @@ public class LEDMasterController : MonoBehaviour
 
         try
         {
-            m_serialPort.Open();
+            m_serialPort1.Open();
+            m_serialPort2.Open();
         }
         catch (Exception ex)
         {
@@ -129,9 +133,15 @@ public class LEDMasterController : MonoBehaviour
                 //For example, if you were to send a 2K byte string, at 9600 bps, the write method would take about 2 seconds to return.
 
                 //Write(byte[] buffer, int offset, int count);
-                m_serialPort.Write(m_startByte, 0, 1);     // m_startByte = 255
-                m_serialPort.Write(m_LEDArray, 0, m_LEDArray.Length);
-                   
+                m_serialPort1.Write(m_startByte, 0, 1);     // m_startByte = 255
+                m_serialPort1.Write(m_LEDArray1, 0, m_LEDArray1.Length);   // m_LEDArray refers to the global address which is bound when the thread function is 
+
+                m_serialPort2.Write(m_startByte, 0, 1);     // m_startByte = 255
+                m_serialPort2.Write(m_LEDArray2, 0, m_LEDArray2.Length);   // m_LEDArray refers to the global address which is bound when the thread function is 
+
+
+                                                                        // defined; This global address is where the new  frame data is stored every frame.
+
 
 
             }
@@ -148,8 +158,11 @@ public class LEDMasterController : MonoBehaviour
 
         };
 
-        // m_Thread = new Thread(new ThreadStart(m_updateArduino)); // ThreadStart() is a delegate (pointer type)
-                                                         // Thread state = unstarted  when created
+        // m_Thread1 = new Thread(new ThreadStart(m_updateArduino)); // ThreadStart() is a delegate (pointer type)
+        // Thread state = unstarted  when created
+
+        m_Thread1 = new Thread(new ThreadStart(m_updateArduino)); // ThreadStart() is a delegate (pointer type)
+        m_Thread2 = new Thread(new ThreadStart(m_updateArduino)); // ThreadStart() is a delegate (pointer type)
 
 
     }// void Start()
@@ -165,28 +178,33 @@ public class LEDMasterController : MonoBehaviour
     //  m_ledColorGenController.m_ledSenderHandler, which is defined in Commhub.cs
     public void UpdateLEDArray(byte[] ledArray) // ledArray is a reference type
     {
-        //Invoke("SendLedMessage", 1.0f);
-        if (m_ThreadAlreadyCreated == true)
-        {
-            // use prepared ledArray rather than given for debugging
 
-            // Send the new LED array only when the sending thread has finished sending the previous LEDArray
-            // THat is, only when m_Thread.IsAlive is false. It happends when the method of the thread returns;
-            // That is when the sending thread has sent all the LED array.
+        m_LEDArray = ledArray; // struc array: array is a reference type derived from
+                               // the abstract base type Array; they use foreach iteration
 
-            //Debug.Log("1) Thread State == " + m_Thread.ThreadState);
 
-            //Debug.Log("2) Thread.IsAlive " + m_Thread.IsAlive);
+                               //Invoke("SendLedMessage", 1.0f);
+                               //if (m_ThreadAlreadyCreated == true)
+                               // {
+                               // use prepared ledArray rather than given for debugging
 
-            //https://stackoverflow.com/questions/6578001/how-to-start-a-stopped-thread
-            //This would create a new instance of the thread and start it. The ThreadStateException error is because,
-            //simply, you can't re-start a thread that's in a stopped state.
-            // m_MyThread.Start() is only valid for threads in the Unstarted state.
-            //  What needs done in cases like this is to create a new thread instance and invoke Start() on the new instance.
+        // Send the new LED array only when the sending thread has finished sending the previous LEDArray
+        // THat is, only when m_Thread.IsAlive is false. It happends when the method of the thread returns;
+        // That is when the sending thread has sent all the LED array.
 
-            // send prepared byte arrays for debugging
+        //Debug.Log("1) Thread State == " + m_Thread.ThreadState);
 
-            if (!m_Thread.IsAlive)   // The thread was created but not alive?
+        //Debug.Log("2) Thread.IsAlive " + m_Thread.IsAlive);
+
+        //https://stackoverflow.com/questions/6578001/how-to-start-a-stopped-thread
+        //This would create a new instance of the thread and start it. The ThreadStateException error is because,
+        //simply, you can't re-start a thread that's in a stopped state.
+        // m_MyThread.Start() is only valid for threads in the Unstarted state.
+        //  What needs done in cases like this is to create a new thread instance and invoke Start() on the new instance.
+
+        // send prepared byte arrays for debugging
+
+        if (!m_Thread1.IsAlive)   // The thread was created but not alive?
             {  // is there a thread running?
                 // 
 
@@ -195,10 +213,9 @@ public class LEDMasterController : MonoBehaviour
 
                 try { 
 
-                    m_LEDArray = ledArray; // struc array: array is a reference type derived from
-                    // the abstract base type Array; they use foreach iteration
+                    
 
-                    m_Thread = new Thread(new ThreadStart(m_updateArduino));   // why create a new thread? Why not resume the 
+                    //m_Thread = new Thread(new ThreadStart(m_updateArduino));   // why create a new thread? Why not resume the 
                                                                                // previous thread?
                     // ThreadStart() is a delegate (pointer type)
                     // Thread state = unstarted when created
@@ -206,7 +223,7 @@ public class LEDMasterController : MonoBehaviour
 
                     // Starting The thread sends m_LEDArray to the arduino master
 
-                    m_Thread.Start();
+                    m_Thread1.Start();
                     //Thread.Sleep(1000);
                     Debug.Log(" started to send LED array to arduino");
 
@@ -234,27 +251,27 @@ public class LEDMasterController : MonoBehaviour
             { // the thread is alive
                // Debug.Log("Thread is alive; Wait until it finishes and the arrived array of led bytes is discarded");
           
-                // The sending thread is still busy sending  the previous LED array =>: The arrived LED array is discarded
+                // The sending thread is still busy sending  the previous LED array =>: The newly arrived LED array is discarded
             }
-        }//if (m_ThreadAlreadyCreated == true)
+        //}//if (m_ThreadAlreadyCreated == true)
 
-        else
-        { // The  thread has been never created;
+        //else
+        //{ // The  thread has been never created;
 
            
 
-             m_LEDArray = ledArray; // struc array: array is a reference type derived from
-            // the abstract base type Array; they use foreach iteration
+        //     m_LEDArray = ledArray; // struc array: array is a reference type derived from
+        //    // the abstract base type Array; they use foreach iteration
 
-            m_Thread = new Thread(new ThreadStart(m_updateArduino));
-            //m_Thread.IsBackground = true;
+        //    m_Thread = new Thread(new ThreadStart(m_updateArduino));
+        //    //m_Thread.IsBackground = true;
 
-            // Starting The thread sends m_LEDArray to the arduino master
-            m_Thread.Start();
-            Debug.Log(" started to send LED array to arduino for the first time");
+        //    // Starting The thread sends m_LEDArray to the arduino master
+        //    m_Thread.Start();
+        //    Debug.Log(" started to send LED array to arduino for the first time");
 
-            m_ThreadAlreadyCreated = true;
-        } //  // The  thread has been never created;
+        //    m_ThreadAlreadyCreated = true;
+        //} //  // The  thread has been never created;
 
     } //  UpdateLEDArray()
 
