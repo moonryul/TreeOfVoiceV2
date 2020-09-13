@@ -314,6 +314,98 @@ void setup (void) {
 
 
 
+//// Right  Unos
+//for (int i = 0; i < NumPixels1R *3; i++)
+//{
+//
+//  if ( i%3 == 0 ) // i is a  multiple of 3 
+//  { 
+//    m_totalReceiveBuffer[ByteSizeLeft + i]=  0;    
+//  }
+//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+//  { 
+//    m_totalReceiveBuffer[ByteSizeLeft + i]=  254;    
+//  }
+//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+//  { 
+//    m_totalReceiveBuffer[ByteSizeLeft + i]= 0;
+//    
+//  }
+//}
+//for (int i = 0; i < NumPixels2R *3; i++) 
+//  {
+//
+//  if ( i%3 == 0 ) // i is a  multiple of 3 
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]=  0;    
+//  }
+//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 254;    
+//  }
+//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + i]=  0;
+//    
+//  }
+//}
+//
+//for (int i = 0; i < NumPixels3R *3; i++)
+//{
+//
+//  if ( i%3 == 0 ) // i is a  multiple of 3 
+//  { 
+//    m_totalReceiveBuffer[ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 0;    
+//  }
+//  if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 254;    
+//  }
+//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + i]= 0;
+//    
+//  }
+//}
+//
+//for (int i = 0; i < NumPixels4R *3; i++) 
+//{
+//
+//  if ( i%3 == 0 ) // i is a  multiple of 3 
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;    
+//  }
+//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]= 254;    
+//  }
+//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;
+//    
+//  }
+//
+//}
+//
+//for (int i = 0; i < NumPixels5R *3; i++) 
+//{
+//
+//  if ( i%3 == 0 ) // i is a  multiple of 3 
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]= 0;    
+//  }
+//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]= 254;    
+//  }
+//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+//  { 
+//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]= 0;
+//    
+//  }
+//
+//}//for
+
 // Right  Unos
 for (int i = 0; i < NumPixels1R *3; i++)
 {
@@ -324,7 +416,7 @@ for (int i = 0; i < NumPixels1R *3; i++)
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ByteSizeLeft + i]=  254;    
+    m_totalReceiveBuffer[ByteSizeLeft + i]=  0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
@@ -341,7 +433,7 @@ for (int i = 0; i < NumPixels2R *3; i++)
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 254;    
+    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
@@ -359,7 +451,7 @@ for (int i = 0; i < NumPixels3R *3; i++)
   }
   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 254;    
+    m_totalReceiveBuffer[ ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
@@ -377,7 +469,7 @@ for (int i = 0; i < NumPixels4R *3; i++)
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]= 254;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
@@ -396,7 +488,7 @@ for (int i = 0; i < NumPixels5R *3; i++)
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]= 254;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
@@ -484,7 +576,8 @@ void loop ()
    Serial.print("message 3 [foloop] in loop():");
 
          
-   for (int i = 0; i < m_totalByteSize; i++) 
+   for (int i = 0; i < m_totalByteSize; i++) // because the printing process is slow, the message may be confused
+   // if you execute loop() two fast. 
    {
    
     // print the received data from first Mega to the second Mega to the PC monitor
