@@ -51,8 +51,8 @@ public class LEDColorGenController : MonoBehaviour
     public float m_LEDGridUnitX = 1.2f / 24;       // 1.2 is divided into 24 units
     public float m_LEDGridUnitY = 2.0f / 32;      // 2m is divided into 32 units
 
-    public int m_NumOfLEDInBox1L = 35;
-    public Vector2[] m_LEDArray1L =
+    public int m_NumOfLEDInBox5L = 35;
+    public Vector2[] m_LEDArray5L =
         {      new Vector2(4,4), new Vector2(8,2), new Vector2(12,3), new Vector2(16,5), new Vector2(15,11),
                new Vector2(12,8), new Vector2(8,7), new Vector2(4,9), new Vector2(8,12), new Vector2(12,13),
                new Vector2(19,7), new Vector2(22,5), new Vector2(23,9), new Vector2(18,31), new Vector2(13,30),
@@ -65,8 +65,8 @@ public class LEDColorGenController : MonoBehaviour
 
 
 
-    public int m_NumOfLEDInBox1R = 27;
-    public Vector2[] m_LEDArray1R =
+    public int m_NumOfLEDInBox5R = 27;
+    public Vector2[] m_LEDArray5R =
         {      new Vector2(21, 30),new Vector2(12, 31), new Vector2(4,29),new Vector2(6, 17),new Vector2(11, 19),
                new Vector2(15, 17),new Vector2(18, 19), new Vector2(21, 20),new Vector2(20,25),new Vector2(17, 25),
                new Vector2(13, 26),new Vector2(9, 25),  new Vector2(5,24), new Vector2(8, 13),new Vector2(12, 12),
@@ -75,8 +75,8 @@ public class LEDColorGenController : MonoBehaviour
                new Vector2(11,1),  new Vector2(5, 2)
        };
 
-    public int m_NumOfLEDInBox2L = 30;
-    public Vector2[] m_LEDArray2L =
+    public int m_NumOfLEDInBox4L = 30;
+    public Vector2[] m_LEDArray4L =
         {     new Vector2(4, 4),   new Vector2(8, 2),  new Vector2(11, 3), new Vector2(16, 5),  new Vector2(20, 4),
               new Vector2(17, 9), new Vector2(14,7), new Vector2(11,9),    new Vector2(7, 7),   new Vector2(3, 9),
               new Vector2(5, 12), new Vector2(9, 13), new Vector2(12,14),  new Vector2(16, 14), new Vector2(20,15),
@@ -85,8 +85,8 @@ public class LEDColorGenController : MonoBehaviour
               new Vector2(17,23),  new Vector2(13, 21), new Vector2(10,23), new Vector2(7, 25),  new Vector2(4, 24)
        };
 
-    public int m_NumOfLEDInBox2R = 30;
-    public Vector2[] m_LEDArray2R =
+    public int m_NumOfLEDInBox4R = 30;
+    public Vector2[] m_LEDArray4R =
         {     new Vector2(21, 1), new Vector2(18, 2), new Vector2(15, 3), new Vector2(8, 3),  new Vector2(3, 2),
               new Vector2(1, 5),  new Vector2(4, 7), new Vector2(8, 8), new Vector2(11, 6), new Vector2(15, 8),
               new Vector2(20, 9), new Vector2(19, 13), new Vector2(16, 12),new Vector2(12, 11),new Vector2(6, 11),
@@ -116,8 +116,8 @@ public class LEDColorGenController : MonoBehaviour
               new Vector2(15, 14),new Vector2(21, 13)
        };
 
-    public int m_NumOfLEDInBox4L = 29;
-    public Vector2[] m_LEDArray4L =
+    public int m_NumOfLEDInBox2L = 29;
+    public Vector2[] m_LEDArray2L =
         {     new Vector2(3, 4), new Vector2(7, 6),new Vector2(11, 7),new Vector2(12, 4), new Vector2(18, 1),
               new Vector2(19, 3),new Vector2(22, 6),new Vector2(15, 9),new Vector2(5, 12),new Vector2(11, 15),
               new Vector2(16, 12),new Vector2(21, 22),new Vector2(3, 18),new Vector2(8, 11),new Vector2(15, 12),
@@ -127,8 +127,8 @@ public class LEDColorGenController : MonoBehaviour
        };
 
 
-    public int m_NumOfLEDInBox4R = 25;
-    public Vector2[] m_LEDArray4R =
+    public int m_NumOfLEDInBox2R = 25;
+    public Vector2[] m_LEDArray2R =
         {     new Vector2(22, 28), new Vector2(17, 31), new Vector2(6, 31),new Vector2(3, 27), new Vector2(8, 25),
               new Vector2(13, 24), new Vector2(9, 22), new Vector2(3, 19), new Vector2(17, 22), new Vector2(20, 26),
               new Vector2(20, 17), new Vector2(11, 16), new Vector2(5, 15), new Vector2(10, 15),new Vector2(16, 11),
@@ -137,8 +137,8 @@ public class LEDColorGenController : MonoBehaviour
        };
 
 
-    public int m_NumOfLEDInBox5L = 30;
-    public Vector2[] m_LEDArray5L =
+    public int m_NumOfLEDInBox1L = 30;
+    public Vector2[] m_LEDArray1L =
         {     new Vector2(13, 1), new Vector2(16, 3), new Vector2(19, 5),new Vector2(17, 6),new Vector2(12, 5),
               new Vector2(6, 5),  new Vector2(6, 7), new Vector2(10, 8), new Vector2(14, 9), new Vector2(18, 10),
               new Vector2(17, 13), new Vector2(10, 12), new Vector2(4, 12), new Vector2(9, 15), new Vector2(13,15),
@@ -147,8 +147,8 @@ public class LEDColorGenController : MonoBehaviour
               new Vector2(19, 22), new Vector2(6, 27), new Vector2(9, 30), new Vector2(15, 29), new Vector2(20, 28)
        };
 
-    public int m_NumOfLEDInBox5R = 25;
-    public Vector2[] m_LEDArray5R =
+    public int m_NumOfLEDInBox1R = 25;
+    public Vector2[] m_LEDArray1R =
         {     new Vector2(19, 1), new Vector2(16, 3), new Vector2(9, 3), new Vector2(3, 5), new Vector2(4, 7),
               new Vector2(9, 8), new Vector2(15, 6), new Vector2(19, 7), new Vector2(21, 9), new Vector2(19, 12),
               new Vector2(12, 11), new Vector2(5, 13), new Vector2(9, 15), new Vector2(19, 17), new Vector2(12, 19),
@@ -218,8 +218,8 @@ public class LEDColorGenController : MonoBehaviour
 
 
     // 150 LEDs in each chain:
-    public int m_leftChain = 152;
-    public int m_rightChain = 148;
+     int m_leftChain = 152;
+    int m_rightChain = 134;
 
     // Arrange 30 LEDs in a single LED panel whose dimensions are as follows:
     // There are 5 panels on each side.
@@ -319,9 +319,13 @@ public class LEDColorGenController : MonoBehaviour
         //m_totalNumOfLEDs = m_firstChain + m_secondChain
         //                  + m_thirdChain + m_fourthChain;
 
-        m_totalNumOfLEDs = m_leftChain + m_rightChain;
+        //m_totalNumOfLEDs = m_leftChain + m_rightChain;
 
-        m_startAngleOfChain1 = m_beginFromInChain1 * M_PI / 180; // degree
+        m_totalNumOfLEDs = m_NumOfLEDInBox1L + m_NumOfLEDInBox2L + m_NumOfLEDInBox3L + m_NumOfLEDInBox4L + m_NumOfLEDInBox5L
+                           + m_NumOfLEDInBox1R + m_NumOfLEDInBox2R + m_NumOfLEDInBox3R + m_NumOfLEDInBox4R + m_NumOfLEDInBox5R;
+
+
+       m_startAngleOfChain1 = m_beginFromInChain1 * M_PI / 180; // degree
         m_startAngleOfChain2 = m_beginFromInChain2 * M_PI / 180; // degree
 
 

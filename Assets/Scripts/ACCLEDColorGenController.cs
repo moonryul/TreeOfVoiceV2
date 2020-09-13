@@ -829,8 +829,8 @@ public class ACCLEDColorGenController : MonoBehaviour
     //        yield return new WaitForSeconds(5.0f);
     //        m_LEDSenderHandler.Invoke(m_LEDArray);
     //    }
-    //    calls UpdateLEDArray(byte[] ledArray)
-    //     m_serialPort.Write(m_LEDArray, 0, m_LEDArray.Length);
+    //   // m_LEDSenderHandler.Invoke(m_LEDArray) calls UpdateLEDArray(byte[] ledArray)
+    //   //  m_serialPort.Write(m_LEDArray, 0, m_LEDArray.Length);
     //}
 
 } //  LEDColorGenController class

@@ -53,19 +53,19 @@ int ss5 = 45; // connect master pin 47 to the fifth uno  slave pin 10
 //const int NumPixels4 = 52;
 
 const int NumPixels1L = 30; // The left of the 1st box
-//const int NumPixels1R = 27;
+//const int NumPixels1R = 25;
 
 const int NumPixles2L = 29;
-//const int NumPixels2R = 30;
+//const int NumPixels2R = 25;
 
 const int NumPixels3L = 28;
-const int NumPixels3R = 27;
+//const int NumPixels3R = 27;
 
 const int NumPixels4L = 30;
-//const int NumPixels4R = 25;
+//const int NumPixels4R =  30;
 
-const int NumPixels5L = 25;
-//const int NumPixels5R = 25;
+const int NumPixels5L = 35;
+//const int NumPixels5R = 27;
 
 
 const int ByteSize1L = NumPixels1L * 3;
@@ -563,7 +563,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // If other libraries use the SPI (hardware resource)  from interrupts,
   // they will be prevented from accessing SPI until you call SPI.endTransaction().
 
-  delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
+  //delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
 
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 
@@ -571,21 +571,22 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 void printLEDBytesToSerialMonitor( byte * totalReceiveBuffer,  int totalByteSize  )
 {
 
+// The LED data for the left LED array (254,0,0; 254,0,0;...
  for (int i = 0; i < totalByteSize; i++) {
 
     // print the received data from PC to the serial monitor via Serial1 of Mega
     if ( i % 3 == 0) {
-     Serial1.print("r:");
-      Serial1.println(totalReceiveBuffer[i]);
+     Serial.print("r:");
+      Serial.println(totalReceiveBuffer[i]);
     }
     else if ( i % 3 == 1) {
-     Serial1.print("g:");
-     Serial1.println(totalReceiveBuffer[i]);
+     Serial.print("g:");
+     Serial.println(totalReceiveBuffer[i]);
     }
 
    else {
-      Serial1.print("b:");
-      Serial1.println(totalReceiveBuffer[i]);
+      Serial.print("b:");
+      Serial.println(totalReceiveBuffer[i]);
     }
 
   }// for

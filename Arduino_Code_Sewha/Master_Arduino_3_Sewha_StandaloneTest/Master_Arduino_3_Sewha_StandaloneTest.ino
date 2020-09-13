@@ -64,7 +64,7 @@ const int NumPixels3L = 28;
 const int NumPixels3R = 27;
 
 const int NumPixels4L = 30;
-const int NumPixels4R = 40;
+const int NumPixels4R = 30;
 
 const int NumPixels5L = 35;
 const int NumPixels5R = 27;
@@ -119,7 +119,10 @@ byte m_totalReceiveBuffer[m_totalByteSize] ;
 const byte m_startByte = 255;
 int m_pos;
 
-boolean m_newFrameHasBeenCompleted = false;
+//boolean m_newFrameHasBeenCompleted = false;
+
+boolean m_newFrameHasBeenCompleted = true; // only for debugging the message printing
+
 boolean m_newFrameHasStarted = false;
 
 // newFrameHasArrived is true when m_totalNumOfPixels of LED Pixel Data has arrived but not yet displayed or sent
@@ -238,15 +241,15 @@ for (int i = 0; i < NumPixels1L *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[i]= 1;    
+    m_totalReceiveBuffer[i]= 254;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[i]= 2;    
+    m_totalReceiveBuffer[i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[i]= 3;
+    m_totalReceiveBuffer[i]= 0;
     
   }
 }
@@ -255,15 +258,15 @@ for (int i = 0; i < NumPixels2L *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 3;    
+    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 254;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 4;    
+    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 5;
+    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 0;
     
   }
 }
@@ -273,15 +276,15 @@ for (int i = 0; i < NumPixels3L *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 6;    
+    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 254;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 7;    
+    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + i]= 8;
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + i]= 0;
     
   }
 }
@@ -291,15 +294,15 @@ for (int i = 0; i < NumPixels4L *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=9;    
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=254;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=10;    
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=11;
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=0;
     
   }
 
@@ -310,15 +313,15 @@ for (int i = 0; i < NumPixels5L *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 +  NumPixels4L *3+ i]=12;    
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 +  NumPixels4L *3+ i] = 254;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3+ i]=13;    
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3+ i]= 0;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3 + i]=14;
+    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3 + i]= 0;
     
   }
 
@@ -331,15 +334,15 @@ for (int i = 0; i < NumPixels1R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ByteSizeLeft + i]= 1;    
+    m_totalReceiveBuffer[ByteSizeLeft + i]=  0;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ByteSizeLeft + i]= 2;    
+    m_totalReceiveBuffer[ByteSizeLeft + i]=  254    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ByteSizeLeft + i]= 3;
+    m_totalReceiveBuffer[ByteSizeLeft + i]= 0;
     
   }
 }
@@ -348,15 +351,15 @@ for (int i = 0; i < NumPixels2R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 3;    
+    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]=  0;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 4;    
+    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 254;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + i]= 5;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + i]=  0;
     
   }
 }
@@ -366,15 +369,15 @@ for (int i = 0; i < NumPixels3R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 6;    
+    m_totalReceiveBuffer[ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 0;    
   }
-  else if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
+  if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 7;    
+    m_totalReceiveBuffer[ ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 254;    
   }
-  else if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
+   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + i]= 8;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + i]= 0;
     
   }
 }
@@ -384,15 +387,15 @@ for (int i = 0; i < NumPixels4R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=9;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=10;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]= 254;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]=11;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;
     
   }
 
@@ -403,15 +406,15 @@ for (int i = 0; i < NumPixels5R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]=12;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]= 0;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]=13;    
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]= 254;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
-    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]=14;
+    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]= 0;
     
   }
 
@@ -455,7 +458,7 @@ void loop (void) {
 
   //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
 
-  m_newFrameHasBeenCompleted = true; // for debug
+ 
   
   if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
     showNewFrame(); // display the new frame of LED data that has arrived
@@ -465,70 +468,70 @@ void loop (void) {
 
 } // loop()
 
-void myReadByte() {
-
-  static int index = 0; // index of the buffer
-
-  byte c; // received byte
-
-  int count = Serial.available();
-
-
-  Serial1.print("count=");   Serial1.print( count); // For Debug
-  if (count == 0) {
-    // not bytes has arrived
-    return;
-  }
-
-  // there are avaiable bytes in the incoming ring buffer
-  c = Serial.read(); // read the first byte in the incoming ring buffer, changing the pointer to the next place
-
-  Serial1.print("byte=");   Serial1.print( c); // For Debug
-  
-  // there are two cases to handle: (1) the start byte HAS arrived (2) the start byte has NOT arrived
-  // These two states are indicated by  m_newFrameHasStarted
-
- // case 1:
-  if ( !m_newFrameHasStarted ) { // the arrival of the startByte has not been verified. 
-    
-    // check if the start byte has arrived
-
-    if ( c == m_startByte ) { // the startbyte was sent by Unity
-      m_newFrameHasStarted = true; // this indicates that the start byte arrived;
-      m_pos = 0; // points to the beginning of the buffer  to read the next byte into; The startByte is not inserted to the buffer
-      return;
-
-    }
-
-    else { // the read byte is not a startByte =>  Ignore the byte and continue to read to find the start byte;
-      // after this  return, myReadByte() is called again
-      return;
-
-    }
-
-  } // if ( !m_newFrameHasStarted )
-
-// case 2:
-  else { // The new frame has started (the start byte arrived) =>  add the received byte to the receive buffer at the empty location m_pos
-  
-    m_totalReceiveBuffer[m_pos] = c;
-
-    if ( m_pos == m_totalByteSize - 1) { // if the buffer index points to the last position of the receive buffer
-      // it means that the receive buffer is full and the current frame has been completed.
-      m_newFrameHasBeenCompleted == true; // this flag is used to indicate that the new frame has been completed and is ready to be sent to the slaves
-      m_newFrameHasStarted = false;   // this is set to indicate that the next start byte is being waited for
-      return;
-    } // the receive buffer is full
-
-    else { // the receive buffer is not yet full
-      m_pos ++ ; // go to the next location of the buffer
-      return;
-    }//
-
-  }//  the start byte has started and the current frame is being constructed
-
-}//myReadByte()
-
+//void myReadByte() {
+//
+//  static int index = 0; // index of the buffer
+//
+//  byte c; // received byte
+//
+//  int count = Serial.available();
+//
+//
+//  Serial1.print("count=");   Serial1.print( count); // For Debug
+//  if (count == 0) {
+//    // not bytes has arrived
+//    return;
+//  }
+//
+//  // there are avaiable bytes in the incoming ring buffer
+//  c = Serial.read(); // read the first byte in the incoming ring buffer, changing the pointer to the next place
+//
+//  Serial1.print("byte=");   Serial1.print( c); // For Debug
+//  
+//  // there are two cases to handle: (1) the start byte HAS arrived (2) the start byte has NOT arrived
+//  // These two states are indicated by  m_newFrameHasStarted
+//
+// // case 1:
+//  if ( !m_newFrameHasStarted ) { // the arrival of the startByte has not been verified. 
+//    
+//    // check if the start byte has arrived
+//
+//    if ( c == m_startByte ) { // the startbyte was sent by Unity
+//      m_newFrameHasStarted = true; // this indicates that the start byte arrived;
+//      m_pos = 0; // points to the beginning of the buffer  to read the next byte into; The startByte is not inserted to the buffer
+//      return;
+//
+//    }
+//
+//    else { // the read byte is not a startByte =>  Ignore the byte and continue to read to find the start byte;
+//      // after this  return, myReadByte() is called again
+//      return;
+//
+//    }
+//
+//  } // if ( !m_newFrameHasStarted )
+//
+//// case 2:
+//  else { // The new frame has started (the start byte arrived) =>  add the received byte to the receive buffer at the empty location m_pos
+//  
+//    m_totalReceiveBuffer[m_pos] = c;
+//
+//    if ( m_pos == m_totalByteSize - 1) { // if the buffer index points to the last position of the receive buffer
+//      // it means that the receive buffer is full and the current frame has been completed.
+//      m_newFrameHasBeenCompleted == true; // this flag is used to indicate that the new frame has been completed and is ready to be sent to the slaves
+//      m_newFrameHasStarted = false;   // this is set to indicate that the next start byte is being waited for
+//      return;
+//    } // the receive buffer is full
+//
+//    else { // the receive buffer is not yet full
+//      m_pos ++ ; // go to the next location of the buffer
+//      return;
+//    }//
+//
+//  }//  the start byte has started and the current frame is being constructed
+//
+//}//myReadByte()
+//
 
 
 void showNewFrame() {
@@ -670,7 +673,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // If other libraries use the SPI (hardware resource)  from interrupts,
   // they will be prevented from accessing SPI until you call SPI.endTransaction().
 
-  delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
+  //delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
 
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 
@@ -680,19 +683,19 @@ void printLEDBytesToSerialMonitor( byte * totalReceiveBuffer,  int totalByteSize
 
  for (int i = 0; i < totalByteSize; i++) {
 
-    // print the received data from PC to the serial monitor via Serial1 of Mega
+    // print the received data from first Mega to the second Mega to the PC monitor
     if ( i % 3 == 0) {
-     Serial1.print("r:");
-      Serial1.println(totalReceiveBuffer[i]);
+     Serial.print("r:");
+      Serial.println(totalReceiveBuffer[i]);
     }
     else if ( i % 3 == 1) {
-     Serial1.print("g:");
-     Serial1.println(totalReceiveBuffer[i]);
+     Serial.print("g:");
+     Serial.println(totalReceiveBuffer[i]);
     }
 
    else {
-      Serial1.print("b:");
-      Serial1.println(totalReceiveBuffer[i]);
+      Serial.print("b:");
+      Serial.println(totalReceiveBuffer[i]);
     }
 
   }// for

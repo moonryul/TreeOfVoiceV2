@@ -54,20 +54,20 @@ int ss5 = 45; // connect master pin 47 to the fifth uno  slave pin 10
 //const int NumPixels4 = 52;
 
 
-const int NumPixels1L = 35; // The left of the 1st box
-const int NumPixels1R = 27;
+const int NumPixels1L = 30; // The left of the 1st box
+const int NumPixels1R = 25;
 
-const int NumPixles2L = 30;
-const int NumPixels2R = 30;
+const int NumPixles2L = 29;
+const int NumPixels2R = 25;
 
 const int NumPixels3L = 28;
 const int NumPixels3R = 27;
 
-const int NumPixels4L = 29;
-const int NumPixels4R = 25;
+const int NumPixels4L = 30;
+const int NumPixels4R = 30;
 
-const int NumPixels5L = 30;
-const int NumPixels5R = 25;
+const int NumPixels5L = 35;
+const int NumPixels5R = 27;
 
 
 
@@ -461,7 +461,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // If other libraries use the SPI (hardware resource)  from interrupts,
   // they will be prevented from accessing SPI until you call SPI.endTransaction().
 
-  delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
+ // delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
 
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 

@@ -20,7 +20,7 @@ public class LEDMasterController : MonoBehaviour
     public string m_portName = "COM0"; // should be specified in the inspector
     SerialPort m_serialPort;
     public int m_threadCounter = 0;
-    public int m_arduinoSendPeriod = 500;
+    public int m_arduinoSendPeriod = 500;    // Is it used somewhere else?
 
     /// </summary>
     //SerialToArduinoMgr m_SerialToArduinoMgr; 
@@ -107,10 +107,6 @@ public class LEDMasterController : MonoBehaviour
     //serialPort1.Write(b,0,4);
     void Start()
     {
-        //m_ledColorGenController.m_ledSenderHandler += UpdateLEDArray; // THis is moved to CommHub.cs
-
-        // public delegate LEDSenderHandler (byte[] LEDArray); defined in LEDColorGenController
-        // public event LEDSenderHandler m_ledSenderHandler;
 
         m_LEDColorGenController = this.gameObject.GetComponent<LEDColorGenController>();
 
@@ -153,12 +149,20 @@ public class LEDMasterController : MonoBehaviour
         };
 
         // m_Thread = new Thread(new ThreadStart(m_updateArduino)); // ThreadStart() is a delegate (pointer type)
-                                                         // Thread state = unstarted
+                                                         // Thread state = unstarted  when created
 
 
     }// void Start()
 
 
+
+    //m_ledColorGenController.m_ledSenderHandler += UpdateLEDArray; // THis is moved to CommHub.cs
+
+    // public delegate LEDSenderHandler (byte[] LEDArray); defined in LEDColorGenController
+    // public event LEDSenderHandler m_ledSenderHandler;
+
+    // UpdateLEDArray() is the event handler for updating the LED array; it is pointed by the delegate
+    //  m_ledColorGenController.m_ledSenderHandler, which is defined in Commhub.cs
     public void UpdateLEDArray(byte[] ledArray) // ledArray is a reference type
     {
         //Invoke("SendLedMessage", 1.0f);
@@ -167,7 +171,7 @@ public class LEDMasterController : MonoBehaviour
             // use prepared ledArray rather than given for debugging
 
             // Send the new LED array only when the sending thread has finished sending the previous LEDArray
-            // THat is, only when m_Thread.IsAlive is false. Tit happends when the method of the thread returns;
+            // THat is, only when m_Thread.IsAlive is false. It happends when the method of the thread returns;
             // That is when the sending thread has sent all the LED array.
 
             //Debug.Log("1) Thread State == " + m_Thread.ThreadState);
@@ -182,7 +186,7 @@ public class LEDMasterController : MonoBehaviour
 
             // send prepared byte arrays for debugging
 
-            if (!m_Thread.IsAlive)
+            if (!m_Thread.IsAlive)   // The thread was created but not alive?
             {  // is there a thread running?
                 // 
 
@@ -194,14 +198,17 @@ public class LEDMasterController : MonoBehaviour
                     m_LEDArray = ledArray; // struc array: array is a reference type derived from
                     // the abstract base type Array; they use foreach iteration
 
-                    m_Thread = new Thread(new ThreadStart(m_updateArduino));
+                    m_Thread = new Thread(new ThreadStart(m_updateArduino));   // why create a new thread? Why not resume the 
+                                                                               // previous thread?
+                    // ThreadStart() is a delegate (pointer type)
+                    // Thread state = unstarted when created
                     //m_Thread.IsBackground = true;
 
                     // Starting The thread sends m_LEDArray to the arduino master
 
                     m_Thread.Start();
                     //Thread.Sleep(1000);
-                   // Debug.Log(" started to send LED array to arduino");
+                    Debug.Log(" started to send LED array to arduino");
 
 
                 }
@@ -211,10 +218,10 @@ public class LEDMasterController : MonoBehaviour
                     Debug.Log(" Exception =" + ex.ToString());
 #if UNITY_EDITOR
                     // Application.Quit() does not work in the editor so
-                    UnityEditor.EditorApplication.isPlaying = false;
+                   // UnityEditor.EditorApplication.isPlaying = false;
                     //UnityEditor.EditorApplication.Exit(0);
 #else
-                   Application.Quit();
+                   //Application.Quit();
 #endif
 
                 }
@@ -244,7 +251,7 @@ public class LEDMasterController : MonoBehaviour
 
             // Starting The thread sends m_LEDArray to the arduino master
             m_Thread.Start();
-//Debug.Log(" started to send LED array to arduino for the first time");
+            Debug.Log(" started to send LED array to arduino for the first time");
 
             m_ThreadAlreadyCreated = true;
         } //  // The  thread has been never created;
