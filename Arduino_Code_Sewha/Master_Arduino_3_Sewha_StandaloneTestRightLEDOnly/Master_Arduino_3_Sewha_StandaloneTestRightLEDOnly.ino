@@ -461,7 +461,8 @@ Serial.print("message 2 in setup:");
 //SO: I will stick with using readBytes() because it seems to produce consistent results
 //and I can predict the number of bytes I should receive back. –
 
-void loop () {
+void loop () 
+{
 
   // If Serial.read() == -1 =oxff , it means that head == tail, i.e. there are no bytes to read, that is, underflow happened
   //Serial1.print("b:");
@@ -469,10 +470,33 @@ void loop () {
   //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
 
    Serial.print("message 3 in loop():");
-      printLEDBytesToSerialMonitor();
+
+         
+   for (int i = 0; i < m_totalByteSize; i++) 
+   {
+   
+    // print the received data from first Mega to the second Mega to the PC monitor
+    if ( i % 3 == 0) {
+     Serial.print("r:");
+      Serial.println(m_totalReceiveBuffer[i]);
+    }
+    else if ( i % 3 == 1) {
+     Serial.print("g:");
+     Serial.println(m_totalReceiveBuffer[i]);
+    }
+
+   else {
+      Serial.print("b:");
+      Serial.println(m_totalReceiveBuffer[i]);
+    }
+
+  }// for
+
+
       
   
-  if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
+  if ( m_newFrameHasBeenCompleted ) 
+  { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
    // showNewFrame(); // display the new frame of LED data that has arrived
   
    sendLEDBytesToSlaves();
@@ -705,7 +729,7 @@ void  sendLEDBytesToSlaves()
 void printLEDBytesToSerialMonitor()
 {
 // for debugging
-Serial.print("message code the same in setup in loop:");
+Serial.print("message code:  the same as in  setup in loop:");
 
 //Serial.print("array address:");
 //Serial.println( int( &m_totalReceiveBuffer[0] ) );
