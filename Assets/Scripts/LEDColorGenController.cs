@@ -184,10 +184,16 @@ public class LEDColorGenController : MonoBehaviour
     //public ActionPlanController m_actionPlanController;
 
     public int m_colorSamplingMethod = 0; // 0 = get the nearest neighbor color
-                                          // 1 = get the average color of the neighbors
+                                          // 1 = get the average color of the neighbors              
 
-    public int m_totalNumOfLEDs = 300; // computed within script
 
+
+
+
+    public int m_NumOfLEDsLeft;
+    public int m_NumOfLEDsRight;                   
+
+    public int m_totalNumOfLEDs; // computed within script
 
     public float m_samplingRadius = 5f; //10cm
 
@@ -321,10 +327,14 @@ public class LEDColorGenController : MonoBehaviour
 
         //m_totalNumOfLEDs = m_leftChain + m_rightChain;
 
-        m_totalNumOfLEDs = m_NumOfLEDInBox1L + m_NumOfLEDInBox2L + m_NumOfLEDInBox3L + m_NumOfLEDInBox4L + m_NumOfLEDInBox5L
-                           + m_NumOfLEDInBox1R + m_NumOfLEDInBox2R + m_NumOfLEDInBox3R + m_NumOfLEDInBox4R + m_NumOfLEDInBox5R;
+        m_NumOfLEDsLeft = m_NumOfLEDInBox5L + m_NumOfLEDInBox4L + m_NumOfLEDInBox3L
+                            + m_NumOfLEDInBox2L + m_NumOfLEDInBox1L;
 
+        m_NumOfLEDsRight = m_NumOfLEDInBox5R + m_NumOfLEDInBox4R + m_NumOfLEDInBox3R 
+                          + m_NumOfLEDInBox2R + m_NumOfLEDInBox1R;
 
+        m_totalNumOfLEDs = m_NumOfLEDsLeft + m_NumOfLEDsRight;
+        
        m_startAngleOfChain1 = m_beginFromInChain1 * M_PI / 180; // degree
         m_startAngleOfChain2 = m_beginFromInChain2 * M_PI / 180; // degree
 
