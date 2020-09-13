@@ -125,6 +125,8 @@ int m_pos;
 
 boolean m_newFrameHasBeenCompleted = true; // only for debugging the message printing
 
+boolean  m_newFrameToBePrinted = true;
+
 boolean m_newFrameHasStarted = false;
 
 // newFrameHasArrived is true when m_totalNumOfPixels of LED Pixel Data has arrived but not yet displayed or sent
@@ -162,7 +164,7 @@ void setup (void) {
 
   // set the pins from which SPI data is sent as outputs:
 
-  pinMode(ssLeft, OUTPUT);
+ // pinMode(ssLeft, OUTPUT);
  
   pinMode(ss1, OUTPUT);
   pinMode(ss2, OUTPUT);
@@ -173,7 +175,7 @@ void setup (void) {
   
 
  // Disable these Pins at the beginning by setting them HIGH
-  digitalWrite(ssLeft, HIGH);
+ // digitalWrite(ssLeft, HIGH);
   
   digitalWrite(ss1, HIGH);
   digitalWrite(ss2, HIGH);
@@ -465,8 +467,16 @@ void loop (void) {
  
   
   if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
-    showNewFrame(); // display the new frame of LED data that has arrived
-    m_newFrameHasBeenCompleted = false;
+   // showNewFrame(); // display the new frame of LED data that has arrived
+  
+   sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
+
+   if (  m_newFrameToBePrinted ) {
+ 
+      printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
+      m_newFrameToBePrinted = false;
+   }
+   // m_newFrameHasBeenCompleted = false;
   }
 
 
