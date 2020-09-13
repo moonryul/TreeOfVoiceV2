@@ -1,4 +1,4 @@
-507123/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 //SPI Tutorial: https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all
 // https://forum.arduino.cc/index.php?topic=558963.0
 // Arduino UNO
@@ -30,7 +30,7 @@
 //int ss5 = 46;
 
 
-int ssLeft = 37; // connect master pin 37 the second mega master  pin 53
+//int ssLeft = 37; // connect master pin 37 the second mega master  pin 53
 
 int ss1 = 49; // connect master pin 49 to the first uno slave pin 10
 int ss2 = 48; // connect master pin 48 to the second uno   slave pin 10
@@ -57,7 +57,7 @@ int ss5 = 45; // connect master pin 47 to the fifth uno  slave pin 10
 const int NumPixels1L = 30; // The left of the 1st box
 const int NumPixels1R = 25;
 
-const int NumPixles2L = 29;
+const int NumPixels2L = 29;
 const int NumPixels2R = 25;
 
 const int NumPixels3L = 28;
@@ -72,7 +72,7 @@ const int NumPixels5R = 27;
 
 
 const int ByteSize1R = NumPixels1R * 3;
-const int ByteSize2R = NumPixles2R * 3;
+const int ByteSize2R = NumPixels2R * 3;
 const int ByteSize3R = NumPixels3R * 3;
 const int ByteSize4R = NumPixels4R * 3;
 const int ByteSize5R = NumPixels5R * 3;
@@ -344,7 +344,7 @@ for (int i = 0; i < NumPixels1R *3; i++)
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[ByteSizeLeft + i]=  254    
+    m_totalReceiveBuffer[ByteSizeLeft + i]=  254;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
@@ -427,6 +427,28 @@ for (int i = 0; i < NumPixels5R *3; i++)
 }
 
 
+// for debugging
+Serial.print("message in setup:");
+for (int i = 0; i < m_totalByteSize; i++) {
+
+    // print the received data from first Mega to the second Mega to the PC monitor
+    if ( i % 3 == 0) {
+     Serial.print("r:");
+      Serial.println(m_totalReceiveBuffer[i]);
+    }
+    else if ( i % 3 == 1) {
+     Serial.print("g:");
+     Serial.println(m_totalReceiveBuffer[i]);
+    }
+
+   else {
+      Serial.print("b:");
+      Serial.println(m_totalReceiveBuffer[i]);
+    }
+
+  }// for
+
+
 
 } // setup
 
@@ -472,7 +494,8 @@ void loop (void) {
    sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
 
    if (  m_newFrameToBePrinted ) {
- 
+
+      Serial.print("message in loop():");
       printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
       m_newFrameToBePrinted = false;
    }
