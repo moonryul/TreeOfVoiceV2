@@ -247,9 +247,14 @@ void loop (void) {
   //Serial1.print("b:");
 
   myReadByte(); // read a new byte changing the state of the reading process, m_newFrameHasArrived. 
+  
 
   if ( m_newFrameHasBeenCompleted ) { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
-    showNewFrame(); // display the new frame of LED data that has arrived
+   // showNewFrame(); // display the new frame of LED data that has arrived
+   
+    printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
+    sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
+  
     m_newFrameHasBeenCompleted = false;
   }
 
@@ -323,6 +328,7 @@ void myReadByte() {
 }//myReadByte()
 
 
+<<<<<<< Updated upstream
 
 void showNewFrame() {
 
@@ -334,6 +340,18 @@ void showNewFrame() {
   sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
 
 }// showNewFrame()
+=======
+//
+//void showNewFrame() {
+//
+//  sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
+//
+//  // print the ledBytes to the serial monitor via Serial1.
+//
+//  printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
+//
+//}// showNewFrame()
+>>>>>>> Stashed changes
 
 
 //int HardwareSerial::available(void)
@@ -367,14 +385,12 @@ void showNewFrame() {
 void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 {
 
-  // SPI.beginTransaction(SPISettingA);
 
   //https://forum.arduino.cc/index.php?topic=52111.0
   // With multiple slaves, only one slave is allowed to "own" the MISO line(by configuring it as an output).So when SS is brought low
   //for that slave it switches its MISO line from high - impedance to output, then it can reply to requests
   //from the master.When the SS is brought high again(inactive) that slave must reconfigure that line as high - impedance,
   //so another slave can use it.
-
 
 
   // send the left groups of LED data to the Mega slave:
@@ -401,50 +417,60 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[0], ByteSize1R);
+  //SPI.transfer( &totalReceiveBuffer[0], ByteSize1R);
 
+  for (int i = 0; i < ByteSize1R; i++)
+  {
+    SPI.transfer( totalReceiveBuffer[i] );
+  }
 // deselect the first SS line
   digitalWrite(ss1, HIGH);
 
-  //SPI.endTransaction();
-
+  
   // send the second group of data to the second slave:
-  // SPI.beginTransaction(SPISettingB);
-
+  
  // select the second SS Line
   digitalWrite(ss2, LOW);
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSize1R], ByteSize2R);
+  //SPI.transfer( &totalReceiveBuffer[ByteSize1R], ByteSize2R);
 
+  for (int i = 0; i < ByteSize2R; i++)
+  {
+    SPI.transfer( totalReceiveBuffer[ByteSize1R + i] );
+  }
+  
  // deselect the second SS Line
   digitalWrite(ss2, HIGH);
 
-  //SPI.endTransaction();
 
   // send the third group of data to the third slave:
-  //SPI.beginTransaction(SPISettingC);
+
 
 // select the third SS line
   digitalWrite(ss3, LOW); 
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
+  //SPI.transfer( &totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
+  for (int i = 0; i < ByteSize3R; i++)
+  {
+    SPI.transfer( totalReceiveBuffer[ByteSize1R + ByteSize2R + i] );
+  }
 
 // deselect the third SS line
   digitalWrite(ss3, HIGH);
 
-  //SPI.endTransaction();
-
-  // send the fourth group of data to the fourth slave:
-
-  // SPI.beginTransaction(SPISettingD);
-
+ 
   // select the fourth SS line
   digitalWrite(ss4, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
+  //SPI.transfer( &totalReceiveBuffer[ ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
+   for (int i = 0; i < ByteSize4R; i++)
+  {
+    SPI.transfer( totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R + i] );
+  }
+
 
  // deselect the fourth SS line
   digitalWrite(ss4, HIGH);
@@ -453,7 +479,12 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss5, LOW);  
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &totalReceiveBuffer[ ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
+  //SPI.transfer( &totalReceiveBuffer[ ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
+   for (int i = 0; i < ByteSize5R; i++)
+  {
+    SPI.transfer( totalReceiveBuffer[ByteSize1R + ByteSize2R + + ByteSize3R + ByteSize4R + i] );
+  }
+
 
  // deselect the fifth SS line 
   digitalWrite(ss5, HIGH);

@@ -17,11 +17,16 @@ public class LEDMasterController : MonoBehaviour
     //
     //////////////////////////////////
     /// <summary>
+<<<<<<< Updated upstream
     public string m_portName1 = "COM22"; // should be specified in the inspector, serial1
     public string m_portName2 = "COM11"; // should be specified in the inspector, serial
 
     int m_NumOfThread1Start = 0;
     int m_NumOfThread2Start = 0;
+=======
+    public string m_portName1 = "COM22"; // should be specified in the inspector    COM22=Serial1
+    public string m_portName2 = "COM11"; // should be specified in the inspector    COM11=Serial
+>>>>>>> Stashed changes
 
     SerialPort m_serialPort1, m_serialPort2;
     //public int m_threadCounter = 0;
@@ -87,8 +92,13 @@ public class LEDMasterController : MonoBehaviour
 
         try
         {
+<<<<<<< Updated upstream
             //m_serialPort1.Open();      // serial1
             // m_serialPort2.Open();        // serial
+=======
+            //m_serialPort1.Open();  //Serial1
+            m_serialPort2.Open();  //Serial
+>>>>>>> Stashed changes
         }
         catch (Exception ex)
         {
@@ -135,35 +145,35 @@ public class LEDMasterController : MonoBehaviour
         m_LEDArray1 = new byte[m_NumOfLEDsLeft * 3]; // 186*3 < 1024
         m_LEDArray2 = new byte[m_NumOfLEDsRight * 3]; // 186*3 < 1024
 
-        // define an action
-        m_updateArduino1 = () =>
-        {
+        //// define an action
+        //m_updateArduino1 = () =>
+        //{
 
-            try
-            { //https://social.msdn.microsoft.com/Forums/vstudio/en-US/93583332-d307-4552-bd61-9a2adfcf2480/serial-port-write-method-is-blocking-execution?forum=vbgeneral
+        //    try
+        //    { //https://social.msdn.microsoft.com/Forums/vstudio/en-US/93583332-d307-4552-bd61-9a2adfcf2480/serial-port-write-method-is-blocking-execution?forum=vbgeneral
 
-                //Yes, the Write methods do block , until all data have been passed from the serial port driver to the UART FIFO.
-                //Usually, this is not a problem.It will not block "forever," just for as long as it takes.
-                //For example, if you were to send a 2K byte string, at 9600 bps, the write method would take about 2 seconds to return.
+        //        //Yes, the Write methods do block , until all data have been passed from the serial port driver to the UART FIFO.
+        //        //Usually, this is not a problem.It will not block "forever," just for as long as it takes.
+        //        //For example, if you were to send a 2K byte string, at 9600 bps, the write method would take about 2 seconds to return.
 
-                //Write(byte[] buffer, int offset, int count);
-                m_serialPort1.Write(m_startByte, 0, 1);     // m_startByte = 255
-                m_serialPort1.Write(m_LEDArray1, 0, m_LEDArray1.Length);   // m_LEDArray refers to the global address which is bound when the thread function is 
+        //        //Write(byte[] buffer, int offset, int count);
+        //        m_serialPort1.Write(m_startByte, 0, 1);     // m_startByte = 255
+        //        m_serialPort1.Write(m_LEDArray1, 0, m_LEDArray1.Length);   // m_LEDArray refers to the global address which is bound when the thread function is 
 
 
-            }
-            catch (Exception ex)
-            {
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                Debug.Log("Error:" + ex.ToString());
+        //        Debug.Log("Error:" + ex.ToString());
 
-            }
+        //    }
 
-            // The WriteBufferSize of the Serial Port is 1024, whereas that of Arduino is 64; m_LEDArray is 200 * 3 = 600 bytes less than
-            // the Serial Port size.
-            //https://stackoverflow.com/questions/22768668/c-sharp-cant-read-full-buffer-from-serial-port-arduino
+        //    // The WriteBufferSize of the Serial Port is 1024, whereas that of Arduino is 64; m_LEDArray is 200 * 3 = 600 bytes less than
+        //    // the Serial Port size.
+        //    //https://stackoverflow.com/questions/22768668/c-sharp-cant-read-full-buffer-from-serial-port-arduino
 
-        };      // u_updateArduino1
+        //};      // u_updateArduino1
 
 
         // define an action
@@ -268,9 +278,15 @@ public class LEDMasterController : MonoBehaviour
 
         for (int i = 0; i < m_NumOfLEDsRight; i++)
         {
+<<<<<<< Updated upstream
             m_LEDArray2[3 * i] = 0;
             m_LEDArray2[3 * i + 1] = 250;
             m_LEDArray2[3 * i + 2] = 0;
+=======
+            m_LEDArray2 [3 * i] = 0;
+            m_LEDArray2[ 3 * i + 1] = 250;
+            m_LEDArray2[ 3 * i + 2] = 0;
+>>>>>>> Stashed changes
 
         }
 
