@@ -56,7 +56,7 @@ public class LEDMasterController : MonoBehaviour
     //////////////////////////////////
 
     //byte[] m_LEDArray1;
-    // bool m_ThreadAlreadyCreated = false;
+    bool m_ThreadCreatedAndStartedFirstTime = false;
 
     private void Awake()
     { // init me
@@ -76,8 +76,8 @@ public class LEDMasterController : MonoBehaviour
 
         //https://forum.unity.com/threads/serial-port-communication-in-unity-c.600511/
 
-         //m_serialPort1 = new SerialPort(m_portName1, 57600); // bit rate= 567000 bps = , serial1
-         //m_serialPort2 = new SerialPort(m_portName2, 57600); // bit rate= 567000 bps = ,serial
+        //m_serialPort1 = new SerialPort(m_portName1, 57600); // bit rate= 567000 bps = , serial1
+        //m_serialPort2 = new SerialPort(m_portName2, 57600); // bit rate= 567000 bps = ,serial
 
 
         //m_SerialPort.ReadTimeout = 50;
@@ -88,7 +88,7 @@ public class LEDMasterController : MonoBehaviour
         try
         {
             //m_serialPort1.Open();      // serial1
-           // m_serialPort2.Open();        // serial
+            // m_serialPort2.Open();        // serial
         }
         catch (Exception ex)
         {
@@ -186,7 +186,7 @@ public class LEDMasterController : MonoBehaviour
 
                 // defined; This global address is where the new  frame data is stored every frame.
 
-                Debug.Log("Thread2: has sent  LED data" );
+                Debug.Log("Thread2: defiined the target function");
 
             }
             catch (Exception ex)
@@ -210,12 +210,13 @@ public class LEDMasterController : MonoBehaviour
         try
         {
             ThreadStart th = new ThreadStart(m_updateArduino2);   // ThreadStart() is a delegate (pointer type)
-            m_Thread2 = new Thread( th ); 
+            m_Thread2 = new Thread(th);
+            m_ThreadCreatedAndStartedFirstTime = true;
         }
 
         catch (Exception ex)
         {
-            Debug.Log(" Exception =" + ex.ToString());
+            Debug.Log(" Thread Creation Exception =" + ex.ToString());
 #if UNITY_EDITOR
             // Application.Quit() does not work in the editor so
             // UnityEditor.EditorApplication.isPlaying = false;
@@ -240,7 +241,8 @@ public class LEDMasterController : MonoBehaviour
     //  m_ledColorGenController.m_ledSenderHandler, which is defined in Commhub.cs
     public void UpdateLEDArray(byte[] ledArray) // ledArray is a reference type
     {
-
+        // for debugging:    to see if the thread causes the termination of the code
+        //return;
         for (int i = 0; i < m_NumOfLEDsLeft * 3; i++)
         {
             m_LEDArray1[i] = ledArray[i];
@@ -266,9 +268,9 @@ public class LEDMasterController : MonoBehaviour
 
         for (int i = 0; i < m_NumOfLEDsRight; i++)
         {
-            m_LEDArray2 [3 * i] = 0;
-            m_LEDArray2[ 3 * i + 1] = 250;
-            m_LEDArray2[ + 3 * i + 2] = 0;
+            m_LEDArray2[3 * i] = 0;
+            m_LEDArray2[3 * i + 1] = 250;
+            m_LEDArray2[3 * i + 2] = 0;
 
         }
 
@@ -278,28 +280,54 @@ public class LEDMasterController : MonoBehaviour
 
         //Debug.Log("2) Thread.IsAlive " + m_Thread.IsAlive);
 
-//       
+        //       
+        if (m_ThreadCreatedAndStartedFirstTime)
+        {    // The thread was initially created and started at the same time;
+            // Because it is alive, let it go.
+            m_ThreadCreatedAndStartedFirstTime = false;
 
-        if (! m_Thread2.IsAlive)   // The thread is alive means that it is started and not terminated.
-                                  // not alive means the thread is either not started or terminated. 
-            
-        {  
-             Debug.Log(" the thread2 is either not started or terminated; so start it");
+            return;
+        }
+        else
+        {    // The thread was terminated
+            if (m_Thread2.IsAlive)   // The thread is alive means that it is started and not terminated.
+                                     // not alive means the thread is either not started or terminated. 
+                                     // IsAlive is false if the thread method returned or the thread was aborted.
 
-             m_Thread2.Start();
-             m_NumOfThread1Start++;
+            { // the thread2 is alive: started and not terminated.   The sending thread is still busy sending  the previous LED array
+                Debug.Log("Thread2 is alive; Wait until it finishes; it means that the arrived array of led bytes is discarded");
+
+            }
+            else  //the thread2 is not alive: it means terminated at this point. 
+            {
+                Debug.Log(" the thread2 is  terminated; so start it");
+                try
+                {
+                    m_Thread2.Start();
+                }
+
+                catch (Exception ex)
+                {
+                    Debug.Log(" Thread2 Start Exception =" + ex.ToString());
+#if UNITY_EDITOR
+                    // Application.Quit() does not work in the editor so
+                    // UnityEditor.EditorApplication.isPlaying = false;
+                    //UnityEditor.EditorApplication.Exit(0);
+#else
+                   //Application.Quit();
+#endif
+
+                }
+                m_NumOfThread1Start++;
 
                 //Thread.Sleep(1000);
-             Debug.Log(" thread2 (serial) started  to send LED array to arduino: " + m_NumOfThread1Start);
+                Debug.Log(" thread2 (serial) started  to send LED array to arduino: " + m_NumOfThread1Start);
 
 
-         }
+            }     //the thread2 is not alive: it means terminated at this point. 
 
-        else
-        { // the thread2 is alive: started and not terminated.   The sending thread is still busy sending  the previous LED array
-            Debug.Log("Thread2 is alive; Wait until it finishes; it means that the arrived array of led bytes is discarded");
 
-         }
+        } // if(!m_ThreadJustCreatedAndStarted)
 
 
     } //  UpdateLEDArray()
