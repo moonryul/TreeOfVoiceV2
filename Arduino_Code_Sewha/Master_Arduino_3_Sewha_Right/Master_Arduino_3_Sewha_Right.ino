@@ -326,11 +326,12 @@ void myReadByte() {
 
 void showNewFrame() {
 
-  sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
 
   // print the ledBytes to the serial monitor via Serial1.
 
   printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
+  
+  sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
 
 }// showNewFrame()
 

@@ -431,6 +431,17 @@ public class LEDColorGenController : MonoBehaviour
         }
 
 
+        // Replace the virtual Camera to see the hole of the north pole exactly
+
+        float   l = m_LEDBoxLength / 2;
+        float   R = m_boids.m_MaxDomainRadius;
+        float h = Mathf.Sqrt(R * R - l * l);
+
+         Camera.main.transform.position +=  new Vector3(0,h,0);
+        //GameObject.Find("Main Camera").transform.position += new Vector3(0,h,0);
+        
+
+
         m_BoidLEDComputeShader.SetFloat("_CeilingInnerRadius", m_startingRadiusOfInnerChain);
         m_BoidLEDComputeShader.SetFloat("_MaxChainRadius", m_endingRadiusOfOuterChainThreeTurns);
 
@@ -926,13 +937,13 @@ public class LEDColorGenController : MonoBehaviour
         // whose projection on the equator plane are the randomly chosen points. 
         // Insert these points into m_BoidLEDArray from which we will pick up colors for the LEDs.
 
-        // 
+       
         float R = m_boids.m_MaxDomainRadius;
         //float LEDEquatorRadius = R * m_LEDArcPercentage;
         //float holeRadius = m_boids.m_CeilingInnerRadius;
 
         //m_totalNumOfLEDs = m_leftChain;     // the total number of leds =  150 for test
-        m_totalNumOfLEDs = m_leftChain + m_rightChain;     // the total number of leds =  150 for test
+        //m_totalNumOfLEDs = m_leftChain + m_rightChain;     // the total number of leds =  150 for test
 
         Debug.Log("Create LED boids :");
 
