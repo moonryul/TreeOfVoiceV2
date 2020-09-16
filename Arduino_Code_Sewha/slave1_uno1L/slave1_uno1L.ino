@@ -1,7 +1,16 @@
 //COM20
 
-#include <SPI.h>
-#include "SoftwareSerial.h"
+// 3W pixie: assembly article: http://ytai-mer.blogspot.com/2015/11/pixie-bright-things-come-in-small.html
+//Serial versus Parallel: https://www.ledsupply.com/blog/wiring-leds-correctly-series-parallel-circuits-explained/
+// Serial Chain of LEDs: Forward Voltage etc. https://www.electronics-tutorials.ws/diode/diode_8.html
+#include <SPI.h>//https://www.ledsupply.com/blog/wiring-leds-correctly-series-parallel-circuits-explained/
+#include "SoftwareSerial.h"// About the voltage drop for a chain of LEDs: https://forums.adafruit.com/viewtopic.php?f=47&t=65815
+//Powering a chain of LED from both ends: https://community.particle.io/t/when-i-connect-chain-of-led-strips-to-power-from-both-ends-do-i-need-to-make-the-power-line-disconnect-in-the-middle/35555
+// Also see: https://community.particle.io/t/when-i-connect-chain-of-led-strips-to-power-from-both-ends-do-i-need-to-make-the-power-line-disconnect-in-the-middle/35555/21
+
+
+// example codes: https://learn.adafruit.com/fiber-optic-pixie-princess-skirt
+
 #include "Adafruit_Pixie.h"
 
 #define NUMPIXELS1 30 // Number of Pixies in the strip
@@ -19,7 +28,7 @@ volatile boolean m_frameInProgess = false;
 
 void setup() {
   Serial.begin(57600);
-  pixieSerial.begin(115200); // Pixie REQUIRES this baud rate
+  pixieSerial.begin(115200); // Pixie REQUIRES this baud rate; begin() executes listen() within it.
 
   //SPI.setClockDivider(SPI_CLOCK_DIV16);
   pinMode(PIXIEPIN, OUTPUT);
@@ -123,13 +132,23 @@ void loop() {
 
      delay(2); // cf: https://learn.adafruit.com/pixie-3-watt-smart-chainable-led-pixels/
 
-     //Each Pixie listens on it Din pin for serial data. It will consume the first 3 bytes it sees and store them. It will then echo
+   //Chainable: Each Pixie listens on it Din pin for serial data. It will consume the FIRST  3 bytes it sees and store them. 
+   // [ The last pixie (Rn,Gn,Bn) will receive its own pixel Data first time and will not relay anything.]  It will then echo
      //any subsequent bytes to its Dout pin (with less than a microsecond latency). It will keep doing so until it detects a 1mslong silence on Din. 
      // Then, it will immediately apply (latch) the color values it got and go back to listening for a new
      // color. => Dn should see 1 ms long silence on Din to terminate the current frame, not to relay the data on the chain any more.
 
-    strip.show(); // show command has been  recieved
+// ==>  Each Pixie in the chain consumes its own data, then relays the rest of the data down the chain,
+//  so the controller can control each Pixie individually, without being connected to each one.
 
+// 3W: 3W: 3 Watts of power drive the LED, or 1 Watt for each Red, Green, Blue. This is a VERY bright LED. 
+//     Compare to typical NeoPixels, which are around 0.2W.
+
+    strip.show(); //  // show() Waits for 1ms elapsed since prior call; Then write the led pixel array as a stream to the physical chain of LEDs.
+    
+// Smart: Smart: Some really high-end features are available on each Pixie, such as Gamma correction 
+// (8-bit to 16-bit) for super-smooth color gradients, 
+/   over-heating protection (these things do get hot if left on at full blast for too long), communication loss protection.
      
     m_process_it = false;
     
@@ -137,3 +156,33 @@ void loop() {
   
  
 }// loop()
+
+//cd:
+//void Adafruit_Pixie::setPixelColor(uint16_t n, uint8_t r, uint8_t g,
+//                                   uint8_t b) {
+//  if (n < numLEDs) {
+//    uint8_t *p = &pixels[n * 3];
+//    p[0] = r;
+//    p[1] = g;
+//    p[2] = b;
+//  }
+//}
+
+//void Adafruit_Pixie::show() {
+//  if (pixels) {
+//    uint16_t n3 = numLEDs * 3;
+//    while (!canShow())
+//      ;                // Wait for 1ms elapsed since prior call
+//    if (!brightness) { // No brightness adjust, output full blast
+
+//      stream->write(pixels, n3); //  stream  = pixieSerial, where SoftwareSerial pixieSerial(-1, PIXIEPIN)
+
+//    } else { // Scale back brightness for every pixel R,G,B:
+//      uint16_t i, b16 = (uint16_t)brightness;
+//      for (i = 0; i < n3; i++) {
+//        stream->write((pixels[i] * b16) >> 8);
+//      }
+//    }
+//    endTime = micros(); // Save EOD time for latch on next call
+//  }
+//}

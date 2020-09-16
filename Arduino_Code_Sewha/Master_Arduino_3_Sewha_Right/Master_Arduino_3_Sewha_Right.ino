@@ -152,6 +152,9 @@ boolean m_newFrameHasStarted = false;
 //which doesn't exceed the SPI device's capability.  As Arduino grows as a platform, onto more capable hardware,
 //this approach is meant to allow SPI-based libraries to automatically use new faster SPI speeds.
 
+void printLEDBytesToSerialMonitor(byte* totalReceiveBuffer, int totalByteSize);
+void  sendLEDBytesToSlaves(byte* totalReceiveBuffer, int totalByteSize);
+
 void setup (void) {
 
 
@@ -328,19 +331,7 @@ void myReadByte() {
 }//myReadByte()
 
 
-<<<<<<< Updated upstream
 
-void showNewFrame() {
-
-
-  // print the ledBytes to the serial monitor via Serial1.
-
-  printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
-  
-  sendLEDBytesToSlaves(m_totalReceiveBuffer,  m_totalByteSize );
-
-}// showNewFrame()
-=======
 //
 //void showNewFrame() {
 //
@@ -351,7 +342,7 @@ void showNewFrame() {
 //  printLEDBytesToSerialMonitor(m_totalReceiveBuffer,  m_totalByteSize ); // for debug
 //
 //}// showNewFrame()
->>>>>>> Stashed changes
+
 
 
 //int HardwareSerial::available(void)
@@ -417,11 +408,14 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   // of the sequence with special bytes, m_startByte and m_endByte respectivley.
 
   SPI.transfer( m_startByte);
-  //SPI.transfer( &totalReceiveBuffer[0], ByteSize1R);
+
+  SPI.transfer( &totalReceiveBuffer[0], ByteSize1R);
 
   for (int i = 0; i < ByteSize1R; i++)
   {
+      //Write the byte totalReceiveBuffer[i] to the SPI bus (MOSI pin) and also receive (MISO pin)
     SPI.transfer( totalReceiveBuffer[i] );
+
   }
 // deselect the first SS line
   digitalWrite(ss1, HIGH);
