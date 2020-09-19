@@ -8,37 +8,75 @@ using UnityEngine.UI;
 using System.IO.Ports;
 
 //https://jonskeet.uk/csharp/threads/waithandles.html
+//http://www.richardmeredith.net/2017/07/simple-multithreading-for-unity/2/
+//Returns
+//Boolean
+//true if both the signal and the wait complete successfully; if the wait does not complete, the method does not return.
+
+//nvalidOperationException
+//toSignal is a semaphore, and it already has a full count.
+
+//public static bool SignalAndWait (System.Threading.WaitHandle toSignal, System.Threading.WaitHandle toWaitOn);
 
 // Thread in Unity: https://www.universityofgames.net/using-threads-in-unity-engine/
 //There are no real problems with threads in Unity.
 //Just keep in mind that pretty much everything of the Unity API can only be accessed from the main thread.
-//http://www.richardmeredith.net/2017/07/simple-multithreading-for-unity/2/
-// http://dotnetpattern.com/threading-autoresetevent
-//https://generacodice.it/en/articolo/41855/Concatenate-RTF-files-in-PHP-%28REGEX%29
-// Use this example in this code: https://stackoverflow.com/questions/382173/what-are-alternative-ways-to-suspend-and-resume-a-thread
-// combined with https://generacodice.it/en/articolo/41855/Concatenate-RTF-files-in-PHP-%28REGEX%29
-//https://docs.microsoft.com/en-us/dotnet/api/system.threading.manualresetevent?view=netcore-3.1
+// https://arghya.xyz/articles/thread-synchronization-part-three/
 
-// Difference between ManualResetEvent and AutoResetEvent: https://generacodice.it/en/articolo/41855/Concatenate-RTF-files-in-PHP-%28REGEX%29
-
-//  The most important difference is that an AutoResetEvent will only allow 
-//    one single waiting thread to continue. A ManualResetEvent on the other hand will keep allowing threads, 
-//    several at the same time even, to continue until you tell it to stop(Reset it).
-
-//A ManualResetEvent is a variation on AutoResetEvent.   
-//    It differs in that it doesn't automatically reset after a thread is let through on a WaitOne call,
-//    and so functions like a gate: calling Set opens the gate, allowing any number of threads 
-//    that WaitOne at the gate through; calling Reset closes the gate, causing, potentially,
-//    a queue of waiters to accumulate until its next opened.
-
-//One could simulate this functionality with a boolean "gateOpen" field (declared with the volatile keyword) 
-//in combination with "spin-sleeping"
-//    – repeatedly checking the flag, and then sleeping for a short period of time.
-
-//ManualResetEvents are sometimes used to signal that a particular operation is complete, 
-//    or that a thread's completed initialization and is ready to perform work.
+//Event & Wait Handles
+//Multiple threads can be synchronized by using synchronization events, 
+//    which are objects of EventWaitHandle or it’s child types.
+//    These objects are meant to handle thread waiting, and some events to signal them.
+//    They can have named instances for system-wide synchronization.EventWaitHandle are like gates,
+//        which has 2 possible states
 
 
+//signaled - waiting threads are activated & executes (open)
+//nonsignaled - waiting threads are suspended, continue to wait in a queue (closed)
+//There are three important methods in EventWaitHandle
+
+//Set() - signals to say it is open now, threads can proceed.State becomes signaled
+//Reset() - signals to say it’s closed, other threads have to wait.State becomes nonsignaled
+//WaitOne() - a thread calls this to wait for an open signal.If current state is signaled, 
+//it can proceed immediately, else it has to wait until it gets a signal
+//So, how the synchronization works among multiple threads is - all threads who wants
+//        to use the shared resources, calls WaitOne() and waits for a signal.
+//        When some thread calls Set() (or if the synchronization object was already signaled), 
+//the waiting threads proceed to access the resource.Now, when Reset() is called from a thread, 
+//    no more new threads can proceed and have to wait.The object remains in nonsigaled state
+//    until someone calls Set() again.When Set() is called, if no threads are waiting, 
+//    the synchronization object remains in signaled state, and new threads can start the work immediately.
+
+//There are several types of synchronization events
+
+
+//AutoResetEvent - allows exclusive access to a single thread at a time. It maintains 
+//        an internal queue of all waiting threads, and lets one thread pass when it is signaled.
+//    The moment one thread with WaitOne() gets activated, it automatically resets to nonsignaled state.
+//    Hence the name.
+//ManualResetEvent - allows access to any number of threads in signaled state.When it is in signaled state, 
+//    it allows all of the waiting threads to get activated, and keeps allowing new threads 
+//    until some thread calls Reset() manually to put it in nonsignaled state.
+//    That’s why it is called manual-reset event.
+
+// AutoResetEvent vs. ManualResetEvent:
+// 두 클래스의 생성자에 인자를 주면서 생성하는데 true이면 차단기가 올라간 상태,
+//false이면 차단기가 내려간 상태에서 시작한다. 두 클래스의 차이점은 WaitOne의 상태가 Set으로 풀린 이후 
+//Reset을 수동으로 하느냐 자동으로 하느냐에 있다. 그러므로 WaitOne의 상태가 Set으로 풀린 이후 Reset을, 
+//다른일을 하고, 천천히 수행하려면 ManualResetEvent 클래스를 사용하면 된다. 
+//System.Threading.AutoResetEvent는 WaitOne의 상태가 Set으로 풀린 이후 이후 자동으로 Reset 된다.
+//AutoResetEvent는 자동 Reset을 하므로 사용자의 여러 개의 스레드 실행하면 하나의 스레드가 끝날 때까지 기다렸다가 
+//대기하고, 하나의 스레드가 끝나면 다음 스레드가 실행되고 
+//ManualResetEvent는 자동 Reset을 수동으로 해야 하므로 한번 Set되면  차단기가 올라간 상태에서
+//여러 개의 스레드가 한번에 실행된다.
+
+//Once we call the Set() method on the ManualResetEvent object, its boolean remains true.
+// To reset the value we can use Reset() method.Reset method change the boolean value to false.     
+//Below is the syntax of calling Reset method.     
+//manualResetEvent.Reset();
+// We must immediately call Reset method after calling Set method 
+// if we want to send signal to threads multiple times. => This may cause the overwriting of SignaledState
+// variable. 
 public class LEDMasterController : MonoBehaviour
 {
 
@@ -62,21 +100,13 @@ public class LEDMasterController : MonoBehaviour
     Thread m_Thread1;      // thread for the first serial line, serial1
     Thread m_Thread2;      // thread for the second serial line, serial
 
-    // AutoResetEvent vs. ManualResetEvent:
-    // 두 클래스의 생성자에 인자를 주면서 생성하는데 true이면 차단기가 올라간 상태,
-    //false이면 차단기가 내려간 상태에서 시작한다. 두 클래스의 차이점은 WaitOne의 상태가 Set으로 풀린 이후 
-    //Reset을 수동으로 하느냐 자동으로 하느냐에 있다. 그러므로 WaitOne의 상태가 Set으로 풀린 이후 Reset을, 
-    //다른일을 하고, 천천히 수행하려면 ManualResetEvent 클래스를 사용하면 된다. 
-    //System.Threading.AutoResetEvent는 WaitOne의 상태가 Set으로 풀린 이후 이후 자동으로 Reset 된다.
-    //AutoResetEvent는 자동 Reset을 하므로 사용자의 여러 개의 스레드 실행하면 하나의 스레드가 끝날 때까지 기다렸다가 
-    //대기하고, 하나의 스레드가 끝나면 다음 스레드가 실행되고 
-    //ManualResetEvent는 자동 Reset을 수동으로 해야 하므로 한번 Set되면  차단기가 올라간 상태에서 여러 개의 스레드가 한번에 실행된다.
-
+   
 
     // We create two waitEventHandles on the same set of threads to handle different aspects of the threads,
     // that Pause and Resume versus Shutdown.
-    ManualResetEvent m_ShutdownEvent = new ManualResetEvent(false);
-    ManualResetEvent m_PauseEvent = new ManualResetEvent(false);   
+    ManualResetEvent m_ChildThreadWaitEvent = new ManualResetEvent(false);
+    ManualResetEvent m_ChildThreadPassThruEvent = new ManualResetEvent(false);
+    ManualResetEvent m_ThreadShutdownEvent = new ManualResetEvent(false);   
     // do not block but go thru it. 
 
     bool  m_Thread1Stopped = false;
@@ -107,7 +137,7 @@ public class LEDMasterController : MonoBehaviour
     //////////////////////////////////
 
     //byte[] m_LEDArray1;
-    bool m_NewLEDFrameHasArrived  = false;
+     int  m_NumOfLEDFrames = 0;
                                                                           
     private void Awake()
     { // init me
@@ -194,15 +224,27 @@ public class LEDMasterController : MonoBehaviour
         {
             while (true)
             {
-                //The thread  blocks initially on the m_PauseEvent.WaitOne() because m_PauseEvent
-                // was created with the unsignaled state (signal being false)
-                m_PauseEvent.WaitOne(Timeout.Infinite);   // wait indefinitely until the main thread
-                                                          // until it gets the signal
-                if (m_ShutdownEvent.WaitOne(0))
+                //The thread  blocks initially because  the thread sync event  m_ThreadSyncEvent was
+                // created with the initial stated being unsigned (the input parameter = false)
+
+                // Wait for the wait gate to open
+                //Debug.LogFormat("Number: {0}, string {1}, number again: {0}, character: {2}", num, str, chr);
+                Debug.Log("Thread 1:  waiting for the gate to open");
+                
+                m_ChildThreadWaitEvent.WaitOne(Timeout.Infinite);   // The current thread wait indefinitely until the main thread
+                                                                    // until it gets the signal from other threads
+
+                // m_ChildThreadPassThruEvent.Set(); // Indicate that the current child thread has passed 
+                // thru m_ChildThreadWaitEvent.WaitOne(); 
+
+                Debug.Log("Thread 1: the gate is open");
+                
+                if (m_ThreadShutdownEvent.WaitOne(0)) // The current thread also waits on another sync event
+                                                      // m_ThreadShutdownEvent to handle thread shutdown.
                     break;
 
                 // do work
-                Debug.Log("Thread2: sent the LED data");
+                //Debug.Log("Thread1: Begin Running");
 
                 try
                 { //https://social.msdn.microsoft.com/Forums/vstudio/en-US/93583332-d307-4552-bd61-9a2adfcf2480/serial-port-write-method-is-blocking-execution?forum=vbgeneral
@@ -219,26 +261,51 @@ public class LEDMasterController : MonoBehaviour
 
 
                     // defined; This global address is where the new  frame data is stored every frame.
-                    Debug.Log("Thread 1 Printing");
+                    Debug.Log("Thread 1 Begin Printing");
 
                     for (int i = 0; i < m_NumOfLEDsLeft * 3; i++)
                     {
                         if (i % 3 == 0)
                         {
-                            Debug.Log("R: " + m_LEDArray1[i]);
+                           
+                            Debug.LogFormat(" {0}th Chain: Thread1: {1}: R: {2} ", m_NumOfLEDFrames, i,  m_LEDArray1[i]);
                         }
                         else if (i % 3 == 1)
                         {
-                            Debug.Log("G: " + m_LEDArray1[i]);
+                         
+                            Debug.LogFormat("{0}th Chain: Thread1: {1}: G: {2} ", m_NumOfLEDFrames, i, m_LEDArray1[i]);
                         }
                         else
                         {
-                            Debug.Log("R: " + m_LEDArray1[i]);
-
+                          
+                            Debug.LogFormat("{0}th Chain: Thread1: {1}: B: {2} ", m_NumOfLEDFrames, i, m_LEDArray1[i]);
+                           // Debug.Log(" ");
                         }
+                        //Debug.Log(" ");
+
                     } // for 
 
 
+                    Debug.Log("Thread 1 Finished Printing");
+
+                    // Thread1:  Wait for Thread2 to pass thru m_ChildThreadWaitEvent.WaitOne() before closing the gate
+                    // Thread2 should execute m_ChildThreadPassThruEvent.Set() to pass thru
+                    // in order to pass thru m_ChildThreadPassThruEvent.WaitOne();
+                   // m_ChildThreadPassThruEvent.WaitOne();
+                                      
+                    m_ChildThreadWaitEvent.Reset();  // Indicate that passing  thru m_ChildThreadPassThruEvent.WaitOne() is finished,
+                    // and   a new pass thru can occur only when the other thread executes
+                    //  m_ChildThreadWaitEvent.Set() is executed by another thread.
+                    
+                    // close the gate, so that all the threads (Thread1 and Thread2) wait on the sync event signal
+                    
+                    //m_ChildThreadPassThruEvent.Reset(); // Indicate that all threads should 
+                                                         // wait for  m_ChildThreadPassThruEvent.WaitOne() once again.
+
+
+                    Debug.LogFormat("Thread 1  going back to the infinite loop", Thread.CurrentThread.ManagedThreadId);
+                    // Reset the thread sync event (close the gate) so that it waits for a new
+                    // LED frame m_LEDArray1 to arrive
                 }
                 catch (Exception ex)
                 {
@@ -252,24 +319,44 @@ public class LEDMasterController : MonoBehaviour
                 //https://stackoverflow.com/questions/22768668/c-sharp-cant-read-full-buffer-from-serial-port-arduino
 
             } // while (true)
-        };       // m_updateArduino1
 
+            Debug.Log("Thread1  reaches here the end of the thread");
+        };       // m_updateArduino1
 
         // define an action
         m_updateArduino2 = () =>
         {
             while (true)
             {
-                //The thread  blocks initially on the m_PauseEvent.WaitOne() because m_PauseEvent
-                // was created with the unsignaled state (signal being false)
-                m_PauseEvent.WaitOne(Timeout.Infinite);   // wait indefinitely until the main thread
-                                                          // executes m_PauseEvent.Set()
-                if ( m_ShutdownEvent.WaitOne(0))       //m_ShutdownEvent.WaitOne(0) becomes true when
-                                                       // the main thread executes m_ShutdownEvent.Set()
-                    break;
+                //The thread  blocks initially because  the thread sync event  m_ThreadSyncEvent was
+                // created with the initial stated being unsigned (the input parameter = false)
 
+                // Wait for the wait gate to open
+                //Debug.LogFormat("Number: {0}, string {1}, number again: {0}, character: {2}", num, str, chr);
+                //Debug.LogFormat("Thread 2  waiting for signal", Thread.CurrentThread.ManagedThreadId);
+
+                Debug.Log("Thread 2:  waiting for the gate to open");
+
+
+                m_ChildThreadWaitEvent.WaitOne(Timeout.Infinite);   // The current thread wait indefinitely until the main thread
+                                                                    // until it gets the signal from other threads
+
+                //m_ChildThreadPassThruEvent.Set(); // Indicate that the current child thread has passed 
+                // thru m_ChildThreadWaitEvent.WaitOne(); 
+                // Increase  the number of time in which the gate is passed through.
+                // This number is set to zero by the main thread, and incremented by one by each thread
+                // Whis this number = the total number of threads, each thread executes the while (true) loop
+                // again, waiting for the next LED frame. 
+
+                //Debug.LogFormat("Thread {0}  got  signal", Thread.CurrentThread.ManagedThreadId);
+                Debug.Log("Thread 2: the gate is open");
+                if (m_ThreadShutdownEvent.WaitOne(0)) // The current thread also waits on another sync event
+                                                      // m_ThreadShutdownEvent to handle thread shutdown.
+                {
+                    break;
+                }
                 // do work
-                Debug.Log("Thread2: sent the LED data");
+               
 
                 try
                 { //https://social.msdn.microsoft.com/Forums/vstudio/en-US/93583332-d307-4552-bd61-9a2adfcf2480/serial-port-write-method-is-blocking-execution?forum=vbgeneral
@@ -282,31 +369,55 @@ public class LEDMasterController : MonoBehaviour
                     //Write(byte[] buffer, int offset, int count);
 
                     // m_serialPort2.Write(m_startByte, 0, 1);     // m_startByte = 255
-                    // m_serialPort2.Write(m_LEDArray2, 0, m_LEDArray2.Length);   // m_LEDArray refers to the global address which is bound when the thread function is 
+                    // m_serialPort2.Write(m_LEDArray1, 0, m_LEDArray1.Length);   // m_LEDArray refers to the global address which is bound when the thread function is 
 
 
                     // defined; This global address is where the new  frame data is stored every frame.
-
-                    Debug.Log("Thread 2 Printing");
+                    Debug.Log("Thread 2 Begin Printing");
 
                     for (int i = 0; i < m_NumOfLEDsRight * 3; i++)
                     {
                         if (i % 3 == 0)
                         {
-                            Debug.Log("R: " + m_LEDArray2[i]);
+                         
+                            Debug.LogFormat("{0}th Chain: Thread2: {1}:  R: {2} ", m_NumOfLEDFrames, i, m_LEDArray2[i]);
                         }
                         else if (i % 3 == 1)
                         {
-                            Debug.Log("G: " + m_LEDArray2[i]);
+                           
+                            Debug.LogFormat("{0}th Chain: Thread2: {1}:  G: {2} ", m_NumOfLEDFrames, i,  m_LEDArray2[i]);
                         }
                         else
-                        {
-                            Debug.Log("R: " + m_LEDArray2[i]);
-
+                        {                                   
+                            Debug.LogFormat("{0}th Chain: Thread2: {1}:  B: {2} ", m_NumOfLEDFrames, i,  m_LEDArray2[i]);
+                            //Debug.Log(" ");
                         }
+                        //Debug.Log(" ");
+
                     } // for 
 
 
+                    Debug.Log("Thread 2 Finished Printing");
+
+                    // Thread1:  Wait for Thread2 to pass thru m_ChildThreadWaitEvent.WaitOne() before closing the gate
+                    // Thread2 should execute m_ChildThreadPassThruEvent.Set() to pass thru
+                    // in order to pass thru m_ChildThreadPassThruEvent.WaitOne();
+                    //m_ChildThreadPassThruEvent.WaitOne();
+                    Debug.Log("close the gate");
+                    m_ChildThreadWaitEvent.Reset();  // Indicate that passing  thru m_ChildThreadPassThruEvent.WaitOne() is finished,
+                                                     // and   a new pass thru can occur only when the other thread executes
+                                                     //  m_ChildThreadWaitEvent.Set() is executed by another thread.
+
+                    // close the gate, so that all the threads (Thread1 and Thread2) wait on the sync event signal
+
+                    //m_ChildThreadPassThruEvent.Reset(); // Indicate that all threads should 
+                    // wait for  m_ChildThreadPassThruEvent.WaitOne() once again.
+
+
+                    Debug.Log("Thread 2 going back to the infinite loop");
+                    
+                    // Reset the thread sync event (close the gate) so that it waits for a new
+                    // LED frame m_LEDArray1 to arrive
                 }
                 catch (Exception ex)
                 {
@@ -320,7 +431,11 @@ public class LEDMasterController : MonoBehaviour
                 //https://stackoverflow.com/questions/22768668/c-sharp-cant-read-full-buffer-from-serial-port-arduino
 
             } // while (true)
+
+            Debug.Log("Thread2  reaches here the end of the thread");
+
         };       // m_updateArduino2
+
 
         //Thread: https://knightk.tistory.com/8
         // m_Thread1 = new Thread(new ThreadStart(m_updateArduino)); // ThreadStart() is a delegate (pointer type)
@@ -355,7 +470,7 @@ public class LEDMasterController : MonoBehaviour
 
             m_Thread1.Start();
             m_Thread2.Start();
-
+            // Both threads will wait over  m_ChildThreadWaitEvent.WaitOne(Timeout.Infinite); 
 
 
         }
@@ -388,7 +503,12 @@ public class LEDMasterController : MonoBehaviour
     public void UpdateLEDArray(byte[] ledArray) // ledArray is a reference type
     {
         // for debugging:    to see if the thread causes the termination of the code
-        //return;
+        m_NumOfLEDFrames++;
+
+        Debug.Log(" ");            
+        Debug.Log("NumOfLEDFrames = " + m_NumOfLEDFrames);
+
+
         for (int i = 0; i < m_NumOfLEDsLeft * 3; i++)
         {
             m_LEDArray1[i] = ledArray[i];
@@ -404,9 +524,9 @@ public class LEDMasterController : MonoBehaviour
 
         for (int i = 0; i < m_NumOfLEDsLeft; i++)
         {
-            m_LEDArray1[3 * i] = 250;
-            m_LEDArray1[3 * i + 1] = 0;
-            m_LEDArray1[3 * i + 2] = 0;
+            m_LEDArray1[3 * i] = 1;
+            m_LEDArray1[3 * i + 1] = 2;
+            m_LEDArray1[3 * i + 2] = 3;
 
         }
 
@@ -415,23 +535,21 @@ public class LEDMasterController : MonoBehaviour
         for (int i = 0; i < m_NumOfLEDsRight; i++)
         {
 
-            m_LEDArray2[3 * i] = 0;
-            m_LEDArray2[3 * i + 1] = 250;
-            m_LEDArray2[3 * i + 2] = 0;
+            m_LEDArray2[3 * i] = 4;
+            m_LEDArray2[3 * i + 1] = 5;
+            m_LEDArray2[3 * i + 2] = 6;
 
 
         }
         //the Set method releases all the threads; They go thru WaitOne() immediately, without blocking
         // because m_PauseEvent waitHandle was created with the signaled state (the boolean label true);
-         
-        m_PauseEvent.Set();
 
-        //Once we call the Set() method on the ManualResetEvent object, its boolean remains true.
-        // To reset the value we can use Reset() method.Reset method change the boolean value to false.     
-        //Below is the syntax of calling Reset method.     
-        //manualResetEvent.Reset();
-        // We must immediately call Reset method after calling Set method 
-        // if we want to send signal to threads multiple times. 
+        // Open the gate
+        Debug.Log("Open the gate");
+
+        m_ChildThreadWaitEvent.Set();
+
+       
 
     } //  UpdateLEDArray()
 
@@ -439,34 +557,52 @@ public class LEDMasterController : MonoBehaviour
     {
     }
 
-   
+
+  
+
+//    OnDestroy occurs when a Scene or game ends.
+//    Stopping the Play mode when running from inside the Editor, will end the application.
+//    As this end happens, an OnDestroy will be executed.
+//    Also, if a Scene is closed and a new Scene is loaded, the OnDestroy call will be made.
+//    When built as a standalone application OnDestroy calls are made when Scenes end.
+//    A Scene ending typically means a new Scene is loaded.
+
+//Note: OnDestroy will only be called on game objects that have previously been active.
 
     public void OnDestroy()
     {
         // Signal the shutdown event
-        m_ShutdownEvent.Set();
+        m_ThreadShutdownEvent.Set();
         Debug.Log("Thread Stopped ");
 
         // Make sure to resume any paused threads
-        m_PauseEvent.Set();
+        m_ChildThreadWaitEvent.Set();
 
-        // Wait for the thread to exit
+        // Wait for the thread to exit: Because both threads are infinite loop, they will never finish.
+        // So, the follwoing join methods will not finish the threads.
         m_Thread1.Join();
         m_Thread2.Join();
+
+        Debug.Log("Threads Joined OnDestory");
+        //m_Thread1.Abort();
+        //m_Thread2.Abort();
     }
 
+   // Sent to all GameObjects before the application quits.
 
+//In the Editor, Unity calls this message when playmode is stopped.
     public void OnApplicationQuit()
     {
 
         // Signal the shutdown event
-        m_ShutdownEvent.Set();
+        m_ThreadShutdownEvent.Set();
         Debug.Log("Thread Stopped ");
 
         // Make sure to resume any paused threads
-        m_PauseEvent.Set();
+        m_ChildThreadWaitEvent.Set();
 
         // Wait for the thread to exit
+        Debug.Log("Threads Joined OnApplicationQuit");
         m_Thread1.Join();
         m_Thread2.Join();
 
