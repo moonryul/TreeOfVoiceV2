@@ -24,29 +24,44 @@
 
 
 
-int ss1 = 49; // connect master pin 49 to the first uno slave pin 10
-int ss2 = 48; // connect master pin 48 to the second uno   slave pin 10
+//int ss1 = 49; // connect master pin 49 to the first uno slave pin 10
+//int ss2 = 48; // connect master pin 48 to the second uno   slave pin 10
 int ss3 = 47; // connect master pin 47 to the third uno  slave pin 10
 
 int ss4 = 46; // connect master pin 48 to the fourth uno   slave pin 10
 int ss5 = 45; // connect master pin 47 to the fifth uno  slave pin 10
 
 
+int ss1 = 53;
+int ss2 = 49;
+
+
 const int NumPixels1L = 30; // The left of the 1st box
-const int NumPixels1R = 25;
 
 const int NumPixels2L = 29;
-const int NumPixels2R = 25;
+
 
 const int NumPixels3L = 28;
-const int NumPixels3R = 27;
+
 
 const int NumPixels4L = 30;
-const int NumPixels4R = 30;
+
 
 const int NumPixels5L = 35;
-const int NumPixels5R = 27;
 
+
+//const int NumPixels1R = 25;
+
+const int NumPixels1R = 5; // for debuging
+//const int NumPixels2R = 25;
+//const int NumPixels3R = 27;
+//const int NumPixels4R = 30;
+//const int NumPixels5R = 27;
+
+const int NumPixels2R = 5;
+const int NumPixels3R = 0;
+const int NumPixels4R = 0;
+const int NumPixels5R = 0;
 
 
 const int ByteSize1R = NumPixels1R * 3;
@@ -183,202 +198,13 @@ void setup (void) {
 // artificial LED RGB data for testing: 1 2 3;1 2 3; 1 2 3;.......
 
 
-
-//
-//// Left Unos
-//for (int i = 0; i < NumPixels1L *3; i++)
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[i]= 254;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[i]= 0;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[i]= 0;
-//    
-//  }
-//}
-//for (int i = 0; i < NumPixels2L *3; i++) 
-//  {
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 254;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 0;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + i]= 0;
-//    
-//  }
-//}
-//
-//for (int i = 0; i < NumPixels3L *3; i++)
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 254;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[  NumPixels1L *3 + NumPixels2L *3 + i]= 0;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + i]= 0;
-//    
-//  }
-//}
-//
-//for (int i = 0; i < NumPixels4L *3; i++) 
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=254;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=0;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + i]=0;
-//    
-//  }
-//
-//}
-//
-//for (int i = 0; i < NumPixels5L *3; i++) 
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 +  NumPixels4L *3+ i] = 254;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3+ i]= 0;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ NumPixels1L *3 + NumPixels2L *3 + NumPixels3L *3 + NumPixels4L *3 + i]= 0;
-//    
-//  }
-//
-//}
-//
-
-
-
-//// Right  Unos
-//for (int i = 0; i < NumPixels1R *3; i++)
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ByteSizeLeft + i]=  0;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ByteSizeLeft + i]=  254;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ByteSizeLeft + i]= 0;
-//    
-//  }
-//}
-//for (int i = 0; i < NumPixels2R *3; i++) 
-//  {
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]=  0;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft+ NumPixels1R *3 + i]= 254;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + i]=  0;
-//    
-//  }
-//}
-//
-//for (int i = 0; i < NumPixels3R *3; i++)
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 0;    
-//  }
-//  if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft +  NumPixels1R *3 + NumPixels2R *3 + i]= 254;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + i]= 0;
-//    
-//  }
-//}
-//
-//for (int i = 0; i < NumPixels4R *3; i++) 
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]= 254;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;
-//    
-//  }
-//
-//}
-//
-//for (int i = 0; i < NumPixels5R *3; i++) 
-//{
-//
-//  if ( i%3 == 0 ) // i is a  multiple of 3 
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]= 0;    
-//  }
-//   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]= 254;    
-//  }
-//   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-//  { 
-//    m_totalReceiveBuffer[ ByteSizeLeft + NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]= 0;
-//    
-//  }
-//
-//}//for
-
 // Right  Unos
 for (int i = 0; i < NumPixels1R *3; i++)
 {
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[ i]=  0;    
+    m_totalReceiveBuffer[ i]=  250;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
@@ -389,13 +215,14 @@ for (int i = 0; i < NumPixels1R *3; i++)
     m_totalReceiveBuffer[ i]= 0;
     
   }
-}
+} // for
+
 for (int i = 0; i < NumPixels2R *3; i++) 
-  {
+ {
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + i]=  0;    
+    m_totalReceiveBuffer[  NumPixels1R *3 + i]=  254;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
@@ -406,89 +233,13 @@ for (int i = 0; i < NumPixels2R *3; i++)
     m_totalReceiveBuffer[NumPixels1R *3 + i]=  0;
     
   }
-}
-
-for (int i = 0; i < NumPixels3R *3; i++)
-{
-
-  if ( i%3 == 0 ) // i is a  multiple of 3 
-  { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + i]= 0;    
-  }
-  if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-  { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + i]= 0;    
-  }
-   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-  { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + i]= 0;
-    
-  }
-}
-
-for (int i = 0; i < NumPixels4R *3; i++) 
-{
-
-  if ( i%3 == 0 ) // i is a  multiple of 3 
-  { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;    
-  }
-   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-  { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i]= 0;    
-  }
-   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-  { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + i] = 0;
-    
-  }
-
-}
-
-for (int i = 0; i < NumPixels5R *3; i++) 
-{
-
-  if ( i%3 == 0 ) // i is a  multiple of 3 
-  { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 +  NumPixels4R *3+ i]= 0;    
-  }
-   if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
-  { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3+ i]= 0;    
-  }
-   if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
-  { 
-    m_totalReceiveBuffer[ NumPixels1R *3 + NumPixels2R *3 + NumPixels3R *3 + NumPixels4R *3 + i]= 0;
-    
-  }
-
-}//for
+} // for
 
 
-// for debugging
-//Serial.print("message 1 [forloop] in setup:");
-for (int i = 0; i < m_totalByteSize; i++) {
-
-    // print the received data from first Mega to the second Mega to the PC monitor
-    if ( i % 3 == 0) {
-    // Serial.print("r:");
-      Serial.println(m_totalReceiveBuffer[i]);
-    }
-    else if ( i % 3 == 1) {
-    // Serial.print("g:");
-     Serial.println(m_totalReceiveBuffer[i]);
-    }
-
-   else {
-      //Serial.print("b:");
-      Serial.println(m_totalReceiveBuffer[i]);
-    }
-
-  }// for
 
 
-Serial.print("message 2 [func] in setup:");
-  printLEDBytesToSerialMonitor();
+
+
 
 } // setup
 
@@ -521,57 +272,27 @@ Serial.print("message 2 [func] in setup:");
 
 void loop () 
 {
-
+  
   // If Serial.read() == -1 =oxff , it means that head == tail, i.e. there are no bytes to read, that is, underflow happened
   //Serial1.print("b:");
 
   //myReadByte(); // commented out for debug: read a new byte changing the state of the reading process, m_newFrameHasArrived. 
-
-    
+   
   
   if ( m_newFrameHasBeenCompleted ) 
   { // a new frame has been completed and is ready to be sent to the slaves; This flag is set in myReadByte()
-   // showNewFrame(); // display the new frame of LED data that has arrived
   
- //  sendLEDBytesToSlaves();
-
    if (  m_newFrameToBePrinted )
    {
-
-
-   Serial.print("message 3 [foloop] in loop():");
-
-         
-   for (int i = 0; i < m_totalByteSize; i++) // because the printing process is slow, the message may be confused
-   // if you execute loop() two fast. 
-   {
-   
-    // print the received data from first Mega to the second Mega to the PC monitor
-    if ( i % 3 == 0) {
-     //Serial.print("r:");
-      Serial.println(m_totalReceiveBuffer[i]);
-    }
-    else if ( i % 3 == 1) {
-    //Serial.print("g:");
-     Serial.println(m_totalReceiveBuffer[i]);
-    }
-
-   else {
-      //Serial.print("b:");
-      Serial.println(m_totalReceiveBuffer[i]);
-    }
-
-  }// for
-  
-     // Serial.print("message 4 [function] in loop():");
       printLEDBytesToSerialMonitor();
     
       m_newFrameToBePrinted = false;
    }
+   
    // m_newFrameHasBeenCompleted = false;
 
    sendLEDBytesToSlaves();
-  }
+  }//   if ( m_newFrameHasBeenCompleted ) 
 
 
 } // loop()
@@ -718,7 +439,12 @@ void  sendLEDBytesToSlaves()
   // m_startByte
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[0], ByteSize1R); 
+  //SPI.transfer( &m_totalReceiveBuffer[0], ByteSize1R); 
+
+  for (int i =0; i < ByteSize1R; i++ )
+  {
+    SPI.transfer( m_totalReceiveBuffer[i] ); 
+  }
   //https://forum.arduino.cc/index.php?topic=407288.0
 
 // deselect the first SS line
@@ -733,56 +459,62 @@ void  sendLEDBytesToSlaves()
   digitalWrite(ss2, LOW);
 
   SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R], ByteSize2R);
+ // SPI.transfer( &m_totalReceiveBuffer[ByteSize1R], ByteSize2R);
+
+for (int i =0; i < ByteSize2R; i++ )
+{
+  SPI.transfer( m_totalReceiveBuffer[ByteSize1R + i] );
+  
+}
 
  // deselect the second SS Line
   digitalWrite(ss2, HIGH);
 
   //SPI.endTransaction();
-
-  // send the third group of data to the third slave:
-  //SPI.beginTransaction(SPISettingC);
-
-// select the third SS line
-  digitalWrite(ss3, LOW); 
-
-  SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
-
-// deselect the third SS line
-  digitalWrite(ss3, HIGH);
-
-  //SPI.endTransaction();
-
-  // send the fourth group of data to the fourth slave:
-
-  // SPI.beginTransaction(SPISettingD);
-
-  // select the fourth SS line
-  digitalWrite(ss4, LOW);  
-
-  SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
-
- // deselect the fourth SS line
-  digitalWrite(ss4, HIGH);
-
- // select the fifth SS line 
-  digitalWrite(ss5, LOW);  
-
-  SPI.transfer( m_startByte);
-  SPI.transfer( &m_totalReceiveBuffer[ ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
-
- // deselect the fifth SS line 
-  digitalWrite(ss5, HIGH);
-
-
-  // SPI.endTransaction();
-
-  // If other libraries use the SPI (hardware resource)  from interrupts,
-  // they will be prevented from accessing SPI until you call SPI.endTransaction().
-
-  delay(50); // make the interrupt process slower so that there would be enough time to read the buffer
+//
+//  // send the third group of data to the third slave:
+//  //SPI.beginTransaction(SPISettingC);
+//
+//// select the third SS line
+//  digitalWrite(ss3, LOW); 
+//
+//  SPI.transfer( m_startByte);
+//  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
+//
+//// deselect the third SS line
+//  digitalWrite(ss3, HIGH);
+//
+//  //SPI.endTransaction();
+//
+//  // send the fourth group of data to the fourth slave:
+//
+//  // SPI.beginTransaction(SPISettingD);
+//
+//  // select the fourth SS line
+//  digitalWrite(ss4, LOW);  
+//
+//  SPI.transfer( m_startByte);
+//  SPI.transfer( &m_totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R ], ByteSize4R );
+//
+// // deselect the fourth SS line
+//  digitalWrite(ss4, HIGH);
+//
+// // select the fifth SS line 
+//  digitalWrite(ss5, LOW);  
+//
+//  SPI.transfer( m_startByte);
+//  SPI.transfer( &m_totalReceiveBuffer[ ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R ], ByteSize5R );
+//
+// // deselect the fifth SS line 
+//  digitalWrite(ss5, HIGH);
+//
+//
+//  // SPI.endTransaction();
+//
+//  // If other libraries use the SPI (hardware resource)  from interrupts,
+//  // they will be prevented from accessing SPI until you call SPI.endTransaction().
+//
+ delay(100); // make the interrupt process slower so that there would be enough time to read the buffer
 
 } //  sendLEDBytesToSlaves( )
 
@@ -791,22 +523,23 @@ void  sendLEDBytesToSlaves()
 
 void printLEDBytesToSerialMonitor()
 {
-    
+
+ Serial.println("print RGB:");
 for (int i = 0; i < m_totalByteSize; i++) 
 {
    
     // print the received data from first Mega to the second Mega to the PC monitor
     if ( i % 3 == 0) {
-     //Serial.print("r:");
+     Serial.print("r:");
       Serial.println(m_totalReceiveBuffer[i]);
     }
     else if ( i % 3 == 1) {
-     //Serial.print("g:");
+    Serial.print("g:");
      Serial.println(m_totalReceiveBuffer[i]);
     }
 
    else {
-     // Serial.print("b:");
+      Serial.print("b:");
       Serial.println(m_totalReceiveBuffer[i]);
     }
 

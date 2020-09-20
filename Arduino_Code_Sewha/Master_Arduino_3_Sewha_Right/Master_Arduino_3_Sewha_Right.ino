@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////
 //SPI Tutorial: https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all
-// https://forum.arduino.cc/index.php?topic=558963.0
+// Make an arduino SPI slave: SPI interrupt: http://gammon.com.au/forum/?id=10892
 // Arduino UNO
 // 10 (SS)
 // 11 (MOSI)
@@ -179,17 +179,19 @@ void setup (void) {
   digitalWrite(ss4, HIGH);
   digitalWrite(ss5, HIGH);
 
-  SPI.begin(); // set up:
+ 
+  SPI.begin(); 
   
-  //To condition the hardware you call SPI.begin () which configures the SPI pins (SCK, MOSI, SS) as outputs.
+  // SPI.begin () configures the SPI pins (SCK, MOSI, SS) as outputs.
   //It sets SCK and MOSI low, and SS high.
-  //It then enables SPI mode with the hardware in "master" mode. This has the side-effect of setting MISO as an input.
+  //It then enables SPI mode with the hardware in "master" mode. 
+  //This has the side-effect of setting MISO as an input.
 
 
   // Slow down the master a bit
     // The default setting is SPI_CLOCK_DIV4,
     
-  //SPI.setClockDivider(SPI_CLOCK_DIV8);
+  SPI.setClockDivider(SPI_CLOCK_DIV8);
 
   // SPI.setClockDivider(SPI_CLOCK_DIV16); // It was used for Researsal Test in ACC 20191203
 
@@ -372,7 +374,8 @@ void myReadByte() {
 //  totalRecieveBuffer[3 * i +1] = (byte)random(10, 255);
 //  totalRecieveBuffer[3 * i +2] = (byte)random(10, 255);
 
-
+//http://gammon.com.au/forum/?id=10892
+//https://sites.google.com/site/qeewiki/books/avr-guide/spi
 void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 {
 
@@ -409,7 +412,7 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 
   SPI.transfer( m_startByte);
 
-  SPI.transfer( &totalReceiveBuffer[0], ByteSize1R);
+//  SPI.transfer( &totalReceiveBuffer[0], ByteSize1R);
 
   for (int i = 0; i < ByteSize1R; i++)
   {
@@ -445,6 +448,26 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss3, LOW); 
 
   SPI.transfer( m_startByte);
+
+  //inline static uint8_t transfer(uint8_t data) {
+  //    SPDR = data;
+  //    /*
+  //     * The following NOP introduces a small delay that can prevent the wait
+  //     * loop form iterating when running at the maximum speed. This gives
+  //     * about 10% more speed, even if it seems counter-intuitive. At lower
+  //     * speeds it is unnoticed.
+  //     */
+
+  //The SPIF bit within the SPSR sets HIGH(1) whenever data transmission is complete
+  //    even if interrupts are not enabled.This is useful because we could check the status of the bit
+  //    in order to figure out if it is safe to write the the SPDR register.
+  
+  //    asm volatile("nop");
+  //    while (!(SPSR & _BV(SPIF))); // wait until transmission is complete
+  //    return SPDR;
+  //}
+
+
   //SPI.transfer( &totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
   for (int i = 0; i < ByteSize3R; i++)
   {

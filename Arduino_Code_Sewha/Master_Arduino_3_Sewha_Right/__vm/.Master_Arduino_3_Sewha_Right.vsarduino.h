@@ -78,5 +78,6 @@ typedef void *__builtin_va_list;
 #define pgm_read_ptr(address_short)   short()
 
 #include "Master_Arduino_3_Sewha_Right.ino"
+#include "..\slave1_uno1L_RingBuffer\slave1_uno1L_RingBuffer.ino"
 #endif
 #endif

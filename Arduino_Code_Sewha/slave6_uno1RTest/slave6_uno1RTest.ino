@@ -4,15 +4,15 @@
 #include "SoftwareSerial.h"
 #include "Adafruit_Pixie.h"
 
-#define NUMPIXELS1 25 // Number of Pixies in the strip
+//#define NUMPIXELS1 25 // Number of Pixies in the strip
+#define NUMPIXELS1 5
 
-//#define NUMPIXELS1 5 // Number of Pixies in the strip
 #define PIXIEPIN  5 // Pin number for SoftwareSerial output to the LED chain
 
 SoftwareSerial pixieSerial(-1, PIXIEPIN);
 Adafruit_Pixie strip = Adafruit_Pixie(NUMPIXELS1, &pixieSerial);
 
-const int m_bufferSize = NUMPIXELS1 * 3; // 6 bytes are for the start and end bytes
+const int m_bufferSize = NUMPIXELS1 * 3; 
 byte m_buffer[m_bufferSize];
 
 volatile int m_pos = 0;
@@ -100,16 +100,15 @@ void loop() {
     }
 
 
-   //  delay(2); // cf: https://learn.adafruit.com/pixie-3-watt-smart-chainable-led-pixels/
+     //delay(2); // cf: https://learn.adafruit.com/pixie-3-watt-smart-chainable-led-pixels/
 
      //Each Pixie listens on it Din pin for serial data. It will consume the first 3 bytes it sees and store them. It will then echo
      //any subsequent bytes to its Dout pin (with less than a microsecond latency). It will keep doing so until it detects a 1mslong silence on Din. 
      // Then, it will immediately apply (latch) the color values it got and go back to listening for a new
      // color. => Dn should see 1 ms long silence on Din to terminate the current frame, not to relay the data on the chain any more.
 
-
-    strip.show(); // show command has been  recieved
+    strip.show(); // show command has been  recieved( at least 1 second delay)
     m_process_it = false;
   } //if ( m_process_it )
-
+ 
 }// loop()

@@ -15,11 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Master_Arduino_3_Sewha_Right.ino" />
+    <None Include="..\slave1_uno1L_RingBuffer\slave1_uno1L_RingBuffer.ino">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Master_Arduino_3_Sewha_Right.ino">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Master_Arduino_3_Sewha_Right.vsarduino.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\slave1_uno1L_RingBuffer\RingBuf.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
