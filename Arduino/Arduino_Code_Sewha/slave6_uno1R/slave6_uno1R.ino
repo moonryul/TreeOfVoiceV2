@@ -47,6 +47,7 @@ RingBuf<byte, m_MaxBufferSize>  m_buffer; //RingBuf<ET, S, IT, BT>::RingBuf() :
 //which is why you don't just make every variable volatile, when not needed.
 
 volatile boolean m_frameInProgress = false;
+volatile boolean m_frameCompleted = false;
 
 volatile  uint16_t m_indexToFrameStart;
 volatile  uint16_t m_indexToFrameEnd;
@@ -99,7 +100,48 @@ void loop() {
 //would DECREMENT it and take whatever actions were needed
 
 	// Extract one LED chain (one frame ) from the ring buffer at the tail end.
-	 
+
+  // First, check if the recently arrived LED frame at the head end is valid
+ 
+ if ( !m_frameCompleted && m_currentFrameSize <  NUMPIXELS1 * 3 ) 
+  // the frame is not completed and  the size of the frame is less than its expected length 
+  {
+     // m_buffer.mSize -= m_currentFrameSize;
+     //  Serial.println("the recent frame is not completed and  the frame size is less than the expected size, so  not ready");
+      return;
+  }
+
+  if ( !m_frameCompleted && m_currentFrameSize >  NUMPIXELS1 * 3 ) 
+  // the frame is not completed and  the size of the frame exceeds its expected length 
+  {
+      m_buffer.mSize -= m_currentFrameSize;
+       Serial.println("the recent frame is not completed and  the frame exceeds the expected size");
+      return;
+  }
+
+   if ( !m_frameCompleted && m_buffer.isFull ) // the frame is not completed and buffer is full 
+  {
+      m_buffer.mSize -= m_currentFrameSize;
+      Serial.println("the recent frame is not complete because the buffer is full");
+      return;
+  }
+  // the frame is completed because n = '\n' arrived; check if the size of the frame is valid
+    
+  if (!m_currentFrameSize == NUMPIXELS1 * 3)
+  {
+        // the LED frame is complete only when the current frame size is the same as m_LEDChainByteSize (= NUMPIXELS1 * 3)
+
+       //  otherwise discard the most recent frame received. 
+       // Change mSize of the ring buffer, m_buffer, in order to discard the partial
+        // LED frame, which is useless. m_buffer.mReadIndex remains the same.
+
+        m_buffer.mSize -= m_currentFrameSize;
+         Serial.print("the recent frame is completed but its size is not the same as its expected size");
+        return;
+  }
+
+ // now at least one frame at the head end is valid; extract a frame at the tail end of the buffer
+ 
 	for (int i = 0; i < NUMPIXELS1; i++)
 	{ 
 		strip.setPixelColor(i, m_buffer[3 * i + 0], m_buffer[3 * 1 + 1], m_buffer[3 * 1 + 2]);
@@ -216,8 +258,10 @@ ISR(SPI_STC_vect) { // SPI_STC_vect: invoked when SPI data arrives:
 	if (!m_frameInProgress)
 	{ // when frameInProfess is false, try to check the start byte, 255
 
-		if (c == 255) { // 255 is the start byte sent by the master
+		if (c == 255) 
+		{ // 255 is the start byte sent by the master
 			m_frameInProgress = true; // ignore the byte c
+      m_frameCompleted = false;
 			m_indexToFrameStart = m_buffer.writeIndex();
 			m_indexToFrameEnd = m_indexToFrameStart;
 
@@ -245,19 +289,20 @@ ISR(SPI_STC_vect) { // SPI_STC_vect: invoked when SPI data arrives:
 		{
 			//assert(m_indexToFrameEnd == m_buffer.writeIndex());				
 
-			if (!m_currentFrameSize == NUMPIXELS1 * 3)
-			{
-				// send the LED frame only when (1) m_indexToFrameStart != m_indexToFrameEnd and
-				// the difference between both is the same as m_LEDChainByteSize.
-
-				 // otherwise discard the most recent partial frame received. 
-				// Change mSize of the ring buffer, m_buffer, in order to discard the partial
-				// LED frame, which is useless. m_buffer.mReadIndex remains the same.
-
-				m_buffer.mSize -= m_currentFrameSize;
-			}
+//			if (!m_currentFrameSize == NUMPIXELS1 * 3)
+//			{
+//				// send the LED frame only when (1) m_indexToFrameStart != m_indexToFrameEnd and
+//				// the difference between both is the same as m_LEDChainByteSize.
+//
+//				 // otherwise discard the most recent partial frame received. 
+//				// Change mSize of the ring buffer, m_buffer, in order to discard the partial
+//				// LED frame, which is useless. m_buffer.mReadIndex remains the same.
+//
+//				m_buffer.mSize -= m_currentFrameSize;
+//			}
 
 			m_frameInProgress = false; // the partial frame or the full frame is discarded and restart the frame
+      m_frameCompleted = true;
 
 		} // if (c == '\n')
 		else
@@ -266,8 +311,11 @@ ISR(SPI_STC_vect) { // SPI_STC_vect: invoked when SPI data arrives:
 
 			if (m_buffer.isFull)
 			{
-				m_buffer.mSize -= m_currentFrameSize;
-				m_frameInProgress = false; // ignore the partial received frame,
+				//m_buffer.mSize -= m_currentFrameSize;
+				m_frameInProgress = false; 
+        m_frameCompleted = false;
+        
+				// ignore the partial received frame,
 										   //  and restart the  frame. 				
 			}
 			else
@@ -275,7 +323,7 @@ ISR(SPI_STC_vect) { // SPI_STC_vect: invoked when SPI data arrives:
 				m_buffer.push(c);
 				m_indexToFrameEnd++; // m_indexToFrameEnd refers to the first empty position of the
 									 // buffer. Check if it overflows. 
-				if (m_indexToFrameEnd == m_buffer.maxSize())
+				if (m_indexToFrameEnd == m_buffer.maxSize()) // index == n, where legal range of index = 0..n-1
 				{
 					m_indexToFrameEnd = 0;
 
