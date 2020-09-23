@@ -21,9 +21,13 @@
 #define rxPin5 12
 #define txPin5 13
 
+#define rxPin6 14
+#define txPin6 15
+
 // set up a new serial port
 SoftwareSerial Serial4(rxPin4, txPin4);
 SoftwareSerial Serial5(rxPin5, txPin5);
+SoftwareSerial Serial6(rxPin6, txPin6);
 
 // SoftwareSerial  Serial4(rxPin5, txPin5);
 //The Arduino Mega has three additional serial ports:
@@ -97,15 +101,17 @@ void  sendLEDBytesToSlaves(byte* totalReceiveBuffer, int totalByteSize);
 
 void setup(void) {
 
-	Serial.begin(115200); // To read bytes from the PC Unity Script;  Unity Script also sets this speed
+	Serial.begin(115200); // For PC to send  bytes to the arduino. 
 
 	// The serial ports for the 5 slave arduinos
-	Serial1.begin(115200);
+	Serial1.begin(115200); // for sending messages to PC
+
 	Serial2.begin(115200);
 	Serial3.begin(115200);
 	Serial4.begin(115200);
 	Serial5.begin(115200);
 
+	Serial6.begin(115200);
 
 	//https://www.arduino.cc/reference/en/language/functions/communication/serial/
 	//
@@ -202,9 +208,9 @@ void myReadByte() {
 			m_pos = 0; // points to the beginning of the buffer  to read the next byte into; The startByte is not inserted to the buffer
 		}
 
-		
+
 		{ // the read byte is not a startByte =>  Ignore the byte and continue to read to find the start byte;
-		 	
+
 		}
 
 		return;  // After the return, myReadByte() is called again	
@@ -215,38 +221,38 @@ void myReadByte() {
 	else
 	{ // The new frame has started (the start byte arrived) =>  add the received byte to the receive buffer at the empty location m_pos
 
-		if (m_pos == m_totalByteSize )
+		if (m_pos == m_totalByteSize)
 		{
-		//  the buffer index m_pos points to the next to the last position of the receive buffer.
-		//	it means that the current frame contains the expected number of bytes.
-			
-		 // check if the current byte is the endByte. If so, it means that the frame is completed 
-			
-			if (c == m_endByte) 
+			//  the buffer index m_pos points to the next to the last position of the receive buffer.
+			//	it means that the current frame contains the expected number of bytes.
+
+			 // check if the current byte is the endByte. If so, it means that the frame is completed 
+
+			if (c == m_endByte)
 			{ // the end was sent by Unity
 				m_newFrameHasStarted = false;
 				m_newFrameHasBeenCompleted == true;
 			}
 			else
 			{  // the current frame contains the expected number of bytes and the current byte is NOT the endByte
-               // it means the current frame is corrupted and should be discarded.
+			   // it means the current frame is corrupted and should be discarded.
 				// It can be achieved by setting m_newFrameHasStarted = false, which causes the 
 				// code to wait for the startByte. 
-				m_newFrameHasStarted = false;  
+				m_newFrameHasStarted = false;
 			}
-		
+
 		} // if (m_pos == m_totalByteSize )
 
 		else
 		{
 			m_totalReceiveBuffer[m_pos] = c;
 			m_pos++;
-		
+
 		} // else (m_pos == m_totalByteSize )
 
-	
+
 	} // else of  (!m_newFrameHasStarted)
-			
+
 
 }//myReadByte()
 
@@ -285,28 +291,48 @@ void  sendLEDBytesToSlaves(byte* totalReceiveBuffer, int totalByteSize)
 
 	//https://forum.arduino.cc/index.php?topic=52111.0
 
+	//int numOfAvailable1 = Serial1.availableForWrite();
+	int numOfAvailable2 = Serial2.availableForWrite();
+	int numOfAvailable3 = Serial3.availableForWrite();
+	int numOfAvailable4 = Serial4.availableForWrite();
+	int numOfAvailable5 = Serial5.availableForWrite();
+	int numOfAvailable6 = Serial6.availableForWrite();
 
-	Serial1.write(m_startByte);
-	Serial1.write(&totalReceiveBuffer[0], ByteSize1R);
-	Serial1.write(m_endByte);
+	Serial1.println(totalReceiveBuffer[i]);
+	// check if the available space for writing to esch serial port is more than the number of bytes to send
+	// In that case, serial.write() is not blocking but returns immediately. Hence, all 5 serials
+	// send the bytes in parallel.
 
-	Serial2.write(m_startByte);
-	Serial2.write(&totalReceiveBuffer[ByteSize1R], ByteSize2R);
-	Serial2.write(m_endByte);
+	if ( numOfAvailable2 > ByteSize1R && numOfAvailable3 > ByteSize2R
+		&& numOfAvailable4 > ByteSize3R && numOfAvailable5 > ByteSize4R
+		&& numOfAvailable6 > ByteSize5R )
 
+	{
 
-	Serial3.write(m_startByte);
-	Serial3.write(&totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
-	Serial3.write(m_endByte);
-
-	Serial4.write(m_startByte);
-	Serial4.write(&totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R], ByteSize4R);
-	Serial4.write(m_endByte);
+		Serial2.write(m_startByte);
+		Serial2.write(&totalReceiveBuffer[0], ByteSize1R);
+		Serial2.write(m_endByte);
 
 
-	Serial5.write(m_startByte);
-	Serial5.write(&totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R], ByteSize5R);
-	Serial5.write(m_endByte);
+		Serial3.write(m_startByte);
+		Serial3.write(&totalReceiveBuffer[ByteSize1R], ByteSize2R);
+		Serial3.write(m_endByte);
+
+
+		Serial4.write(m_startByte);
+		Serial4.write(&totalReceiveBuffer[ByteSize1R + ByteSize2R], ByteSize3R);
+		Serial4.write(m_endByte);
+
+		Serial5.write(m_startByte);
+		Serial5.write(&totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R], ByteSize4R);
+		Serial5.write(m_endByte);
+
+
+		Serial6.write(m_startByte);
+		Serial6.write(&totalReceiveBuffer[ByteSize1R + ByteSize2R + ByteSize3R + ByteSize4R], ByteSize5R);
+		Serial6.write(m_endByte);
+
+	}
 
 } //  sendLEDBytesToSlaves(totalReceiveBuffer,  m_totalByteSize )
 
