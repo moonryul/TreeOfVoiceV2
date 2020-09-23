@@ -298,7 +298,11 @@ void  sendLEDBytesToSlaves(byte* totalReceiveBuffer, int totalByteSize)
 	int numOfAvailable5 = Serial5.availableForWrite();
 	int numOfAvailable6 = Serial6.availableForWrite();
 
-	Serial1.println(totalReceiveBuffer[i]);
+	Serial1.print("  numOfAvailable2 ="); Serial1.println( numOfAvailable2);
+    Serial1.print("  numOfAvailable3 ="); Serial1.println( numOfAvailable3);
+    Serial1.print("  numOfAvailable4 ="); Serial1.println( numOfAvailable4);
+    Serial1.print("  numOfAvailable5 ="); Serial1.println( numOfAvailable5);
+    Serial1.print("  numOfAvailable6 ="); Serial1.println( numOfAvailable6);
 	// check if the available space for writing to esch serial port is more than the number of bytes to send
 	// In that case, serial.write() is not blocking but returns immediately. Hence, all 5 serials
 	// send the bytes in parallel.

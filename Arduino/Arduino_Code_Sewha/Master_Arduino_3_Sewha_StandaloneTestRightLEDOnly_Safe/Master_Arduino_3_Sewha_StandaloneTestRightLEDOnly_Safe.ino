@@ -95,6 +95,8 @@ byte m_totalReceiveBuffer[m_totalByteSize] ;
 
 
 const byte m_startByte = 255;
+const byte m_endByte = '\n';
+
 int m_pos;
 
 //boolean m_newFrameHasBeenCompleted = false;
@@ -222,11 +224,11 @@ for (int i = 0; i < NumPixels2R *3; i++)
 
   if ( i%3 == 0 ) // i is a  multiple of 3 
   { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + i]=  254;    
+    m_totalReceiveBuffer[  NumPixels1R *3 + i]=  ;    
   }
    if ( i%3 == 1 ) // i is a  multiple of 3 plus 1
   { 
-    m_totalReceiveBuffer[  NumPixels1R *3 + i]= 0;    
+    m_totalReceiveBuffer[  NumPixels1R *3 + i]= 250;    
   }
    if ( i%3 ==  2 ) // i is a  multiple of 3 plus 2
   { 
@@ -363,17 +365,6 @@ void loop ()
 //
 
 
-void showNewFrame() {
-
-  sendLEDBytesToSlaves();
-  
-  // print the ledBytes to the serial monitor via Serial1.
-
-  printLEDBytesToSerialMonitor();
-  
-}// showNewFrame()
-
-
 //int HardwareSerial::available(void)
 //    {
 //    return ((unsigned int)(SERIAL_RX_BUFFER_SIZE + _rx_buffer_head - _rx_buffer_tail)) % SERIAL_RX_BUFFER_SIZE;
@@ -445,6 +436,10 @@ void  sendLEDBytesToSlaves()
   {
     SPI.transfer( m_totalReceiveBuffer[i] ); 
   }
+
+  
+  SPI.transfer( m_endByte);
+  
   //https://forum.arduino.cc/index.php?topic=407288.0
 
 // deselect the first SS line
@@ -466,6 +461,8 @@ for (int i =0; i < ByteSize2R; i++ )
   SPI.transfer( m_totalReceiveBuffer[ByteSize1R + i] );
   
 }
+ 
+  SPI.transfer( m_endByte);
 
  // deselect the second SS Line
   digitalWrite(ss2, HIGH);

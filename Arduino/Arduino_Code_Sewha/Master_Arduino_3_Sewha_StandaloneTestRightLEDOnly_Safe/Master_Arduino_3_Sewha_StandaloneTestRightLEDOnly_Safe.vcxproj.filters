@@ -15,17 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="slave6_uno1R.ino" />
+    <None Include="Master_Arduino_3_Sewha_StandaloneTestRightLEDOnly_Safe.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.slave6_uno1R.vsarduino.h">
+    <ClInclude Include="__vm\.Master_Arduino_3_Sewha_StandaloneTestRightLEDOnly_Safe.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< Updated upstream
-=======
-    <ClInclude Include="RingBuf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
->>>>>>> Stashed changes
   </ItemGroup>
 </Project>

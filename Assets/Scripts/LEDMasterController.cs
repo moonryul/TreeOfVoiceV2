@@ -129,10 +129,11 @@ public class LEDMasterController : MonoBehaviour
    
     public int m_LEDCount; // from LEDColorGenController component
 
-    public int m_LEDArraySemaphore = 2; // two threads should finish processing its own LED array for the 
-    // main thread to prepare new LED  arrays.
-    
-     int  m_NumOfLEDFrames = 0;
+    public int m_LEDArraySemaphoreCount = 0; // two threads should finish processing its own LED array for the 
+    public int m_LEDArraySemaphoreMaxCount = 2; // two threads should finish processing its own LED array for the 
+                                        // main thread to prepare new LED  arrays.
+
+    int  m_NumOfLEDFrames = 0;
                                                                           
     private void Awake()
     { // init me
@@ -283,11 +284,13 @@ public class LEDMasterController : MonoBehaviour
 
                     Debug.Log("Thread 1 Finished Printing");
 
+                    m_LEDArraySemaphoreCount--;       // decrease LEDArraySemaphoreCount to indicate a single round of the thread finished
+
                     // Thread1:  Wait for Thread2 to pass thru m_ChildThreadWaitEvent.WaitOne() before closing the gate
                     // Thread2 should execute m_ChildThreadPassThruEvent.Set() to pass thru
                     // in order to pass thru m_ChildThreadPassThruEvent.WaitOne();
-                   // m_ChildThreadPassThruEvent.WaitOne();
-                                      
+                    // m_ChildThreadPassThruEvent.WaitOne();
+
                     m_ChildThreadWaitEvent.Reset();  // Indicate that passing  thru m_ChildThreadPassThruEvent.WaitOne() is finished,
                     // and   a new pass thru can occur only when the other thread executes
                     //  m_ChildThreadWaitEvent.Set() is executed by another thread.
@@ -394,6 +397,9 @@ public class LEDMasterController : MonoBehaviour
 
                     Debug.Log("Thread 2 Finished Printing");
 
+                    m_LEDArraySemaphoreCount--;       // decrease LEDArraySemaphoreCount to indicate a single round of the thread finished
+
+
                     // Thread1:  Wait for Thread2 to pass thru m_ChildThreadWaitEvent.WaitOne() before closing the gate
                     // Thread2 should execute m_ChildThreadPassThruEvent.Set() to pass thru
                     // in order to pass thru m_ChildThreadPassThruEvent.WaitOne();
@@ -497,6 +503,11 @@ public class LEDMasterController : MonoBehaviour
     //  m_ledColorGenController.m_ledSenderHandler, which is defined in Commhub.cs
     public void UpdateLEDArray(byte[] ledArray) // ledArray is a reference type
     {
+
+        // Wait on m_LEDArraySemaphoreCount
+
+        while (m_LEDArraySemaphoreCount != 0) ; // wait until m_LEDArraySemaphoreCount becomes zero.
+
         // for debugging:    to see if the thread causes the termination of the code
         m_NumOfLEDFrames++;
 
@@ -536,6 +547,11 @@ public class LEDMasterController : MonoBehaviour
 
 
         }
+
+        // initialize the LEDArraySemaphore
+
+        m_LEDArraySemaphoreCount = m_LEDArraySemaphoreMaxCount;
+
         //the  m_ChildThreadWaitEvent.Set()  releases all the threads, so that they  go thru WaitOne();
 
         // Open the gate
