@@ -15,12 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Master_Arduino_3_Sewha_Right.ino">
-      <Filter>Source Files</Filter>
-    </None>
+    <None Include="slave6_uno1R.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.Master_Arduino_3_Sewha_Right.vsarduino.h">
+    <ClInclude Include="__vm\.slave6_uno1R.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

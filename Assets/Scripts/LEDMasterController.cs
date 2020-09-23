@@ -123,20 +123,15 @@ public class LEDMasterController : MonoBehaviour
     //public byte[] m_LEDArray; // 200  LEDs
     public byte[] m_LEDArray1; // 200  LEDs
     public byte[] m_LEDArray2; // 200  LEDs
-    byte[] m_startByte = { 255 };
+    byte[] m_startByte = { (byte)'\n' };
+    byte[] m_endByte = { (byte)'\r' };
 
-
-    float m_Delay;
+   
     public int m_LEDCount; // from LEDColorGenController component
 
-    int m_index;
-    //////////////////////////////////
-    //
-    // Function
-    //
-    //////////////////////////////////
-
-    //byte[] m_LEDArray1;
+    public int m_LEDArraySemaphore = 2; // two threads should finish processing its own LED array for the 
+    // main thread to prepare new LED  arrays.
+    
      int  m_NumOfLEDFrames = 0;
                                                                           
     private void Awake()
@@ -157,8 +152,8 @@ public class LEDMasterController : MonoBehaviour
 
         //https://forum.unity.com/threads/serial-port-communication-in-unity-c.600511/
 
-        //m_serialPort1 = new SerialPort(m_portName1, 57600); // bit rate= 567000 bps = , serial1
-        //m_serialPort2 = new SerialPort(m_portName2, 57600); // bit rate= 567000 bps = ,serial
+        //m_serialPort1 = new SerialPort(m_portName1, 115200); // Serial of Master 1
+        //m_serialPort2 = new SerialPort(m_portName2, 115200); // Serial of Master 2
 
 
         //m_SerialPort.ReadTimeout = 50;
@@ -258,7 +253,7 @@ public class LEDMasterController : MonoBehaviour
 
                     // m_serialPort2.Write(m_startByte, 0, 1);     // m_startByte = 255
                     // m_serialPort2.Write(m_LEDArray1, 0, m_LEDArray1.Length);   // m_LEDArray refers to the global address which is bound when the thread function is 
-
+                    // m_serialPort2.Write(m_endByte, 0, 1); 
 
                     // defined; This global address is where the new  frame data is stored every frame.
                     Debug.Log("Thread 1 Begin Printing");
@@ -541,8 +536,7 @@ public class LEDMasterController : MonoBehaviour
 
 
         }
-        //the Set method releases all the threads; They go thru WaitOne() immediately, without blocking
-        // because m_PauseEvent waitHandle was created with the signaled state (the boolean label true);
+        //the  m_ChildThreadWaitEvent.Set()  releases all the threads, so that they  go thru WaitOne();
 
         // Open the gate
         Debug.Log("Open the gate");

@@ -93,10 +93,12 @@ class RingBuf
 
 private:
   ET mBuffer[S];
-  IT mReadIndex;
-  IT mSize;
+ // IT mReadIndex;
+public: 
+  IT mSize;  // mSize is made public by Moon Jung
+  IT mReadIndex; // mReadIndex is made public by Moon Jung
 
-  IT writeIndex();
+  //IT writeIndex();
 
 public:
   /* Constructor. Init mReadIndex to 0 and mSize to 0 */
@@ -121,16 +123,26 @@ public:
   void clear()   { mSize = 0; }
   /* return the size of the buffer */
   IT size() { return mSize; }
+
+  /* return the readIndex of the buffer */
+  IT readIndex() { return mReadIndex; }
+
+  IT writeIndex();
+  //IT RingBuf<ET, S, IT, BT>::writeIndex()
+
   /* return the maximum size of the buffer */
   IT maxSize() { return S; }
   /* access the buffer using array syntax, not interrupt safe */
   ET &operator[](IT inIndex);
+  //ET &RingBuf<ET, S, IT, BT>::operator[](IT inIndex)
 };
 
 template <typename ET, size_t S, typename IT, typename BT>
 IT RingBuf<ET, S, IT, BT>::writeIndex()
 {
- BT wi = (BT)mReadIndex + (BT)mSize;
+ BT wi = (BT)mReadIndex + (BT)mSize; // mReadIndex refers to the first readable element in the buffer
+                                     // mSize is the size of the data items in the buffer. 
+                                     // Adding both refers to the first empty position in the buffer
  if (wi >= (BT)S) wi -= (BT)S;
  return (IT)wi;
 }

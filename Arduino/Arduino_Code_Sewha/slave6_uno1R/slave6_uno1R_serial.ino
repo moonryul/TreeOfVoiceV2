@@ -56,10 +56,6 @@ volatile uint16_t  m_currentFrameSize;
 
 //http://gammon.com.au/forum/?id=10892
 //https://sites.google.com/site/qeewiki/books/avr-guide/spi
-
-// SPI, interrupts in Arduino: https://forum.arduino.cc/index.php?topic=44454.0
-//https://busylog.net/arduino-timer-interrupt-isr-example/
-
 void setup() {
 
 	Serial.begin(57600);

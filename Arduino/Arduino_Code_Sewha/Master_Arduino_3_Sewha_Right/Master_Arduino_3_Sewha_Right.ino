@@ -191,7 +191,8 @@ void setup (void) {
   // Slow down the master a bit
     // The default setting is SPI_CLOCK_DIV4,
     
-  SPI.setClockDivider(SPI_CLOCK_DIV8);
+  SPI.setClockDivider(SPI_CLOCK_DIV8); // 16MHz (Mega 2560) / 8 = 2,000,000 bps much faster
+  // than Pixie Serial 115200 bps; 15MHz / 64 = 250,000 bps
 
   // SPI.setClockDivider(SPI_CLOCK_DIV16); // It was used for Researsal Test in ACC 20191203
 
@@ -379,6 +380,12 @@ void myReadByte() {
 void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
 {
 
+  //Serial.write(buf, len): 115200 bps:  serial transmission is asynchronous.
+    //If there is enough empty space in the transmit buffer, 
+    //Serial.write() will return before any characters are transmitted over serial.
+    //If the transmit buffer is full then Serial.write() will block until there is enough space in the buffer.
+    //To avoid blocking calls to Serial.write(), 
+    //you can first check the amount of free space in the transmit buffer using availableForWrite().
 
   //https://forum.arduino.cc/index.php?topic=52111.0
   // With multiple slaves, only one slave is allowed to "own" the MISO line(by configuring it as an output).So when SS is brought low
@@ -430,7 +437,9 @@ void  sendLEDBytesToSlaves( byte * totalReceiveBuffer, int totalByteSize )
   digitalWrite(ss2, LOW);
 
   SPI.transfer( m_startByte);
-  //SPI.transfer( &totalReceiveBuffer[ByteSize1R], ByteSize2R);
+  
+  SPI.transfer( &totalReceiveBuffer[ByteSize1R], ByteSize2R); // The transfer() function checks
+  // the complete transmisstion of each byte in the buffer. 
 
   for (int i = 0; i < ByteSize2R; i++)
   {
